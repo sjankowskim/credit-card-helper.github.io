@@ -34,10 +34,13 @@ const seenCardIds = new Map();
  */
 const imagesByCardPath = new Map();
 for (const image of getFiles(imagesDir, '.png')) {
-  const relativeImage = path.relative(imagesDir, image).replace(/\\/g, '/').replace(/\.png$/, '');
+  const relativeImage = path
+    .relative(imagesDir, image)
+    .replace(/\\/g, '/')
+    .replace(/\.png$/, '');
   const [, base, variant] = /^(.*?)(?:-(\d+))?$/.exec(relativeImage);
   const images = imagesByCardPath.get(base) ?? [];
-  images.push({ order: variant ? Number(variant) : 1, url: `/images/cards/${relativeImage}.png` });
+  images.push({ order: variant ? Number(variant) : 1, url: `images/cards/${relativeImage}.png` });
   imagesByCardPath.set(base, images);
 }
 
@@ -54,17 +57,14 @@ function fail(message) {
 }
 
 allFiles.forEach((filePath) => {
-  const relativePath = path
-    .relative(cardsDir, filePath)
-    .replace(/\\/g, '/')
-    .replace(/\.ts$/, '');
+  const relativePath = path.relative(cardsDir, filePath).replace(/\\/g, '/').replace(/\.ts$/, '');
 
   const fileName = path.basename(filePath, '.ts');
   const varName = fileName.toUpperCase().replace(/-/g, '_');
 
   if (seenVarNames.has(varName)) {
     console.error(
-      `\x1b[31m[Card Indexer]\x1b[0m ${relativePath}.ts and ${seenVarNames.get(varName)}.ts both export ${varName}. Rename one file.`
+      `\x1b[31m[Card Indexer]\x1b[0m ${relativePath}.ts and ${seenVarNames.get(varName)}.ts both export ${varName}. Rename one file.`,
     );
     process.exit(1);
   }
@@ -85,13 +85,18 @@ allFiles.forEach((filePath) => {
   const transitionedTo = /^  transitionedTo: \{ cardId: '([^']+)'/m.exec(source)?.[1];
   if (transitionedTo) transitions.push([relativePath, transitionedTo]);
   if (imageOf) {
-    if (images) console.warn(`\x1b[33m[Card Indexer]\x1b[0m ${relativePath}.ts has its own image and imageOf; the imageOf is ignored`);
+    if (images)
+      console.warn(
+        `\x1b[33m[Card Indexer]\x1b[0m ${relativePath}.ts has its own image and imageOf; the imageOf is ignored`,
+      );
     else borrowedImages.push([cardId, imageOf, relativePath]);
   }
   if (images) {
     cardImages.push([cardId, images.sort((a, b) => a.order - b.order).map((image) => image.url)]);
   } else if (!imageOf) {
-    console.warn(`\x1b[33m[Card Indexer]\x1b[0m No image for ${relativePath}.ts; add public/images/cards/${relativePath}.png`);
+    console.warn(
+      `\x1b[33m[Card Indexer]\x1b[0m No image for ${relativePath}.ts; add public/images/cards/${relativePath}.png`,
+    );
   }
 
   imports.push(`import { ${varName} } from './${relativePath}';`);
@@ -99,7 +104,8 @@ allFiles.forEach((filePath) => {
 });
 
 for (const [relativePath, cardId] of transitions) {
-  if (!seenCardIds.has(cardId)) fail(`${relativePath}.ts transitions to '${cardId}', which isn't a card id.`);
+  if (!seenCardIds.has(cardId))
+    fail(`${relativePath}.ts transitions to '${cardId}', which isn't a card id.`);
 }
 
 // Cards that reuse another card's artwork take only its default design; alternate
@@ -108,7 +114,10 @@ const imagesById = new Map(cardImages);
 for (const [cardId, imageOf, relativePath] of borrowedImages) {
   const images = imagesById.get(imageOf);
   if (images) cardImages.push([cardId, images.slice(0, 1)]);
-  else console.warn(`\x1b[33m[Card Indexer]\x1b[0m ${relativePath}.ts uses the image of '${imageOf}', which has none`);
+  else
+    console.warn(
+      `\x1b[33m[Card Indexer]\x1b[0m ${relativePath}.ts uses the image of '${imageOf}', which has none`,
+    );
 }
 
 const content = `// ============================================================================
@@ -144,4 +153,6 @@ for (const [base, images] of imagesByCardPath) {
 }
 
 fs.writeFileSync(indexFile, content);
-console.log(`\x1b[32m[Card Indexer]\x1b[0m Successfully indexed ${allFiles.length} card files in cards/index.ts`);
+console.log(
+  `\x1b[32m[Card Indexer]\x1b[0m Successfully indexed ${allFiles.length} card files in cards/index.ts`,
+);

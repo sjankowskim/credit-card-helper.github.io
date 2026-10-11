@@ -286,40 +286,26 @@ export const ALL_CARDS: Card[] = [
   BILT_MASTERCARD,
 ];
 
-export const CARD_MAP = new Map<string, Card>(ALL_CARDS.map((card) => [card.id, card]));
+export const CARD_MAP = new Map<string, Card>(
+  ALL_CARDS.map(card => [card.id, card])
+);
 
-/** Image URLs by card id, default design first; artwork lives at the card file's path under publicimages/cards */
+/** Image URLs by card id, default design first; artwork lives at the card file's path under public/images/cards */
 export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['amex-blue-business-cash', ['images/cards/american-express/blue-business-cash.png']],
   ['amex-blue-business-plus', ['images/cards/american-express/blue-business-plus.png']],
   ['amex-blue-cash-everyday', ['images/cards/american-express/blue-cash-everyday.png']],
   ['amex-blue-cash-preferred', ['images/cards/american-express/blue-cash-preferred.png']],
-  [
-    'amex-graphite-business-cash-unlimited',
-    ['images/cards/american-express/business-cash-unlimited.png'],
-  ],
-  [
-    'amex-business-gold',
-    [
-      'images/cards/american-express/business-gold.png',
-      'images/cards/american-express/business-gold-2.png',
-      'images/cards/american-express/business-gold-3.png',
-    ],
-  ],
+  ['amex-graphite-business-cash-unlimited', ['images/cards/american-express/business-cash-unlimited.png']],
+  ['amex-business-gold', ['images/cards/american-express/business-gold.png', 'images/cards/american-express/business-gold-2.png', 'images/cards/american-express/business-gold-3.png']],
   ['amex-business-green-rewards', ['images/cards/american-express/business-green-rewards.png']],
   ['amex-business-platinum', ['images/cards/american-express/business-platinum.png']],
   ['amex-delta-skymiles-blue', ['images/cards/american-express/delta-skymiles-blue.png']],
   ['amex-delta-skymiles-gold', ['images/cards/american-express/delta-skymiles-gold.png']],
   ['amex-delta-skymiles-platinum', ['images/cards/american-express/delta-skymiles-platinum.png']],
-  [
-    'amex-delta-skymiles-reserve-business',
-    ['images/cards/american-express/delta-skymiles-reserve-business.png'],
-  ],
+  ['amex-delta-skymiles-reserve-business', ['images/cards/american-express/delta-skymiles-reserve-business.png']],
   ['amex-delta-skymiles-reserve', ['images/cards/american-express/delta-skymiles-reserve.png']],
-  [
-    'amex-delta-skymiles-gold-business',
-    ['images/cards/american-express/gold-delta-skymiles-business.png'],
-  ],
+  ['amex-delta-skymiles-gold-business', ['images/cards/american-express/gold-delta-skymiles-business.png']],
   ['amex-gold', ['images/cards/american-express/gold.png']],
   ['amex-green', ['images/cards/american-express/green.png']],
   ['amex-hilton-honors-aspire', ['images/cards/american-express/hilton-honors-aspire.png']],
@@ -327,15 +313,9 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['amex-hilton-honors-surpass', ['images/cards/american-express/hilton-honors-surpass.png']],
   ['amex-hilton-honors', ['images/cards/american-express/hilton-honors.png']],
   ['amex-marriott-bonvoy-bevy', ['images/cards/american-express/marriott-bonvoy-bevy.png']],
-  [
-    'amex-marriott-bonvoy-brilliant',
-    ['images/cards/american-express/marriott-bonvoy-brilliant.png'],
-  ],
+  ['amex-marriott-bonvoy-brilliant', ['images/cards/american-express/marriott-bonvoy-brilliant.png']],
   ['amex-marriott-bonvoy-business', ['images/cards/american-express/marriott-bonvoy-business.png']],
-  [
-    'amex-delta-skymiles-platinum-business',
-    ['images/cards/american-express/platinum-delta-skymiles-business.png'],
-  ],
+  ['amex-delta-skymiles-platinum-business', ['images/cards/american-express/platinum-delta-skymiles-business.png']],
   ['amex-platinum', ['images/cards/american-express/platinum.png']],
   ['bofa-air-france-klm', ['images/cards/bank-of-america/air-france-klm.png']],
   ['bofa-allways-rewards', ['images/cards/bank-of-america/allways-rewards.png']],
@@ -343,46 +323,22 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['bofa-atmos-rewards-summit', ['images/cards/bank-of-america/atmos-rewards-summit.png']],
   ['bofa-bankamericard-secured', ['images/cards/bank-of-america/bankamericard-secured.png']],
   ['bofa-bankamericard', ['images/cards/bank-of-america/bankamericard.png']],
-  [
-    'bofa-business-advantage-customized-cash-rewards',
-    ['images/cards/bank-of-america/customized-cash-rewards-business.png'],
-  ],
-  [
-    'bofa-customized-cash-rewards-secured',
-    ['images/cards/bank-of-america/customized-cash-rewards-secured.png'],
-  ],
-  [
-    'bofa-customized-cash-rewards',
-    [
-      'images/cards/bank-of-america/customized-cash-rewards.png',
-      'images/cards/bank-of-america/customized-cash-rewards-2.png',
-    ],
-  ],
+  ['bofa-business-advantage-customized-cash-rewards', ['images/cards/bank-of-america/customized-cash-rewards-business.png']],
+  ['bofa-customized-cash-rewards-secured', ['images/cards/bank-of-america/customized-cash-rewards-secured.png']],
+  ['bofa-customized-cash-rewards', ['images/cards/bank-of-america/customized-cash-rewards.png', 'images/cards/bank-of-america/customized-cash-rewards-2.png']],
   ['bofa-norwegian-cruise-line', ['images/cards/bank-of-america/norwegian-cruise-line.png']],
   ['bofa-premium-rewards-elite', ['images/cards/bank-of-america/premium-rewards-elite.png']],
   ['bofa-premium-rewards', ['images/cards/bank-of-america/premium-rewards.png']],
   ['bofa-royal-one-plus', ['images/cards/bank-of-america/royal-one-plus.png']],
   ['bofa-royal-one', ['images/cards/bank-of-america/royal-one.png']],
-  [
-    'bofa-business-advantage-travel-rewards',
-    ['images/cards/bank-of-america/travel-rewards-business.png'],
-  ],
+  ['bofa-business-advantage-travel-rewards', ['images/cards/bank-of-america/travel-rewards-business.png']],
   ['bofa-travel-rewards-secured', ['images/cards/bank-of-america/travel-rewards-secured.png']],
   ['bofa-travel-rewards', ['images/cards/bank-of-america/travel-rewards.png']],
-  [
-    'bofa-business-advantage-unlimited-cash-rewards',
-    ['images/cards/bank-of-america/unlimited-cash-rewards-business.png'],
-  ],
-  [
-    'bofa-unlimited-cash-rewards-secured',
-    ['images/cards/bank-of-america/unlimited-cash-rewards-secured.png'],
-  ],
+  ['bofa-business-advantage-unlimited-cash-rewards', ['images/cards/bank-of-america/unlimited-cash-rewards-business.png']],
+  ['bofa-unlimited-cash-rewards-secured', ['images/cards/bank-of-america/unlimited-cash-rewards-secured.png']],
   ['bofa-unlimited-cash-rewards', ['images/cards/bank-of-america/unlimited-cash-rewards.png']],
   ['barclays-aadvantage-aviator-red', ['images/cards/barclays/aadvantage-aviator-red.png']],
-  [
-    'capital-one-club-business-card',
-    ['images/cards/capital-one/bass-pro-shops-and-cabelas-club-business.png'],
-  ],
+  ['capital-one-club-business-card', ['images/cards/capital-one/bass-pro-shops-and-cabelas-club-business.png']],
   ['capital-one-bass-pro-shops-club-card', ['images/cards/capital-one/bass-pro-shops-club.png']],
   ['capital-one-bjs-one-plus-mastercard', ['images/cards/capital-one/bjs-one-plus.png']],
   ['capital-one-bjs-one-mastercard', ['images/cards/capital-one/bjs-one.png']],
@@ -390,10 +346,7 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['capital-one-key-rewards-visa', ['images/cards/capital-one/key-rewards.png']],
   ['capital-one-kohls-rewards-visa', ['images/cards/capital-one/kohls-rewards.png']],
   ['capital-one-platinum', ['images/cards/capital-one/platinum-mastercard.png']],
-  [
-    'capital-one-pottery-barn-key-rewards-visa',
-    ['images/cards/capital-one/pottery-barn-key-rewards.png'],
-  ],
+  ['capital-one-pottery-barn-key-rewards-visa', ['images/cards/capital-one/pottery-barn-key-rewards.png']],
   ['capital-one-quicksilverone-rewards', ['images/cards/capital-one/quicksilver-one-rewards.png']],
   ['capital-one-quicksilver-rewards', ['images/cards/capital-one/quicksilver-rewards.png']],
   ['capital-one-rei-co-op-mastercard', ['images/cards/capital-one/rei-co-op.png']],
@@ -410,10 +363,7 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['capital-one-ventureone-business', ['images/cards/capital-one/ventureone-business.png']],
   ['capital-one-ventureone-rewards', ['images/cards/capital-one/ventureone-rewards.png']],
   ['capital-one-west-elm-key-rewards-visa', ['images/cards/capital-one/west-elm-key-rewards.png']],
-  [
-    'capital-one-williams-sonoma-key-rewards-visa',
-    ['images/cards/capital-one/williams-sonoma-key-rewards.png'],
-  ],
+  ['capital-one-williams-sonoma-key-rewards-visa', ['images/cards/capital-one/williams-sonoma-key-rewards.png']],
   ['cardless-bilt-blue', ['images/cards/cardless/bilt-blue.png']],
   ['cardless-bilt-obsidian', ['images/cards/cardless/bilt-obsidian.png']],
   ['cardless-bilt-palladium', ['images/cards/cardless/bilt-palladium.png']],
@@ -428,30 +378,15 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['us-bank-cash-plus', ['images/cards/us-bank/cash-plus.png']],
   ['wells-fargo-bilt-mastercard', ['images/cards/wells-fargo/bilt-mastercard.png']],
   ['bofa-bankamericard-students', ['images/cards/bank-of-america/bankamericard.png']],
-  [
-    'bofa-customized-cash-rewards-students',
-    ['images/cards/bank-of-america/customized-cash-rewards.png'],
-  ],
+  ['bofa-customized-cash-rewards-students', ['images/cards/bank-of-america/customized-cash-rewards.png']],
   ['bofa-travel-rewards-students', ['images/cards/bank-of-america/travel-rewards.png']],
-  [
-    'bofa-unlimited-cash-rewards-students',
-    ['images/cards/bank-of-america/unlimited-cash-rewards.png'],
-  ],
+  ['bofa-unlimited-cash-rewards-students', ['images/cards/bank-of-america/unlimited-cash-rewards.png']],
   ['capital-one-platinum-secured', ['images/cards/capital-one/platinum-mastercard.png']],
-  [
-    'capital-one-quicksilver-rewards-good-credit',
-    ['images/cards/capital-one/quicksilver-rewards.png'],
-  ],
-  [
-    'capital-one-quicksilver-rewards-students',
-    ['images/cards/capital-one/quicksilver-rewards.png'],
-  ],
+  ['capital-one-quicksilver-rewards-good-credit', ['images/cards/capital-one/quicksilver-rewards.png']],
+  ['capital-one-quicksilver-rewards-students', ['images/cards/capital-one/quicksilver-rewards.png']],
   ['capital-one-quicksilver-secured-rewards', ['images/cards/capital-one/quicksilver-rewards.png']],
   ['capital-one-savor-rewards-good-credit', ['images/cards/capital-one/savor-rewards.png']],
   ['capital-one-savor-rewards-students', ['images/cards/capital-one/savor-rewards.png']],
   ['capital-one-spark-cash-select', ['images/cards/capital-one/spark-cash.png']],
-  [
-    'capital-one-ventureone-rewards-good-credit',
-    ['images/cards/capital-one/ventureone-rewards.png'],
-  ],
+  ['capital-one-ventureone-rewards-good-credit', ['images/cards/capital-one/ventureone-rewards.png']],
 ]);
