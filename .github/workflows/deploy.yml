@@ -36,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Build Angular app
-        run: npm run build -- --base-href /
+        run: npm run build -- --base-href /credit-card-helper.github.io/
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
