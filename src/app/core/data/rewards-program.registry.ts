@@ -62,5 +62,23 @@ export const REWARDS_PROGRAM_REGISTRY: Record<RewardsProgram, RewardsProgramMeta
     name: 'U.S. Bank Rewards',
     allowsTransfers: false,
     hasTravelPartners: false
+  },
+  'Amex Cash Back': {
+    id: 'Amex Cash Back',
+    name: 'Amex Cash Back',
+    allowsTransfers: false,
+    hasTravelPartners: false
+  },
+  'Bank of America Rewards': {
+    id: 'Bank of America Rewards',
+    name: 'Bank of America Rewards',
+    allowsTransfers: false,
+    hasTravelPartners: false
+  },
+  'Discover Cashback Bonus': {
+    id: 'Discover Cashback Bonus',
+    name: 'Discover Cashback Bonus',
+    allowsTransfers: false,
+    hasTravelPartners: false
   }
 };

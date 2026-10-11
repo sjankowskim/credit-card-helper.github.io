@@ -11,34 +11,27 @@ const imagesDir = path.join(__dirname, '../public/images/cards');
 const indexFile = path.join(cardsDir, 'index.ts');
 
 /**
- * Recursively find all .ts files in the cards directory
+ * Recursively find files with the given extension
  */
-function getCardFiles(dir) {
-  let results = [];
-  const list = fs.readdirSync(dir);
-
-  list.forEach((file) => {
+function getFiles(dir, extension) {
+  return fs.readdirSync(dir).flatMap((file) => {
     const filePath = path.join(dir, file);
-    const stat = fs.statSync(filePath);
-
-    if (stat && stat.isDirectory()) {
-      results = results.concat(getCardFiles(filePath));
-    } else if (file.endsWith('.ts') && file !== 'index.ts') {
-      results.push(filePath);
-    }
+    if (fs.statSync(filePath).isDirectory()) return getFiles(filePath, extension);
+    return file.endsWith(extension) ? [filePath] : [];
   });
-
-  return results;
 }
 
-const allFiles = getCardFiles(cardsDir);
+const allFiles = getFiles(cardsDir, '.ts').filter((file) => path.basename(file) !== 'index.ts');
 
 const imports = [];
 const exports = [];
 const seenVarNames = new Map();
 const seenCardIds = new Map();
-/** Card ids with artwork at public/images/cards/<card id>.png */
-const cardIdsWithImages = [];
+/**
+ * Card artwork mirrors the card files: cards/chase/freedom.ts -> public/images/cards/chase/freedom.png.
+ * Entries are [card id, image URL] for the cards that have one.
+ */
+const cardImages = [];
 
 function fail(message) {
   console.error(`\x1b[31m[Card Indexer]\x1b[0m ${message}`);
@@ -72,10 +65,10 @@ allFiles.forEach((filePath) => {
   }
   seenCardIds.set(cardId, relativePath);
 
-  if (fs.existsSync(path.join(imagesDir, `${cardId}.png`))) {
-    cardIdsWithImages.push(cardId);
+  if (fs.existsSync(path.join(imagesDir, `${relativePath}.png`))) {
+    cardImages.push([cardId, `/images/cards/${relativePath}.png`]);
   } else {
-    console.warn(`\x1b[33m[Card Indexer]\x1b[0m No image for '${cardId}'; add public/images/cards/${cardId}.png`);
+    console.warn(`\x1b[33m[Card Indexer]\x1b[0m No image for ${relativePath}.ts; add public/images/cards/${relativePath}.png`);
   }
 
   imports.push(`import { ${varName} } from './${relativePath}';`);
@@ -98,16 +91,18 @@ export const CARD_MAP = new Map<string, Card>(
   ALL_CARDS.map(card => [card.id, card])
 );
 
-/** Card ids with artwork at public/images/cards/<card id>.png */
-export const CARD_IDS_WITH_IMAGES = new Set<string>([
-${cardIdsWithImages.sort().map(id => `  '${id}',`).join('\n')}
+/** Image URL by card id; artwork lives at the card file's path under public/images/cards */
+export const CARD_IMAGE_URLS = new Map<string, string>([
+${cardImages.map(([id, url]) => `  ['${id}', '${url}'],`).join('\n')}
 ]);
 `;
 
-const knownIds = new Set(seenCardIds.keys());
-for (const image of fs.readdirSync(imagesDir)) {
-  if (!knownIds.has(image.replace(/\.png$/, ''))) {
-    console.warn(`\x1b[33m[Card Indexer]\x1b[0m public/images/cards/${image} doesn't match any card id`);
+// Images that no card file points to (e.g. left behind after renaming a card file)
+const expectedImages = new Set(seenVarNames.values());
+for (const image of getFiles(imagesDir, '.png')) {
+  const relativeImage = path.relative(imagesDir, image).replace(/\\/g, '/').replace(/\.png$/, '');
+  if (!expectedImages.has(relativeImage)) {
+    console.warn(`\x1b[33m[Card Indexer]\x1b[0m public/images/cards/${relativeImage}.png doesn't match any card file`);
   }
 }
 

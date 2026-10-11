@@ -4,35 +4,65 @@
 // ============================================================================
 import { Card } from '../../models/card.model';
 
+import { AMEX_GOLD } from './american-express/amex-gold';
+import { AMEX_PLATINUM } from './american-express/amex-platinum';
+import { BLUE_CASH_PREFERRED } from './american-express/blue-cash-preferred';
+import { CUSTOMIZED_CASH_REWARDS } from './bank-of-america/customized-cash-rewards';
+import { PREMIUM_REWARDS } from './bank-of-america/premium-rewards';
 import { AADVANTAGE_AVIATOR_RED } from './barclays/aadvantage-aviator-red';
 import { QUICKSILVER_REWARDS } from './capital-one/quicksilver-rewards';
 import { SAVOR_ONE_REWARDS } from './capital-one/savor-one-rewards';
 import { VENTURE_X_REWARDS } from './capital-one/venture-x-rewards';
+import { BILT_BLUE } from './cardless/bilt-blue';
+import { BILT_OBSIDIAN } from './cardless/bilt-obsidian';
 import { BILT_PALLADIUM } from './cardless/bilt-palladium';
 import { FREEDOM_FLEX } from './chase/freedom-flex';
 import { FREEDOM_UNLIMITED } from './chase/freedom-unlimited';
 import { FREEDOM } from './chase/freedom';
 import { INK_BUSINESS_CASH } from './chase/ink-business-cash';
 import { INK_BUSINESS_PREFERRED } from './chase/ink-business-preferred';
+import { INK_BUSINESS_UNLIMITED } from './chase/ink-business-unlimited';
+import { SAPPHIRE_PREFERRED } from './chase/sapphire-preferred';
+import { SAPPHIRE_RESERVE } from './chase/sapphire-reserve';
 import { AADVANTAGE_PLATINUM_SELECT } from './citi/aadvantage-platinum-select';
 import { CITI_CUSTOM_CASH } from './citi/citi-custom-cash';
+import { DOUBLE_CASH } from './citi/double-cash';
+import { STRATA_PREMIER } from './citi/strata-premier';
+import { DISCOVER_IT_CASH_BACK } from './discover/discover-it-cash-back';
 import { CASH_PLUS } from './us-bank/cash-plus';
+import { ACTIVE_CASH } from './wells-fargo/active-cash';
+import { AUTOGRAPH } from './wells-fargo/autograph';
 import { BILT_MASTERCARD } from './wells-fargo/bilt-mastercard';
 
 export const ALL_CARDS: Card[] = [
+  AMEX_GOLD,
+  AMEX_PLATINUM,
+  BLUE_CASH_PREFERRED,
+  CUSTOMIZED_CASH_REWARDS,
+  PREMIUM_REWARDS,
   AADVANTAGE_AVIATOR_RED,
   QUICKSILVER_REWARDS,
   SAVOR_ONE_REWARDS,
   VENTURE_X_REWARDS,
+  BILT_BLUE,
+  BILT_OBSIDIAN,
   BILT_PALLADIUM,
   FREEDOM_FLEX,
   FREEDOM_UNLIMITED,
   FREEDOM,
   INK_BUSINESS_CASH,
   INK_BUSINESS_PREFERRED,
+  INK_BUSINESS_UNLIMITED,
+  SAPPHIRE_PREFERRED,
+  SAPPHIRE_RESERVE,
   AADVANTAGE_PLATINUM_SELECT,
   CITI_CUSTOM_CASH,
+  DOUBLE_CASH,
+  STRATA_PREMIER,
+  DISCOVER_IT_CASH_BACK,
   CASH_PLUS,
+  ACTIVE_CASH,
+  AUTOGRAPH,
   BILT_MASTERCARD,
 ];
 
@@ -40,20 +70,20 @@ export const CARD_MAP = new Map<string, Card>(
   ALL_CARDS.map(card => [card.id, card])
 );
 
-/** Card ids with artwork at public/images/cards/<card id>.png */
-export const CARD_IDS_WITH_IMAGES = new Set<string>([
-  'barclays-aadvantage-aviator-red',
-  'capital-one-quicksilver-rewards',
-  'capital-one-savor-one-rewards',
-  'capital-one-venture-x-rewards',
-  'cardless-bilt-palladium',
-  'chase-freedom',
-  'chase-freedom-flex',
-  'chase-freedom-unlimited',
-  'chase-ink-business-cash',
-  'chase-ink-business-preferred',
-  'citi-aadvantage-platinum-select',
-  'citi-custom-cash',
-  'us-bank-cash-plus',
-  'wells-fargo-bilt-mastercard',
+/** Image URL by card id; artwork lives at the card file's path under public/images/cards */
+export const CARD_IMAGE_URLS = new Map<string, string>([
+  ['barclays-aadvantage-aviator-red', '/images/cards/barclays/aadvantage-aviator-red.png'],
+  ['capital-one-quicksilver-rewards', '/images/cards/capital-one/quicksilver-rewards.png'],
+  ['capital-one-savor-one-rewards', '/images/cards/capital-one/savor-one-rewards.png'],
+  ['capital-one-venture-x-rewards', '/images/cards/capital-one/venture-x-rewards.png'],
+  ['cardless-bilt-palladium', '/images/cards/cardless/bilt-palladium.png'],
+  ['chase-freedom-flex', '/images/cards/chase/freedom-flex.png'],
+  ['chase-freedom-unlimited', '/images/cards/chase/freedom-unlimited.png'],
+  ['chase-freedom', '/images/cards/chase/freedom.png'],
+  ['chase-ink-business-cash', '/images/cards/chase/ink-business-cash.png'],
+  ['chase-ink-business-preferred', '/images/cards/chase/ink-business-preferred.png'],
+  ['citi-aadvantage-platinum-select', '/images/cards/citi/aadvantage-platinum-select.png'],
+  ['citi-custom-cash', '/images/cards/citi/citi-custom-cash.png'],
+  ['us-bank-cash-plus', '/images/cards/us-bank/cash-plus.png'],
+  ['wells-fargo-bilt-mastercard', '/images/cards/wells-fargo/bilt-mastercard.png'],
 ]);

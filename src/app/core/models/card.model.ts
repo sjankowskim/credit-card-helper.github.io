@@ -58,7 +58,10 @@ export type RewardsProgram =
   | 'Wells Fargo Rewards'
   | 'BILT'
   | 'American Airlines AAdvantage'
-  | 'U.S. Bank Rewards';
+  | 'U.S. Bank Rewards'
+  | 'Amex Cash Back'
+  | 'Bank of America Rewards'
+  | 'Discover Cashback Bonus';
 
 // ============================================================================
 // 4. REWARD TIER DEFINITION

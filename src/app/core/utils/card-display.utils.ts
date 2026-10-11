@@ -1,4 +1,4 @@
-import { CARD_IDS_WITH_IMAGES } from '../data/cards';
+import { CARD_IMAGE_URLS } from '../data/cards';
 import type { Card, RewardTier, UserCard } from '../models/card.model';
 import type { RateUnit } from '../services/card-ranking.service';
 import { addMonths, parseLocalDate, today } from './date.utils';
@@ -84,7 +84,7 @@ export function getNextAnniversary(accountStartDate: string | undefined, referen
   return anniversary;
 }
 
-/** Artwork lives at public/images/cards/<card id>.png; undefined when there's none yet */
+/** Artwork mirrors the card's data file (cards/chase/freedom.ts -> images/cards/chase/freedom.png) */
 export function getCardImageUrl(card: Card): string | undefined {
-  return CARD_IDS_WITH_IMAGES.has(card.id) ? `/images/cards/${card.id}.png` : undefined;
+  return CARD_IMAGE_URLS.get(card.id);
 }
