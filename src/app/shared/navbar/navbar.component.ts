@@ -13,6 +13,7 @@ export class NavbarComponent {
     { path: '/portfolio', label: 'Portfolio' },
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/sub-tracker', label: 'SUB Tracker' },
-    { path: '/account-tracker', label: 'Account Tracker' }
+    { path: '/account-tracker', label: 'Account Tracker' },
+    { path: '/settings', label: 'Settings' }
   ];
 }

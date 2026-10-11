@@ -1,1 +1,75 @@
-/* You can add global styles to this file, and also import other style files */
+// Global styles: design tokens, reset, and shared page layout.
+// normalize.css is loaded before this file via angular.json.
+
+:root {
+  --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Noto Sans', 'Ubuntu', 'Cantarell';
+  --background: #ffffff;
+  --text-primary: #111111;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --border: #e0e0e0;
+  --border-hover: #cccccc;
+  --surface: #f8f8f8;
+  --surface-hover: #eeeeee;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --accent: var(--primary);
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --warning: #f59e0b;
+  --success: #16a34a;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-family);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+body {
+  background: var(--background);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+// Shared page layout used by every feature page
+.page-container {
+  padding: 3rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  > h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  > p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    letter-spacing: -0.01em;
+  }
+}

@@ -1,5 +1,5 @@
 // ============================================================================
-// 2. TIER BEHAVIOR DISCRIMINATED UNIONS
+// 1. TIER BEHAVIOR DISCRIMINATED UNIONS
 // ============================================================================
 
 import { CategoryId } from "../data/category.registry";
@@ -28,7 +28,7 @@ export type TierBehavior =
   };
 
 // ============================================================================
-// 3. CARD ISSUERS
+// 2. CARD ISSUERS
 // ============================================================================
 export const CardIssuer = {
   CAPITAL_ONE: 'Capital One',
@@ -44,7 +44,7 @@ export const CardIssuer = {
 export type CardIssuer = typeof CardIssuer[keyof typeof CardIssuer];
 
 // ============================================================================
-// 4. REWARDS PROGRAMS
+// 3. REWARDS PROGRAMS
 // ============================================================================
 export const RewardsProgram = {
   CAPITAL_ONE_REWARDS: 'Capital One Rewards',
@@ -58,7 +58,7 @@ export const RewardsProgram = {
 export type RewardsProgram = typeof RewardsProgram[keyof typeof RewardsProgram];
 
 // ============================================================================
-// 5. REWARD TIER DEFINITION
+// 4. REWARD TIER DEFINITION
 // ============================================================================
 export interface RewardTier {
   /** Unique ID for the tier within the card (e.g., 'usb-cashplus-5pct-tier') */
@@ -84,7 +84,52 @@ export interface RewardTier {
 }
 
 // ============================================================================
-// 5. CARD STATUS
+// 5. SIGN-UP BONUSES & BENEFITS
+// ============================================================================
+export interface SignUpBonus {
+  /** Bonus amount in the card's rewards currency (points, miles, or dollars) */
+  amount: number;
+
+  /** Currency the bonus is paid in (e.g., 'Ultimate Rewards', 'Cashback') */
+  currency: string;
+
+  /** Spend required to earn the bonus, in dollars */
+  spendRequired: number;
+
+  /** Months from account opening to hit the spend requirement */
+  windowMonths: number;
+}
+
+/** A user's copy of a sign-up bonus, which can differ from the catalog default */
+export interface UserSignUpBonus extends SignUpBonus {
+  /** Dollars spent toward the requirement so far */
+  spent?: number;
+
+  /** Date the bonus was earned (ISO date string) */
+  earnedDate?: string;
+}
+
+export interface Benefit {
+  /** Unique ID for the benefit within the card (e.g., 'amex-gold-dining-credit') */
+  id: string;
+
+  /** Display label (e.g., 'Dining Credit') */
+  name: string;
+
+  /** Dollar value available each period */
+  amount: number;
+
+  /** How often the benefit resets */
+  period: 'MONTHLY' | 'QUARTERLY' | 'SEMIANNUAL' | 'ANNUAL';
+
+  /** Whether periods follow the calendar or the account anniversary */
+  resetBasis: 'CALENDAR' | 'CARDMEMBER_YEAR';
+
+  note?: string;
+}
+
+// ============================================================================
+// 6. CARD STATUS
 // ============================================================================
 export const CardStatus = {
   ACTIVE: 'active',
@@ -95,7 +140,7 @@ export const CardStatus = {
 export type CardStatus = typeof CardStatus[keyof typeof CardStatus];
 
 // ============================================================================
-// 6. STATIC CARD BLUEPRINT
+// 7. STATIC CARD BLUEPRINT
 // ============================================================================
 export const CardNetwork = {
   VISA: 'VISA',
@@ -133,11 +178,23 @@ export interface Card {
   /** Whether this card affects Chase 5/24 status */
   affectsChase524: boolean;
 
+  /** Annual fee in dollars (0 for no-fee cards) */
+  annualFee: number;
+
+  /** Whether this is a business card (most business cards don't count toward 5/24) */
+  isBusiness: boolean;
+
   /** Default fallback rate for unlisted categories (typically 1.0 for 1%) */
   baseRewardRate: number;
 
   /** Array of special reward tiers associated with this card */
   rewardTiers: RewardTier[];
+
+  /** Current public sign-up bonus, copied onto a user's card when it is added */
+  defaultSignUpBonus?: SignUpBonus;
+
+  /** Recurring statement credits and other dollar-value perks */
+  benefits?: Benefit[];
 
   /** Optional link or path to card artwork asset */
   imageUrl?: string;
@@ -151,7 +208,7 @@ export interface Card {
 }
 
 // ============================================================================
-// 5. USER CARD STATE (LOCALSTORAGE / DATABASE INSTANCE)
+// 8. USER CARD STATE (LOCALSTORAGE / DATABASE INSTANCE)
 // ============================================================================
 export interface UserCard {
   /** Unique ID generated for this user's saved card instance */
@@ -182,6 +239,12 @@ export interface UserCard {
     accountStartDate?: string;
     /** Whether the user has hit the spending requirement for the signup bonus */
     hitSub?: boolean;
+    /** Sign-up bonus being worked on for this card instance */
+    signUpBonus?: UserSignUpBonus;
+    /** Whether the user is an authorized user rather than the primary cardholder */
+    isAuthorizedUser?: boolean;
+    /** Annual fee the user actually pays, when it differs from the catalog (e.g., a retention offer) */
+    annualFeeOverride?: number;
     /**
      * Selected category for AUTO_TOP_SPEND cards.
      * Only applicable for cards with AUTO_TOP_SPEND behavior.
@@ -229,3 +292,5 @@ export interface UserCard {
     };
   };
 }
+
+export type UserCardData = UserCard['userData'];

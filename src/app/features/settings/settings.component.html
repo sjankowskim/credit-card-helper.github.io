@@ -1,0 +1,19 @@
+<div class="page-container">
+  <h1>Settings</h1>
+  <p>Back up and restore your data</p>
+
+  <section class="settings-section">
+    <h2>Backup</h2>
+    <p class="section-description">
+      Your data lives only in this browser. Export a backup regularly, and import it to restore
+      or move to another device.
+    </p>
+    <div class="actions">
+      <button class="action-button" (click)="onExport()">Export JSON</button>
+      <label class="action-button">
+        Import JSON
+        <input type="file" accept="application/json,.json" (change)="onImport(fileInput)" #fileInput hidden />
+      </label>
+    </div>
+  </section>
+</div>

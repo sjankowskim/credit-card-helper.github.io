@@ -1,6 +1,6 @@
 import { Component, input, computed } from '@angular/core';
 import type { CardRanking } from '../../../../core/services/card-ranking.service';
-import { CATEGORY_REGISTRY } from '../../../../core/data/category.registry';
+import { getCategory } from '../../../../core/data/category.registry';
 
 interface CategoryRankingsEntry {
   categoryId: string;
@@ -29,6 +29,6 @@ export class CategoryRankingsTableComponent {
     if (categoryId === 'fallthrough') {
       return 'Base Rate (Fallthrough)';
     }
-    return CATEGORY_REGISTRY[categoryId]?.name || categoryId;
+    return getCategory(categoryId)?.name ?? categoryId;
   }
 }

@@ -1,21 +1,4 @@
-.page-container {
-  padding: 3rem 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-h1 {
-  font-size: 2.5rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--text-primary);
-  letter-spacing: -0.02em;
-}
-
-p {
-  color: var(--text-secondary);
-  font-size: 1.125rem;
-  letter-spacing: -0.01em;
+.page-container > p {
   margin-bottom: 2rem;
 }
 

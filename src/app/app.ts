@@ -6,7 +6,6 @@ import { ToastContainerComponent } from './shared/toast-container/toast-containe
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, NavbarComponent, ToastContainerComponent],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+  templateUrl: './app.html'
 })
 export class App {}

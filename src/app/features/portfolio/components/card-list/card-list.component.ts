@@ -1,7 +1,7 @@
 import { Component, input, output, computed } from '@angular/core';
 import type { Card } from '../../../../core/models/card.model';
 import type { UserCard } from '../../../../core/models/card.model';
-import { ALL_CARDS } from '../../../../core/data/cards';
+import { CARD_MAP } from '../../../../core/data/cards';
 import { getCardDisplayName, getDisplayInstanceNumber, getOriginalCardName } from '../../../../core/utils/card-display.utils';
 
 @Component({
@@ -31,7 +31,7 @@ export class CardListComponent {
     const instances: Array<{ card: Card; userCard: UserCard | null }> = [];
     
     for (const userCard of this.userCards()) {
-      const card = ALL_CARDS.find(c => c.id === userCard.cardId);
+      const card = CARD_MAP.get(userCard.cardId);
       if (card) {
         instances.push({ card, userCard });
       }

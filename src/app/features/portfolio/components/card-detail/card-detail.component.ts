@@ -3,8 +3,8 @@ import type { Card } from '../../../../core/models/card.model';
 import type { UserCard } from '../../../../core/models/card.model';
 import { CardStatus } from '../../../../core/models/card.model';
 import { UserCardsService } from '../../../../core/services/user-cards.service';
-import { CATEGORY_REGISTRY } from '../../../../core/data/category.registry';
-import { ALL_CARDS } from '../../../../core/data/cards';
+import { getCategory } from '../../../../core/data/category.registry';
+import { ALL_CARDS, CARD_MAP } from '../../../../core/data/cards';
 
 @Component({
   selector: 'app-card-detail',
@@ -20,7 +20,7 @@ export class CardDetailComponent {
 
   readonly userCard = computed(() => {
     if (!this.userCardId()) return null;
-    return this.userCardsService.getUserCardById(this.userCardId()!);
+    return this.userCardsService.getById(this.userCardId()!);
   });
 
   readonly status = computed(() => {
@@ -79,7 +79,7 @@ export class CardDetailComponent {
   readonly productChangedToCard = computed(() => {
     const cardId = this.productChangedToCardId();
     if (!cardId) return null;
-    return ALL_CARDS.find(card => card.id === cardId);
+    return CARD_MAP.get(cardId);
   });
 
   readonly plannedCloseDate = computed(() => {
@@ -114,12 +114,12 @@ export class CardDetailComponent {
 
   onCategoryChange(categoryId: string): void {
     if (this.userCardId()) {
-      this.userCardsService.setAutoTopSpendCategoryByUserCardId(this.userCardId()!, categoryId);
+      this.userCardsService.patchUserData(this.userCardId()!, { autoTopSpendCategory: categoryId || undefined });
     }
   }
 
   getCategoryName(categoryId: string): string {
-    return CATEGORY_REGISTRY[categoryId]?.name || categoryId;
+    return getCategory(categoryId)?.name ?? categoryId;
   }
 
   onEditLabel(): void {
@@ -129,7 +129,7 @@ export class CardDetailComponent {
 
   onSaveLabel(): void {
     if (this.userCardId()) {
-      this.userCardsService.setCustomLabelByUserCardId(this.userCardId()!, this.tempLabel() || undefined);
+      this.userCardsService.patchUserData(this.userCardId()!, { customLabel: this.tempLabel() || undefined });
     }
     this.isEditingLabel.set(false);
   }
@@ -140,7 +140,7 @@ export class CardDetailComponent {
 
   onUndoLabel(): void {
     if (this.userCardId()) {
-      this.userCardsService.setCustomLabelByUserCardId(this.userCardId()!, undefined);
+      this.userCardsService.patchUserData(this.userCardId()!, { customLabel: undefined });
       this.tempLabel.set('');
     }
   }
@@ -152,7 +152,7 @@ export class CardDetailComponent {
 
   onSaveAccountDate(): void {
     if (this.userCardId()) {
-      this.userCardsService.setAccountStartDateByUserCardId(this.userCardId()!, this.tempAccountDate() || undefined);
+      this.userCardsService.patchUserData(this.userCardId()!, { accountStartDate: this.tempAccountDate() || undefined });
     }
     this.isEditingAccountDate.set(false);
   }
@@ -163,35 +163,28 @@ export class CardDetailComponent {
 
   onUndoAccountDate(): void {
     if (this.userCardId()) {
-      this.userCardsService.setAccountStartDateByUserCardId(this.userCardId()!, undefined);
+      this.userCardsService.patchUserData(this.userCardId()!, { accountStartDate: undefined });
     }
   }
 
   onToggleHitSub(): void {
     const current = this.hitSub();
     if (this.userCardId()) {
-      this.userCardsService.setHitSubByUserCardId(this.userCardId()!, !current);
+      this.userCardsService.patchUserData(this.userCardId()!, { hitSub: !current });
     }
   }
 
   onStatusChange(status: CardStatus): void {
     if (this.userCardId()) {
-      const currentStatus = this.status();
-      
-      // If changing from active to closed or product-changed, clear payment due date and credit limit
-      if (currentStatus === CardStatus.ACTIVE && (status === CardStatus.CLOSED || status === CardStatus.PRODUCT_CHANGED)) {
-        this.userCardsService.setPaymentDueDateByUserCardId(this.userCardId()!, undefined);
-        this.userCardsService.setCreditLimitByUserCardId(this.userCardId()!, undefined);
-      }
-      
-      this.userCardsService.setStatusByUserCardId(this.userCardId()!, status);
+      // setStatus also clears data belonging to the previous status (e.g. credit limit)
+      this.userCardsService.setStatus(this.userCardId()!, status);
     }
   }
 
   onToggleChurnCard(): void {
     const current = this.isChurnCard();
     if (this.userCardId()) {
-      this.userCardsService.setIsChurnCardByUserCardId(this.userCardId()!, !current);
+      this.userCardsService.patchUserData(this.userCardId()!, { isChurnCard: !current });
     }
   }
 
@@ -206,7 +199,7 @@ export class CardDetailComponent {
       if (value !== undefined && (value < 1 || value > 31)) {
         return; // Invalid day of month
       }
-      this.userCardsService.setPaymentDueDateByUserCardId(this.userCardId()!, value);
+      this.userCardsService.patchUserData(this.userCardId()!, d => ({ activeData: { ...d.activeData, paymentDueDate: value } }));
     }
     this.isEditingPaymentDueDate.set(false);
   }
@@ -217,7 +210,7 @@ export class CardDetailComponent {
 
   onUndoPaymentDueDate(): void {
     if (this.userCardId()) {
-      this.userCardsService.setPaymentDueDateByUserCardId(this.userCardId()!, undefined);
+      this.userCardsService.patchUserData(this.userCardId()!, d => ({ activeData: { ...d.activeData, paymentDueDate: undefined } }));
     }
   }
 
@@ -229,7 +222,7 @@ export class CardDetailComponent {
   onSaveCreditLimit(): void {
     if (this.userCardId()) {
       const value = this.tempCreditLimit() ? parseFloat(this.tempCreditLimit()) : undefined;
-      this.userCardsService.setCreditLimitByUserCardId(this.userCardId()!, value);
+      this.userCardsService.patchUserData(this.userCardId()!, d => ({ activeData: { ...d.activeData, creditLimit: value } }));
     }
     this.isEditingCreditLimit.set(false);
   }
@@ -240,7 +233,7 @@ export class CardDetailComponent {
 
   onUndoCreditLimit(): void {
     if (this.userCardId()) {
-      this.userCardsService.setCreditLimitByUserCardId(this.userCardId()!, undefined);
+      this.userCardsService.patchUserData(this.userCardId()!, d => ({ activeData: { ...d.activeData, creditLimit: undefined } }));
     }
   }
 
@@ -251,7 +244,7 @@ export class CardDetailComponent {
 
   onSaveClosedDate(): void {
     if (this.userCardId()) {
-      this.userCardsService.setClosedDateByUserCardId(this.userCardId()!, this.tempClosedDate() || undefined);
+      this.userCardsService.patchUserData(this.userCardId()!, d => ({ closedData: { ...d.closedData, closedDate: this.tempClosedDate() || undefined } }));
     }
     this.isEditingClosedDate.set(false);
   }
@@ -262,7 +255,7 @@ export class CardDetailComponent {
 
   onUndoClosedDate(): void {
     if (this.userCardId()) {
-      this.userCardsService.setClosedDateByUserCardId(this.userCardId()!, undefined);
+      this.userCardsService.patchUserData(this.userCardId()!, d => ({ closedData: { ...d.closedData, closedDate: undefined } }));
     }
   }
 
@@ -273,7 +266,7 @@ export class CardDetailComponent {
 
   onSaveProductChangeDate(): void {
     if (this.userCardId()) {
-      this.userCardsService.setProductChangeDateByUserCardId(this.userCardId()!, this.tempProductChangeDate() || undefined);
+      this.userCardsService.patchUserData(this.userCardId()!, d => ({ productChangedData: { ...d.productChangedData, productChangeDate: this.tempProductChangeDate() || undefined } }));
     }
     this.isEditingProductChangeDate.set(false);
   }
@@ -284,13 +277,13 @@ export class CardDetailComponent {
 
   onUndoProductChangeDate(): void {
     if (this.userCardId()) {
-      this.userCardsService.setProductChangeDateByUserCardId(this.userCardId()!, undefined);
+      this.userCardsService.patchUserData(this.userCardId()!, d => ({ productChangedData: { ...d.productChangedData, productChangeDate: undefined } }));
     }
   }
 
   onProductChangeCardSelect(cardId: string): void {
     if (this.userCardId()) {
-      this.userCardsService.setProductChangedToCardIdByUserCardId(this.userCardId()!, cardId);
+      this.userCardsService.patchUserData(this.userCardId()!, d => ({ productChangedData: { ...d.productChangedData, productChangedToCardId: cardId } }));
     }
     this.isProductChangeDropdownOpen.set(false);
     this.productChangeCardSearch.set('');
@@ -298,7 +291,7 @@ export class CardDetailComponent {
 
   onProductChangeCardClear(): void {
     if (this.userCardId()) {
-      this.userCardsService.setProductChangedToCardIdByUserCardId(this.userCardId()!, undefined);
+      this.userCardsService.patchUserData(this.userCardId()!, d => ({ productChangedData: { ...d.productChangedData, productChangedToCardId: undefined } }));
     }
   }
 
@@ -317,7 +310,7 @@ export class CardDetailComponent {
 
   onSavePlannedCloseDate(): void {
     if (this.userCardId()) {
-      this.userCardsService.setPlannedCloseDateByUserCardId(this.userCardId()!, this.tempPlannedCloseDate() || undefined);
+      this.userCardsService.patchUserData(this.userCardId()!, { plannedCloseDate: this.tempPlannedCloseDate() || undefined });
     }
     this.isEditingPlannedCloseDate.set(false);
   }
@@ -328,7 +321,7 @@ export class CardDetailComponent {
 
   onUndoPlannedCloseDate(): void {
     if (this.userCardId()) {
-      this.userCardsService.setPlannedCloseDateByUserCardId(this.userCardId()!, undefined);
+      this.userCardsService.patchUserData(this.userCardId()!, { plannedCloseDate: undefined });
     }
   }
 }

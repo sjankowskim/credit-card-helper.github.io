@@ -1,10 +1,11 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { UserCardsService } from '../../core/services/user-cards.service';
 import { getCardDisplayName, getDisplayInstanceNumber, getOriginalCardName } from '../../core/utils/card-display.utils';
-import { ALL_CARDS } from '../../core/data/cards';
+import { CARD_MAP } from '../../core/data/cards';
 import type { UserCard } from '../../core/models/card.model';
 import type { Card } from '../../core/models/card.model';
 import { CardStatus } from '../../core/models/card.model';
+import { isWithin, parseLocalDate } from '../../core/utils/date.utils';
 
 interface AccountRow {
   card: Card;
@@ -49,35 +50,22 @@ export class AccountTrackerComponent {
   readonly filterAffects524 = signal<boolean | null>(null);
 
   readonly accountRows = computed(() => {
-    const now = new Date();
-    const twoYearsAgo = new Date(now);
-    twoYearsAgo.setFullYear(now.getFullYear() - 2);
-
-    const ninetyDaysAgo = new Date(now);
-    ninetyDaysAgo.setDate(now.getDate() - 90);
-
-    const sixtyDaysAgo = new Date(now);
-    sixtyDaysAgo.setDate(now.getDate() - 60);
-
-    const thirtyDaysAgo = new Date(now);
-    thirtyDaysAgo.setDate(now.getDate() - 30);
-
     const rows: AccountRow[] = [];
 
     for (const userCard of this.ownedCards()) {
-      const card = ALL_CARDS.find(c => c.id === userCard.cardId);
+      const card = CARD_MAP.get(userCard.cardId);
       if (!card) continue;
 
-      const accountDate = userCard.userData.accountStartDate ? new Date(userCard.userData.accountStartDate) : null;
+      const accountDate = parseLocalDate(userCard.userData.accountStartDate);
 
       rows.push({
         card,
         userCard,
         accountDate: userCard.userData.accountStartDate || null,
-        within2Years: accountDate ? accountDate >= twoYearsAgo : false,
-        within90Days: accountDate ? accountDate >= ninetyDaysAgo : false,
-        within60Days: accountDate ? accountDate >= sixtyDaysAgo : false,
-        within30Days: accountDate ? accountDate >= thirtyDaysAgo : false,
+        within2Years: accountDate ? isWithin(accountDate, 24, 'months') : false,
+        within90Days: accountDate ? isWithin(accountDate, 90, 'days') : false,
+        within60Days: accountDate ? isWithin(accountDate, 60, 'days') : false,
+        within30Days: accountDate ? isWithin(accountDate, 30, 'days') : false,
         affects524: card.affectsChase524
       });
     }
@@ -114,7 +102,7 @@ export class AccountTrackerComponent {
         case 'date':
           if (!a.accountDate) comparison = 1;
           else if (!b.accountDate) comparison = -1;
-          else comparison = new Date(a.accountDate).getTime() - new Date(b.accountDate).getTime();
+          else comparison = a.accountDate.localeCompare(b.accountDate); // ISO dates sort as strings
           break;
         case 'within2Years':
           comparison = Number(a.within2Years) - Number(b.within2Years);
@@ -153,7 +141,7 @@ export class AccountTrackerComponent {
   });
 
   onDateChange(userCardId: string, date: string): void {
-    this.userCardsService.setAccountStartDateByUserCardId(userCardId, date || undefined);
+    this.userCardsService.patchUserData(userCardId, { accountStartDate: date || undefined });
   }
 
   onSort(column: 'card' | 'date' | 'within2Years' | 'within90Days' | 'within60Days' | 'within30Days' | 'affects524'): void {
@@ -208,11 +196,5 @@ export class AccountTrackerComponent {
     this.filterWithin60Days.set(null);
     this.filterWithin30Days.set(null);
     this.filterAffects524.set(null);
-  }
-
-  formatDate(date: string | null): string {
-    if (!date) return '';
-    const d = new Date(date);
-    return d.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
   }
 }

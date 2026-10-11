@@ -10,6 +10,8 @@ export const CITI_CUSTOM_CASH: Card = {
   hasForeignTransactionFee: true,
   hasTravelPartnerAccess: false,
   affectsChase524: true,
+  annualFee: 0,
+  isBusiness: false,
   baseRewardRate: 1.0,
   imageUrl: '/images/cards/citi-custom-cash.png',
   rewardTiers: [

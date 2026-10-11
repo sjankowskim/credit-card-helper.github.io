@@ -1,11 +1,10 @@
 import { Injectable, inject } from '@angular/core';
-import { ALL_CARDS } from '../data/cards';
-import { CATEGORY_REGISTRY } from '../data/category.registry';
+import { ALL_CARDS, CARD_MAP } from '../data/cards';
+import { getCategory } from '../data/category.registry';
 import { REWARDS_PROGRAM_REGISTRY } from '../data/rewards-program.registry';
 import { CppSettingsService } from './cpp-settings.service';
-import type { Card } from '../models/card.model';
 import type { CategoryId } from '../data/category.registry';
-import type { UserCard } from '../models/card.model';
+import type { Card, UserCard } from '../models/card.model';
 
 export interface CardRanking {
   card: Card;
@@ -40,11 +39,11 @@ export class CardRankingService {
     // Check if user owns any card in same program with travel partner access
     // Only check cards that are in the current cardIds (respects wishlist toggle)
     return cardIds.some(cardId => {
-      const userCard = ALL_CARDS.find(c => c.id === cardId);
+      const otherCard = CARD_MAP.get(cardId);
       return (
-        userCard &&
-        userCard.rewardsProgram === card.rewardsProgram &&
-        userCard.hasTravelPartnerAccess
+        otherCard &&
+        otherCard.rewardsProgram === card.rewardsProgram &&
+        otherCard.hasTravelPartnerAccess
       );
     });
   }
@@ -140,9 +139,9 @@ export class CardRankingService {
           covered.add(categoryId);
           
           // Add parent category if it exists
-          const category = CATEGORY_REGISTRY[categoryId];
+          const category = getCategory(categoryId);
           if (category?.parentId) {
-            covered.add(category.parentId as CategoryId);
+            covered.add(category.parentId);
           }
         }
       }

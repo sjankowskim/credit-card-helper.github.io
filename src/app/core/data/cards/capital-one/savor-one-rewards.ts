@@ -10,6 +10,8 @@ export const SAVOR_ONE_REWARDS: Card = {
   hasForeignTransactionFee: false,
   hasTravelPartnerAccess: false,
   affectsChase524: true,
+  annualFee: 0,
+  isBusiness: false,
   baseRewardRate: 1.0,
   imageUrl: '/images/cards/capital-one-savor-one-rewards.png',
   rewardTiers: [

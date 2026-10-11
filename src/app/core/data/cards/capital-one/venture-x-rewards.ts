@@ -10,6 +10,8 @@ export const VENTURE_X_REWARDS: Card = {
   hasForeignTransactionFee: false,
   hasTravelPartnerAccess: true,
   affectsChase524: true,
+  annualFee: 395,
+  isBusiness: false,
   baseRewardRate: 2.0,
   imageUrl: '/images/cards/capital-one-venture-x-rewards.png',
   rewardTiers: []

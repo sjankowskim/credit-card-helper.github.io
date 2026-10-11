@@ -23,7 +23,7 @@
           @if (instance.userCard?.isWishlist) {
             <button 
               class="action-button wishlist-button" 
-              [class.active]="instance.userCard?.isWishlist"
+              [class.active]="instance.userCard.isWishlist"
               (click)="$event.stopPropagation(); wishlistClick.emit({ card: instance.card, userCard: instance.userCard })"
               aria-label="Toggle wishlist"
               title="Toggle wishlist"

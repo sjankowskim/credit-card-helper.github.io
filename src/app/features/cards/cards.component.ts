@@ -5,20 +5,19 @@ import { CardDetailComponent } from '../portfolio/components/card-detail/card-de
 import { ALL_CARDS } from '../../core/data/cards';
 import { UserCardsService } from '../../core/services/user-cards.service';
 import { ToastService } from '../../core/services/toast.service';
-import type { UserCard } from '../../core/models/card.model';
+import type { Card, UserCard } from '../../core/models/card.model';
 
 @Component({
   selector: 'app-cards',
   imports: [SearchBarComponent, CardListComponent, CardDetailComponent],
-  templateUrl: './cards.component.html',
-  styleUrl: './cards.component.scss'
+  templateUrl: './cards.component.html'
 })
 export class CardsComponent {
   private readonly userCardsService = inject(UserCardsService);
   private readonly toastService = inject(ToastService);
   
   readonly searchQuery = signal('');
-  readonly selectedCard = signal<typeof ALL_CARDS[number] | null>(null);
+  readonly selectedCard = signal<Card | null>(null);
 
   readonly userCards = this.userCardsService.cards;
 
@@ -45,7 +44,7 @@ export class CardsComponent {
     this.searchQuery.set(query);
   }
 
-  onCardClick(data: { card: typeof ALL_CARDS[number]; userCard: UserCard | null }): void {
+  onCardClick(data: { card: Card; userCard: UserCard | null }): void {
     if (!data.userCard) {
       // If no userCard, add the card to portfolio as active
       this.userCardsService.addCard(data.card.id, false, 'active');
@@ -60,10 +59,10 @@ export class CardsComponent {
     this.selectedCard.set(null);
   }
 
-  onWishlistClick(data: { card: typeof ALL_CARDS[number]; userCard: UserCard | null }): void {
+  onWishlistClick(data: { card: Card; userCard: UserCard | null }): void {
     if (data.userCard) {
       // Toggle wishlist status for existing card
-      this.userCardsService.toggleWishlistByUserCardId(data.userCard.id);
+      this.userCardsService.toggleWishlist(data.userCard.id);
       const isWishlisted = this.userCardsService.cards().find(c => c.id === data.userCard!.id)?.isWishlist;
       if (isWishlisted) {
         this.toastService.success(`Added ${data.card.name} to wishlist`);

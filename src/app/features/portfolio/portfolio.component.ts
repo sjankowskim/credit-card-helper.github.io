@@ -2,10 +2,10 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { CardListComponent } from './components/card-list/card-list.component';
 import { CardDetailComponent } from './components/card-detail/card-detail.component';
-import { ALL_CARDS } from '../../core/data/cards';
+import { CARD_MAP } from '../../core/data/cards';
 import { UserCardsService } from '../../core/services/user-cards.service';
 import { ToastService } from '../../core/services/toast.service';
-import { CardStatus, type UserCard } from '../../core/models/card.model';
+import { CardStatus, type Card, type UserCard } from '../../core/models/card.model';
 
 @Component({
   selector: 'app-portfolio',
@@ -18,9 +18,9 @@ export class PortfolioComponent {
   private readonly toastService = inject(ToastService);
   
   readonly searchQuery = signal('');
-  readonly selectedCard = signal<typeof ALL_CARDS[number] | null>(null);
+  readonly selectedCard = signal<Card | null>(null);
   readonly selectedUserCardId = signal<string | null>(null);
-  readonly cardToRemove = signal<typeof ALL_CARDS[number] | null>(null);
+  readonly cardToRemove = signal<Card | null>(null);
   readonly userCardToRemove = signal<UserCard | null>(null);
 
   readonly userCards = this.userCardsService.cards;
@@ -28,8 +28,8 @@ export class PortfolioComponent {
   readonly portfolioCards = computed(() => {
     return this.userCardsService.cards()
       .filter(c => !c.isWishlist)
-      .map(userCard => ({ card: ALL_CARDS.find(card => card.id === userCard.cardId), userCard }))
-      .filter((item): item is { card: typeof ALL_CARDS[number]; userCard: UserCard } => item.card !== undefined)
+      .map(userCard => ({ card: CARD_MAP.get(userCard.cardId), userCard }))
+      .filter((item): item is { card: Card; userCard: UserCard } => item.card !== undefined)
       .sort((a, b) => {
         // Sort by card name first, then by instance number
         const nameCompare = a.card.name.localeCompare(b.card.name);
@@ -62,8 +62,8 @@ export class PortfolioComponent {
   readonly wishlistCards = computed(() => {
     return this.userCardsService.cards()
       .filter(c => c.isWishlist)
-      .map(userCard => ({ card: ALL_CARDS.find(card => card.id === userCard.cardId), userCard }))
-      .filter((item): item is { card: typeof ALL_CARDS[number]; userCard: UserCard } => item.card !== undefined)
+      .map(userCard => ({ card: CARD_MAP.get(userCard.cardId), userCard }))
+      .filter((item): item is { card: Card; userCard: UserCard } => item.card !== undefined)
       .sort((a, b) => {
         // Sort by card name first, then by instance number
         const nameCompare = a.card.name.localeCompare(b.card.name);
@@ -89,7 +89,7 @@ export class PortfolioComponent {
     this.searchQuery.set(query);
   }
 
-  onCardClick(data: { card: typeof ALL_CARDS[number]; userCard: UserCard | null }): void {
+  onCardClick(data: { card: Card; userCard: UserCard | null }): void {
     if (!data.userCard) {
       // If no userCard, add the card to portfolio as active
       this.userCardsService.addCard(data.card.id, false, 'active');
@@ -106,10 +106,10 @@ export class PortfolioComponent {
     this.selectedUserCardId.set(null);
   }
 
-  onWishlistClick(data: { card: typeof ALL_CARDS[number]; userCard: UserCard | null }): void {
+  onWishlistClick(data: { card: Card; userCard: UserCard | null }): void {
     if (data.userCard) {
       // Toggle wishlist status for existing card
-      this.userCardsService.toggleWishlistByUserCardId(data.userCard.id);
+      this.userCardsService.toggleWishlist(data.userCard.id);
       const isWishlisted = this.userCardsService.cards().find(c => c.id === data.userCard!.id)?.isWishlist;
       if (isWishlisted) {
         this.toastService.success(`Added ${data.card.name} to wishlist`);
@@ -123,19 +123,19 @@ export class PortfolioComponent {
     }
   }
 
-  onAddToPortfolioClick(data: { card: typeof ALL_CARDS[number]; userCard: UserCard }): void {
+  onAddToPortfolioClick(data: { card: Card; userCard: UserCard }): void {
     // Move card from wishlist to portfolio by setting isWishlist to false and status to active
-    this.userCardsService.setStatusByUserCardId(data.userCard.id, CardStatus.ACTIVE);
-    this.userCardsService.toggleWishlistByUserCardId(data.userCard.id);
+    this.userCardsService.setStatus(data.userCard.id, CardStatus.ACTIVE);
+    this.userCardsService.toggleWishlist(data.userCard.id);
     this.toastService.success(`Added ${data.card.name} to portfolio`);
   }
 
-  onRemoveClick(data: { card: typeof ALL_CARDS[number]; userCard: UserCard }): void {
+  onRemoveClick(data: { card: Card; userCard: UserCard }): void {
     if (this.userCardsService.hasUserData(data.userCard)) {
       this.cardToRemove.set(data.card);
       this.userCardToRemove.set(data.userCard);
     } else {
-      this.userCardsService.removeCardByUserCardId(data.userCard.id);
+      this.userCardsService.remove(data.userCard.id);
       this.toastService.info(`Removed ${data.card.name} from portfolio`);
     }
   }
@@ -145,7 +145,7 @@ export class PortfolioComponent {
     const userCard = this.userCardToRemove();
     if (card && userCard) {
       // Remove the specific instance
-      this.userCardsService.removeCardByUserCardId(userCard.id);
+      this.userCardsService.remove(userCard.id);
       this.toastService.info(`Removed ${card.name} from portfolio`);
       this.cardToRemove.set(null);
       this.userCardToRemove.set(null);
