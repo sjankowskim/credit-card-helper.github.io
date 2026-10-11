@@ -116,22 +116,42 @@
             }
           }
 
-          @if (userData().signUpBonus; as sub) {
-            <div class="row">
-              <span class="label">Sign-up bonus</span>
-              <span class="value">
-                {{ sub.amount.toLocaleString() }} {{ sub.currency }} after {{ formatCurrency(sub.spendRequired) }} in
-                {{ sub.windowMonths }} mo
-              </span>
-            </div>
-          }
-          <div class="row">
-            <span class="label">Hit sign-up bonus</span>
-            <button class="btn btn-small" (click)="toggle('hitSub')">{{ userData().hitSub ? 'Yes' : 'No' }}</button>
-          </div>
         }
       </div>
     </section>
+
+    @if (isOwned()) {
+      <section>
+        <h3>Sign-up bonus</h3>
+        @if (userData().signUpBonus; as sub) {
+          <div class="rows">
+            <div class="row">
+              <span class="label">Bonus ({{ sub.currency }})</span>
+              <app-inline-edit-field type="number" [min]="0" [value]="sub.amount" (saved)="setBonusField('amount', $event)" />
+            </div>
+            <div class="row">
+              <span class="label">Spend required</span>
+              <app-inline-edit-field type="currency" [min]="0" [value]="sub.spendRequired" (saved)="setBonusField('spendRequired', $event)" />
+            </div>
+            <div class="row">
+              <span class="label">Months to spend it</span>
+              <app-inline-edit-field type="number" [min]="1" [value]="sub.windowMonths" (saved)="setBonusField('windowMonths', $event)" />
+            </div>
+            <div class="row">
+              <span class="label">Spent so far</span>
+              <app-inline-edit-field type="currency" [min]="0" [value]="sub.spent" emptyLabel="$0" (saved)="setBonusField('spent', $event)" />
+            </div>
+            <div class="row">
+              <span class="label">Earned on</span>
+              <app-inline-edit-field type="date" [value]="sub.earnedDate" emptyLabel="Not yet" (saved)="setBonusEarnedDate($event)" />
+            </div>
+          </div>
+          <button class="btn btn-small stop-tracking" (click)="removeBonus()">Stop tracking this bonus</button>
+        } @else {
+          <button class="btn btn-small" (click)="startBonus()">+ Track a sign-up bonus</button>
+        }
+      </section>
+    }
 
     @if (status() === CardStatus.ACTIVE && hasCategoryChoices()) {
       <section>

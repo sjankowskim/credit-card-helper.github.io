@@ -237,8 +237,6 @@ export interface UserCard {
     customLabel?: string;
     /** Date when the user opened this card account (ISO string format) */
     accountStartDate?: string;
-    /** Whether the user has hit the spending requirement for the signup bonus */
-    hitSub?: boolean;
     /** Sign-up bonus being worked on for this card instance */
     signUpBonus?: UserSignUpBonus;
     /** Whether the user is an authorized user rather than the primary cardholder */

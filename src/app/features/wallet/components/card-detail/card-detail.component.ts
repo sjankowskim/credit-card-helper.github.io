@@ -1,5 +1,5 @@
 import { Component, input, output, inject, computed } from '@angular/core';
-import { CardStatus, type Card, type RewardTier, type UserCardData } from '../../../../core/models/card.model';
+import { CardStatus, type Card, type RewardTier, type UserCardData, type UserSignUpBonus } from '../../../../core/models/card.model';
 import { UserCardsService } from '../../../../core/services/user-cards.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { getCategoryName, type CategoryId } from '../../../../core/data/category.registry';
@@ -17,6 +17,7 @@ import {
 } from '../../../../core/utils/card-display.utils';
 import { formatDate, toIsoDate, today } from '../../../../core/utils/date.utils';
 import { getQuarter } from '../../../../core/utils/reward-rate.utils';
+import { createSignUpBonus } from '../../../../core/utils/sub.utils';
 
 type InlineValue = string | number | undefined;
 
@@ -138,8 +139,31 @@ export class CardDetailComponent {
     }));
   }
 
-  toggle(field: 'hitSub' | 'isChurnCard' | 'isAuthorizedUser'): void {
+  toggle(field: 'isChurnCard' | 'isAuthorizedUser'): void {
     this.patch(d => ({ [field]: !d[field] }));
+  }
+
+  startBonus(): void {
+    this.patch({ signUpBonus: createSignUpBonus(this.card()) });
+  }
+
+  removeBonus(): void {
+    this.patch({ signUpBonus: undefined });
+  }
+
+  /** Cleared fields fall back to a safe value; "spent" can be cleared */
+  setBonusField(field: 'amount' | 'spendRequired' | 'windowMonths' | 'spent', value: InlineValue): void {
+    const id = this.userCardId();
+    if (!id) return;
+    const number = value === undefined ? undefined : Number(value);
+    const fallback = { amount: 0, spendRequired: 0, windowMonths: 1, spent: undefined }[field];
+    const patch: Partial<UserSignUpBonus> = { [field]: number ?? fallback };
+    this.userCardsService.patchSignUpBonus(id, patch);
+  }
+
+  setBonusEarnedDate(value: InlineValue): void {
+    const id = this.userCardId();
+    if (id) this.userCardsService.patchSignUpBonus(id, { earnedDate: value === undefined ? undefined : String(value) });
   }
 
   onStatusChange(value: string): void {

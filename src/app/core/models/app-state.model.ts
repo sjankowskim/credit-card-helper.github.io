@@ -20,7 +20,7 @@ export interface AppState {
   dashboardSettings: DashboardSettings;
 }
 
-export const CURRENT_SCHEMA_VERSION = 2;
+export const CURRENT_SCHEMA_VERSION = 3;
 
 export const DEFAULT_DASHBOARD_SETTINGS: DashboardSettings = {
   numCards: 3,

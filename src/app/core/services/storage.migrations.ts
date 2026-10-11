@@ -4,6 +4,8 @@ import {
   DEFAULT_DASHBOARD_SETTINGS,
   createDefaultAppState
 } from '../models/app-state.model';
+import { CARD_MAP } from '../data/cards';
+import { toIsoDate, today } from '../utils/date.utils';
 
 /** localStorage keys used before the unified AppState (schema v1) */
 export const LEGACY_KEYS = {
@@ -26,8 +28,36 @@ const MIGRATIONS: Record<number, (state: RawState) => RawState> = {
       ...DEFAULT_DASHBOARD_SETTINGS,
       ...(isObject(state['dashboardSettings']) ? state['dashboardSettings'] : {})
     }
+  }),
+
+  // v2 -> v3: the hitSub flag becomes an earned sign-up bonus (signUpBonus.earnedDate)
+  2: (state) => ({
+    ...state,
+    schemaVersion: 3,
+    userCards: (state['userCards'] as RawUserCard[]).map(migrateHitSub)
   })
 };
+
+type RawUserCard = { cardId: string; userData: Record<string, unknown> };
+
+function migrateHitSub(userCard: RawUserCard): RawUserCard {
+  const { hitSub, ...userData } = userCard.userData;
+  if (hitSub !== true) {
+    return { ...userCard, userData };
+  }
+
+  const card = CARD_MAP.get(userCard.cardId);
+  const existing = isObject(userData['signUpBonus']) ? userData['signUpBonus'] : undefined;
+  const bonus: Record<string, unknown> = existing ?? {
+    amount: card?.defaultSignUpBonus?.amount ?? 0,
+    currency: card?.defaultSignUpBonus?.currency ?? card?.rewardsCurrency ?? '',
+    spendRequired: card?.defaultSignUpBonus?.spendRequired ?? 0,
+    windowMonths: card?.defaultSignUpBonus?.windowMonths ?? 3
+  };
+  // The real earned date is unknown; the open date keeps it out of "earned this year" for old cards
+  const earnedDate = bonus['earnedDate'] ?? userData['accountStartDate'] ?? toIsoDate(today());
+  return { ...userCard, userData: { ...userData, signUpBonus: { ...bonus, earnedDate } } };
+}
 
 export class UnsupportedSchemaError extends Error {}
 

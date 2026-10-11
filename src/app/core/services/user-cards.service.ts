@@ -1,5 +1,5 @@
 import { Injectable, computed, inject } from '@angular/core';
-import type { UserCard, UserCardData } from '../models/card.model';
+import type { UserCard, UserCardData, UserSignUpBonus } from '../models/card.model';
 import { CardStatus } from '../models/card.model';
 import { StorageService } from './storage.service';
 
@@ -63,6 +63,11 @@ export class UserCardsService {
       ...c,
       userData: { ...c.userData, ...(typeof patch === 'function' ? patch(c.userData) : patch) }
     }));
+  }
+
+  /** Merges fields into a card's sign-up bonus; does nothing if it has none. */
+  patchSignUpBonus(userCardId: string, patch: Partial<UserSignUpBonus>): void {
+    this.patchUserData(userCardId, d => (d.signUpBonus ? { signUpBonus: { ...d.signUpBonus, ...patch } } : {}));
   }
 
   /** Changes status and drops the data that belongs to other statuses. */

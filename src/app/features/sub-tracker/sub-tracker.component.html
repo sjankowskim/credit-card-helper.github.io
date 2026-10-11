@@ -1,4 +1,138 @@
 <div class="page-container">
   <h1>SUB Tracker</h1>
-  <p>Track sign-up bonus progress for your cards</p>
+  <p>Sign-up bonus progress, deadlines, and what you've earned</p>
+
+  <section class="stats">
+    <div class="stat">
+      <span class="value">{{ stats().active }}</span>
+      <span class="label">In progress</span>
+    </div>
+    <div class="stat">
+      <span class="value">{{ formatCurrency(stats().spendRemaining) }}</span>
+      <span class="label">Spend remaining</span>
+    </div>
+    <div class="stat">
+      <span class="value">{{ formatCurrency(stats().earnedValue) }}</span>
+      <span class="label">Earned this year</span>
+      <span class="muted">{{ stats().earnedCount }} {{ stats().earnedCount === 1 ? 'bonus' : 'bonuses' }}</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>In progress</h2>
+    @for (sub of active(); track sub.userCard.id) {
+      @let met = sub.remaining === 0;
+      <article class="sub" [class.behind]="sub.behindPace" [class.met]="met">
+        <header>
+          <div>
+            <button class="link name" (click)="open(sub)">{{ getName(sub.userCard, sub.card) }}</button>
+            <div class="muted">{{ describeBonus(sub) }}</div>
+          </div>
+          @if (met) {
+            <span class="badge badge-success">Spend met</span>
+          } @else if (sub.behindPace) {
+            <span class="badge badge-danger">Behind pace</span>
+          } @else if (sub.deadline) {
+            <span class="badge badge-info">On pace</span>
+          }
+        </header>
+
+        <div class="bar" role="progressbar" [attr.aria-valuenow]="sub.spent" aria-valuemin="0" [attr.aria-valuemax]="sub.bonus.spendRequired">
+          <div class="fill" [style.width.%]="getPercent(sub)"></div>
+        </div>
+
+        <div class="facts">
+          <span>
+            <strong>{{ formatCurrency(sub.spent) }}</strong> of {{ formatCurrency(sub.bonus.spendRequired) }} spent
+            @if (!met) {
+              · {{ formatCurrency(sub.remaining) }} to go
+            }
+          </span>
+          @if (sub.daysLeft !== null && sub.daysLeft < 0) {
+            <span>Deadline was {{ formatDay(sub.deadline) }}. Mark it earned once the bonus posts.</span>
+          } @else if (sub.deadline) {
+            <span>
+              Due {{ formatDay(sub.deadline) }} · {{ sub.daysLeft }} {{ sub.daysLeft === 1 ? 'day' : 'days' }} left
+              @if (sub.perDayNeeded) {
+                · {{ formatCurrency(sub.perDayNeeded) }}/day
+              }
+            </span>
+          } @else {
+            <span class="muted">Add an open date in the card's details to get a deadline.</span>
+          }
+        </div>
+        @if (sub.behindPace && sub.expectedSpent !== null) {
+          <div class="pace-note">Spending evenly, you'd be at {{ formatCurrency(sub.expectedSpent) }} by now.</div>
+        }
+
+        <div class="actions">
+          <form class="quick-add" (submit)="addSpend(sub, $event)">
+            <span class="prefix">+$</span>
+            <input
+              class="input"
+              type="number"
+              min="0"
+              step="any"
+              placeholder="Spend"
+              aria-label="Add spend"
+              [value]="spendDrafts()[sub.userCard.id] ?? ''"
+              (input)="setDraft(sub.userCard.id, $any($event.target).value)"
+            />
+            <button class="btn btn-small" type="submit">Add</button>
+          </form>
+          <button class="btn btn-small" [class.btn-primary]="met" (click)="markEarned(sub)">Mark earned</button>
+        </div>
+      </article>
+    } @empty {
+      <div class="empty">
+        No bonuses in progress. Track one when you add a card, or from a card's details in your Wallet.
+      </div>
+    }
+  </section>
+
+  @if (history().length > 0) {
+    <section>
+      <h2>History</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Card</th>
+              <th>Bonus</th>
+              <th>Outcome</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (sub of history(); track sub.userCard.id) {
+              <tr>
+                <td><button class="link" (click)="open(sub)">{{ getName(sub.userCard, sub.card) }}</button></td>
+                <td>{{ describeBonus(sub) }}</td>
+                <td>
+                  @if (sub.state === 'earned') {
+                    <span class="badge badge-success">Earned</span>
+                    <span class="muted">{{ formatIso(sub.bonus.earnedDate) }}</span>
+                  } @else {
+                    <span class="badge badge-danger">Missed</span>
+                    <span class="muted">deadline {{ formatDay(sub.deadline) }}</span>
+                  }
+                </td>
+                <td class="right">
+                  @if (sub.state === 'earned') {
+                    <button class="btn btn-small" (click)="undoEarned(sub)">Undo</button>
+                  } @else {
+                    <button class="btn btn-small" (click)="markEarned(sub)">Mark earned</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+
+  @if (selected(); as item) {
+    <app-card-detail [card]="item.card" [userCardId]="item.userCard.id" (closed)="selected.set(null)" />
+  }
 </div>
