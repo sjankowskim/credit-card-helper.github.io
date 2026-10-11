@@ -1,0 +1,134 @@
+<div class="page-container">
+  <h1>Account Tracker</h1>
+  <p>Track account opening dates and Chase 5/24 status</p>
+
+  @if (filterWithin2Years() !== null || filterWithin90Days() !== null || filterWithin60Days() !== null || filterWithin30Days() !== null || filterAffects524() !== null) {
+    <button class="reset-filters-button" (click)="resetFilters()">Reset Filters</button>
+  }
+
+  <div class="account-table-container">
+    <table class="account-table">
+      <thead>
+        <tr>
+          <th (click)="onSort('card')" class="sortable-header">
+            Account
+            @if (sortColumn() === 'card') {
+              <span class="sort-indicator">{{ sortDirection() === 'asc' ? '↑' : '↓' }}</span>
+            }
+          </th>
+          <th (click)="onSort('date')" class="sortable-header">
+            Date
+            @if (sortColumn() === 'date') {
+              <span class="sort-indicator">{{ sortDirection() === 'asc' ? '↑' : '↓' }}</span>
+            }
+          </th>
+          <th (click)="onFilterWithin2Years()" class="filterable-header">
+            Within 2 Years?
+            @if (filterWithin2Years() !== null) {
+              <span class="filter-indicator">{{ filterWithin2Years() ? '✓' : '✗' }}</span>
+            }
+          </th>
+          <th (click)="onFilterWithin90Days()" class="filterable-header">
+            Within 90 Days?
+            @if (filterWithin90Days() !== null) {
+              <span class="filter-indicator">{{ filterWithin90Days() ? '✓' : '✗' }}</span>
+            }
+          </th>
+          <th (click)="onFilterWithin60Days()" class="filterable-header">
+            Within 60 Days?
+            @if (filterWithin60Days() !== null) {
+              <span class="filter-indicator">{{ filterWithin60Days() ? '✓' : '✗' }}</span>
+            }
+          </th>
+          <th (click)="onFilterWithin30Days()" class="filterable-header">
+            Within 30 Days?
+            @if (filterWithin30Days() !== null) {
+              <span class="filter-indicator">{{ filterWithin30Days() ? '✓' : '✗' }}</span>
+            }
+          </th>
+          <th (click)="onFilterAffects524()" class="filterable-header">
+            Affects 5/24?
+            @if (filterAffects524() !== null) {
+              <span class="filter-indicator">{{ filterAffects524() ? '✓' : '✗' }}</span>
+            }
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of accountRows(); track row.userCard.id) {
+          <tr>
+            <td class="card-name-cell">
+              <div class="card-name-wrapper">
+                <span class="card-name">{{ getDisplayName(row.userCard, row.card.name) }}</span>
+                @if (getOriginalCardName(row.userCard, row.card.name)) {
+                  <span class="original-name">({{ getOriginalCardName(row.userCard, row.card.name) }})</span>
+                }
+              </div>
+              @if (getDisplayNumber(row.userCard)) {
+                <span class="instance-number">#{{ getDisplayNumber(row.userCard) }}</span>
+              }
+            </td>
+            <td class="date-input">
+              @if (!row.accountDate) {
+                <div class="date-warning">
+                  <span class="warning-icon">⚠️</span>
+                  <input 
+                    type="date" 
+                    [value]="row.accountDate || ''"
+                    (input)="onDateChange(row.userCard.id, $any($event.target).value)"
+                    class="warning-input"
+                  />
+                </div>
+              } @else {
+                <input 
+                  type="date" 
+                  [value]="row.accountDate || ''"
+                  (input)="onDateChange(row.userCard.id, $any($event.target).value)"
+                />
+              }
+            </td>
+            <td class="status-cell">
+              <span [class.yes]="row.within2Years" [class.no]="!row.within2Years">
+                {{ row.within2Years ? 'YES' : 'NO' }}
+              </span>
+            </td>
+            <td class="status-cell">
+              <span [class.yes]="row.within90Days" [class.no]="!row.within90Days">
+                {{ row.within90Days ? 'YES' : 'NO' }}
+              </span>
+            </td>
+            <td class="status-cell">
+              <span [class.yes]="row.within60Days" [class.no]="!row.within60Days">
+                {{ row.within60Days ? 'YES' : 'NO' }}
+              </span>
+            </td>
+            <td class="status-cell">
+              <span [class.yes]="row.within30Days" [class.no]="!row.within30Days">
+                {{ row.within30Days ? 'YES' : 'NO' }}
+              </span>
+            </td>
+            <td class="status-cell">
+              <span [class.yes]="row.affects524" [class.no]="!row.affects524">
+                {{ row.affects524 ? 'YES' : 'NO' }}
+              </span>
+            </td>
+          </tr>
+        }
+        <tr class="totals-row">
+          <td class="total-label">TOTAL</td>
+          <td></td>
+          <td class="total-cell">{{ totals().within2Years }}</td>
+          <td class="total-cell">{{ totals().within90Days }}</td>
+          <td class="total-cell">{{ totals().within60Days }}</td>
+          <td class="total-cell">{{ totals().within30Days }}</td>
+          <td class="total-cell">{{ totals().affects524 }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="chase-status">
+      <h2>Chase 5/24 Status</h2>
+      <div class="status-value">{{ chase524Status() }}</div>
+    </div>
+  </div>
+</div>

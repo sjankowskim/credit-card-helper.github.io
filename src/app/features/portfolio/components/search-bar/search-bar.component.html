@@ -1,0 +1,9 @@
+<div class="search-bar">
+  <input
+    type="text"
+    [value]="searchQuery()"
+    (input)="onSearch($event)"
+    placeholder="Search cards..."
+    class="search-input"
+  />
+</div>

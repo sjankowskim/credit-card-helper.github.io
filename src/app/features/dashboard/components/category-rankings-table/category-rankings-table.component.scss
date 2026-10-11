@@ -1,0 +1,65 @@
+.rankings-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+thead {
+  background: var(--surface);
+}
+
+th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border);
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  
+  &:hover {
+    background: var(--surface-hover);
+  }
+}
+
+td {
+  padding: 1rem;
+}
+
+.category-cell {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.card-cell {
+  position: relative;
+  
+  &.warning {
+    background: #fef3c7;
+    
+    .reward-rate {
+      color: #d97706;
+    }
+  }
+  
+  .card-name {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+  }
+  
+  .reward-rate {
+    font-weight: 600;
+    color: var(--accent);
+  }
+  
+  .warning-icon {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 1rem;
+    cursor: help;
+  }
+}

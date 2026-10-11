@@ -1,0 +1,150 @@
+.card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.card-item {
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--background);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+
+  &:hover {
+    border-color: var(--border-hover);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.card-actions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: none;
+  font-size: 1.125rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: var(--text-tertiary);
+
+  &:hover {
+    background: var(--surface-hover);
+    color: var(--text-secondary);
+  }
+
+  &.active {
+    color: #ffffff;
+  }
+
+  &.wishlist-button.active {
+    background: #fbbf24;
+  }
+
+  &.owned-button.active {
+    background: #10b981;
+  }
+
+  &.add-wishlist-button,
+  &.add-owned-button {
+    width: auto;
+    height: auto;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--text-primary);
+
+    &:hover {
+      background: #f8f8f8;
+      border-color: #cccccc;
+    }
+  }
+
+  &.add-wishlist-button {
+    color: #f59e0b;
+    border-color: #fcd34d;
+  }
+
+  &.add-owned-button {
+    color: #10b981;
+    border-color: #6ee7b7;
+  }
+}
+
+.card-image {
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.card-header {
+  margin-bottom: 0.75rem;
+}
+
+.card-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+
+  .original-name {
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  .instance-number {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    margin-left: 0.5rem;
+  }
+}
+
+.card-issuer {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.card-details {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
+.card-network,
+.card-currency {
+  padding: 0.25rem 0.5rem;
+  background: var(--surface);
+  border-radius: 4px;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 3rem;
+  text-align: center;
+  color: var(--text-tertiary);
+}

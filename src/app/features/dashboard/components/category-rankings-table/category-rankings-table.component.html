@@ -1,0 +1,26 @@
+<table class="rankings-table">
+  <thead>
+    <tr>
+      <th>Category</th>
+      @for (i of [0, 1, 2, 3, 4].slice(0, numColumns()); track i) {
+        <th>Card {{ i + 1 }}</th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for (entry of entries(); track entry.categoryId) {
+      <tr>
+        <td class="category-cell">{{ getCategoryName(entry.categoryId) }}</td>
+        @for (ranking of entry.rankings; track ranking.card.id) {
+          <td class="card-cell" [class.warning]="ranking.hasAutoTopSpendWarning">
+            <div class="card-name">{{ ranking.card.name }}</div>
+            <div class="reward-rate">{{ ranking.rewardRate }}x</div>
+            @if (ranking.hasAutoTopSpendWarning) {
+              <div class="warning-icon" title="This card requires you to select a category. Go to Portfolio to configure.">⚠️</div>
+            }
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>

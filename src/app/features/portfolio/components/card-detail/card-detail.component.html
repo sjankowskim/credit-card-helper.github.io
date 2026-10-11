@@ -1,0 +1,345 @@
+<div class="card-detail-overlay" (click)="close.emit()">
+  <div class="card-detail-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="title-section">
+        @if (isEditingLabel()) {
+          <div class="edit-label-input">
+            <input 
+              type="text" 
+              [value]="tempLabel()"
+              (input)="tempLabel.set($any($event.target).value)"
+              placeholder="Enter custom label"
+              class="label-input"
+            />
+            <button class="save-button" (click)="onSaveLabel()">✓</button>
+            <button class="cancel-button" (click)="onCancelLabel()">✕</button>
+          </div>
+        } @else {
+          <div class="title-display">
+            <h2 class="modal-title">
+              @if (customLabel()) {
+                {{ customLabel() }}
+                <span class="original-name">({{ card().name }})</span>
+              } @else {
+                {{ card().name }}
+              }
+            </h2>
+            <button class="edit-button" (click)="onEditLabel()">✏️</button>
+            @if (customLabel()) {
+              <button class="undo-button" (click)="onUndoLabel()">↩️</button>
+            }
+          </div>
+        }
+      </div>
+      <button class="close-button" (click)="close.emit()">✕</button>
+    </div>
+    <div class="modal-content">
+      <div class="user-info-section">
+        <h3>Status Information</h3>
+        <div class="card-info">
+          <div class="info-row">
+            <span class="label">Status:</span>
+            <div class="status-display">
+              <select 
+                class="status-select" 
+                [value]="status() || ''"
+                (change)="onStatusChange($any($event.target).value)"
+              >
+                <option value="">-- Select status --</option>
+                <option value="active">Active</option>
+                <option value="closed">Closed</option>
+                <option value="product-changed">Product Changed</option>
+              </select>
+            </div>
+          </div>
+          @if (status() === 'active') {
+            <div class="info-row">
+              <span class="label">Payment Due Date:</span>
+              @if (isEditingPaymentDueDate()) {
+                <div class="edit-date-input">
+                  <input 
+                    type="number" 
+                    min="1" 
+                    max="31"
+                    [value]="tempPaymentDueDate()"
+                    (input)="tempPaymentDueDate.set($any($event.target).value)"
+                    placeholder="Day of month (1-31)"
+                    class="date-input"
+                  />
+                  <button class="save-button" (click)="onSavePaymentDueDate()">✓</button>
+                  <button class="cancel-button" (click)="onCancelPaymentDueDate()">✕</button>
+                </div>
+              } @else {
+                <div class="date-display">
+                  <span class="value">{{ paymentDueDate() || 'Not set' }}</span>
+                  <button class="edit-button" (click)="onEditPaymentDueDate()">✏️</button>
+                  @if (paymentDueDate()) {
+                    <button class="undo-button" (click)="onUndoPaymentDueDate()">↩️</button>
+                  }
+                </div>
+              }
+            </div>
+            <div class="info-row">
+              <span class="label">Credit Limit:</span>
+              @if (isEditingCreditLimit()) {
+                <div class="edit-date-input">
+                  <input 
+                    type="number" 
+                    min="0" 
+                    step="100"
+                    [value]="tempCreditLimit()"
+                    (input)="tempCreditLimit.set($any($event.target).value)"
+                    placeholder="Credit limit amount"
+                    class="date-input"
+                  />
+                  <button class="save-button" (click)="onSaveCreditLimit()">✓</button>
+                  <button class="cancel-button" (click)="onCancelCreditLimit()">✕</button>
+                </div>
+              } @else {
+                <div class="date-display">
+                  <span class="value">{{ creditLimit() ? '$' + creditLimit()!.toLocaleString() : 'Not set' }}</span>
+                  <button class="edit-button" (click)="onEditCreditLimit()">✏️</button>
+                  @if (creditLimit()) {
+                    <button class="undo-button" (click)="onUndoCreditLimit()">↩️</button>
+                  }
+                </div>
+              }
+            </div>
+          }
+          @if (status() === 'closed') {
+            <div class="info-row">
+              <span class="label">Closed Date:</span>
+              @if (isEditingClosedDate()) {
+                <div class="edit-date-input">
+                  <input 
+                    type="date" 
+                    [value]="tempClosedDate()"
+                    (input)="tempClosedDate.set($any($event.target).value)"
+                    class="date-input"
+                  />
+                  <button class="save-button" (click)="onSaveClosedDate()">✓</button>
+                  <button class="cancel-button" (click)="onCancelClosedDate()">✕</button>
+                </div>
+              } @else {
+                <div class="date-display">
+                  <span class="value">{{ closedDate() || 'Not set' }}</span>
+                  <button class="edit-button" (click)="onEditClosedDate()">✏️</button>
+                  @if (closedDate()) {
+                    <button class="undo-button" (click)="onUndoClosedDate()">↩️</button>
+                  }
+                </div>
+              }
+            </div>
+          }
+          @if (status() === 'product-changed') {
+            <div class="info-row">
+              <span class="label">Product Change Date:</span>
+              @if (isEditingProductChangeDate()) {
+                <div class="edit-date-input">
+                  <input 
+                    type="date" 
+                    [value]="tempProductChangeDate()"
+                    (input)="tempProductChangeDate.set($any($event.target).value)"
+                    class="date-input"
+                  />
+                  <button class="save-button" (click)="onSaveProductChangeDate()">✓</button>
+                  <button class="cancel-button" (click)="onCancelProductChangeDate()">✕</button>
+                </div>
+              } @else {
+                <div class="date-display">
+                  <span class="value">{{ productChangeDate() || 'Not set' }}</span>
+                  <button class="edit-button" (click)="onEditProductChangeDate()">✏️</button>
+                  @if (productChangeDate()) {
+                    <button class="undo-button" (click)="onUndoProductChangeDate()">↩️</button>
+                  }
+                </div>
+              }
+            </div>
+            <div class="info-row">
+              <span class="label">Product Changed To:</span>
+              <div class="product-change-card-selector">
+                @if (productChangedToCard()) {
+                  <div class="selected-card-display">
+                    <span class="value">{{ productChangedToCard()!.name }}</span>
+                    <button class="clear-button" (click)="onProductChangeCardClear()">✕</button>
+                  </div>
+                } @else {
+                  <button class="select-button" (click)="toggleProductChangeDropdown()">
+                    Select Card
+                  </button>
+                }
+                @if (isProductChangeDropdownOpen()) {
+                  <div class="dropdown-container">
+                    <input 
+                      type="text" 
+                      [value]="productChangeCardSearch()"
+                      (input)="onProductChangeCardSearch($any($event.target).value)"
+                      placeholder="Search cards..."
+                      class="search-input"
+                    />
+                    <div class="dropdown-list">
+                      @for (card of filteredCardsForProductChange(); track card.id) {
+                        <div class="dropdown-item" (click)="onProductChangeCardSelect(card.id)">
+                          <span class="card-name">{{ card.name }}</span>
+                          <span class="card-issuer">{{ card.issuer }}</span>
+                        </div>
+                      } @empty {
+                        <div class="no-results">No cards found</div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+          @if (status() === 'active' && isChurnCard()) {
+            <div class="info-row">
+              <span class="label">Planned Close Date:</span>
+              @if (isEditingPlannedCloseDate()) {
+                <div class="edit-date-input">
+                  <input 
+                    type="date" 
+                    [value]="tempPlannedCloseDate()"
+                    (input)="tempPlannedCloseDate.set($any($event.target).value)"
+                    class="date-input"
+                  />
+                  <button class="save-button" (click)="onSavePlannedCloseDate()">✓</button>
+                  <button class="cancel-button" (click)="onCancelPlannedCloseDate()">✕</button>
+                </div>
+              } @else {
+                <div class="date-display">
+                  <span class="value">{{ plannedCloseDate() || 'Not set' }}</span>
+                  <button class="edit-button" (click)="onEditPlannedCloseDate()">✏️</button>
+                  @if (plannedCloseDate()) {
+                    <button class="undo-button" (click)="onUndoPlannedCloseDate()">↩️</button>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+      <div class="user-info-section">
+        <h3>Card Information</h3>
+        <div class="card-info">
+          <div class="info-row">
+            <span class="label">Account Start Date:</span>
+            @if (isEditingAccountDate()) {
+              <div class="edit-date-input">
+                <input 
+                  type="date" 
+                  [value]="tempAccountDate()"
+                  (input)="tempAccountDate.set($any($event.target).value)"
+                  class="date-input"
+                />
+                <button class="save-button" (click)="onSaveAccountDate()">✓</button>
+                <button class="cancel-button" (click)="onCancelAccountDate()">✕</button>
+              </div>
+            } @else {
+              <div class="date-display">
+                <span class="value">{{ accountStartDate() || 'Not set' }}</span>
+                <button class="edit-button" (click)="onEditAccountDate()">✏️</button>
+                @if (accountStartDate()) {
+                  <button class="undo-button" (click)="onUndoAccountDate()">↩️</button>
+                }
+              </div>
+            }
+          </div>
+          <div class="info-row">
+            <span class="label">Hit Sub:</span>
+            <div class="hit-sub-display">
+              <span class="value">{{ hitSub() ? 'Yes' : 'No' }}</span>
+              <button class="toggle-button" (click)="onToggleHitSub()">
+                {{ hitSub() ? 'Mark as Not Hit' : 'Mark as Hit' }}
+              </button>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="label">Churn Card:</span>
+            <div class="churn-card-display">
+              <span class="value">{{ isChurnCard() ? 'Yes' : 'No' }}</span>
+              <button class="toggle-button" (click)="onToggleChurnCard()">
+                {{ isChurnCard() ? 'Mark as Not Churn' : 'Mark as Churn' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      @if (hasAutoTopSpend() && userCard()) {
+        <div class="auto-top-spend-selector">
+          <h3>Select Bonus Category</h3>
+          <p class="selector-hint">This card only gives bonus rewards in one category. Select which category to use:</p>
+          <select 
+            class="category-select" 
+            [value]="selectedCategory() || ''"
+            (change)="onCategoryChange($any($event.target).value)"
+          >
+            <option value="">-- Select a category --</option>
+            @for (categoryId of autoTopSpendCategories(); track categoryId) {
+              <option [value]="categoryId" [selected]="selectedCategory() === categoryId">
+                {{ getCategoryName(categoryId) }}
+              </option>
+            }
+          </select>
+          @if (!selectedCategory()) {
+            <p class="warning-text">⚠️ No category selected. This card will only earn base rate until you select a category.</p>
+          }
+        </div>
+      }
+      
+      <div class="card-info-section">
+        <h3>Card Details</h3>
+        <div class="card-info">
+          <div class="info-row">
+            <span class="label">Issuer:</span>
+            <span class="value">{{ card().issuer }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Rewards Program:</span>
+            <span class="value">{{ card().rewardsProgram }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Network:</span>
+            <span class="value">{{ card().network }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Rewards:</span>
+            <span class="value">{{ card().rewardsCurrency }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Base Rate:</span>
+            <span class="value">{{ card().baseRewardRate }}x</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Foreign Transaction Fee:</span>
+            <span class="value">{{ card().hasForeignTransactionFee ? 'Yes' : 'No' }}</span>
+          </div>
+        </div>
+      </div>
+      
+      @if (card().rewardTiers.length > 0) {
+        <div class="reward-tiers">
+          <h3>Reward Tiers</h3>
+          @for (tier of card().rewardTiers; track tier.id) {
+            <div class="tier-item">
+              <div class="tier-header">
+                <span class="tier-name">{{ tier.name }}</span>
+                <span class="tier-rate">{{ tier.rewardRate }}x</span>
+              </div>
+              <div class="tier-categories">
+                @for (category of tier.eligibleCategories; track category) {
+                  <span class="category-tag">{{ category }}</span>
+                }
+              </div>
+              @if (tier.spendingCap) {
+                <div class="tier-cap">
+                  Cap: {{ tier.spendingCap.amount }} / {{ tier.spendingCap.period.toLowerCase() }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

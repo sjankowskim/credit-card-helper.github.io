@@ -1,0 +1,24 @@
+<div class="page-container">
+  <h1>All Cards</h1>
+  <p>Search and browse all available credit cards</p>
+  
+  <app-search-bar (searchChange)="onSearchChange($event)" />
+  
+  <app-card-list 
+    [cards]="filteredCards()" 
+    [mode]="'all-cards'"
+    [userCards]="userCards()"
+    (cardClick)="onCardClick($event)"
+    (wishlistClick)="onWishlistClick($event)"
+    [wishlistedCardIds]="wishlistedCardIds()"
+    [portfolioCardIds]="portfolioCardIds()"
+  />
+  
+  @if (selectedCard()) {
+    <app-card-detail 
+      [card]="selectedCard()!" 
+      [userCardId]="null"
+      (close)="onCloseDetail()" 
+    />
+  }
+</div>

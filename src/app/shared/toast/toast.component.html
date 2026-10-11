@@ -1,0 +1,5 @@
+<div class="toast" [class.success]="toast().type === 'success'" [class.error]="toast().type === 'error'" [class.warning]="toast().type === 'warning'" [class.info]="toast().type === 'info'" [class.removing]="toast().removing">
+  <span class="toast-icon">{{ getIcon() }}</span>
+  <span class="toast-message">{{ toast().message }}</span>
+  <button class="toast-close" (click)="close.emit()">✕</button>
+</div>
