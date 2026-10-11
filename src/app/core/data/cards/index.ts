@@ -4,18 +4,56 @@
 // ============================================================================
 import { Card } from '../../models/card.model';
 
+import { AADVANTAGE_AVIATOR_RED } from './barclays/aadvantage-aviator-red';
 import { QUICKSILVER_REWARDS } from './capital-one/quicksilver-rewards';
 import { SAVOR_ONE_REWARDS } from './capital-one/savor-one-rewards';
 import { VENTURE_X_REWARDS } from './capital-one/venture-x-rewards';
+import { BILT_PALLADIUM } from './cardless/bilt-palladium';
+import { FREEDOM_FLEX } from './chase/freedom-flex';
+import { FREEDOM_UNLIMITED } from './chase/freedom-unlimited';
+import { FREEDOM } from './chase/freedom';
+import { INK_BUSINESS_CASH } from './chase/ink-business-cash';
+import { INK_BUSINESS_PREFERRED } from './chase/ink-business-preferred';
+import { AADVANTAGE_PLATINUM_SELECT } from './citi/aadvantage-platinum-select';
 import { CITI_CUSTOM_CASH } from './citi/citi-custom-cash';
+import { CASH_PLUS } from './us-bank/cash-plus';
+import { BILT_MASTERCARD } from './wells-fargo/bilt-mastercard';
 
 export const ALL_CARDS: Card[] = [
+  AADVANTAGE_AVIATOR_RED,
   QUICKSILVER_REWARDS,
   SAVOR_ONE_REWARDS,
   VENTURE_X_REWARDS,
+  BILT_PALLADIUM,
+  FREEDOM_FLEX,
+  FREEDOM_UNLIMITED,
+  FREEDOM,
+  INK_BUSINESS_CASH,
+  INK_BUSINESS_PREFERRED,
+  AADVANTAGE_PLATINUM_SELECT,
   CITI_CUSTOM_CASH,
+  CASH_PLUS,
+  BILT_MASTERCARD,
 ];
 
 export const CARD_MAP = new Map<string, Card>(
   ALL_CARDS.map(card => [card.id, card])
 );
+
+/** Card ids with artwork at public/images/cards/<card id>.png */
+export const CARD_IDS_WITH_IMAGES = new Set<string>([
+  'barclays-aadvantage-aviator-red',
+  'capital-one-quicksilver-rewards',
+  'capital-one-savor-one-rewards',
+  'capital-one-venture-x-rewards',
+  'cardless-bilt-palladium',
+  'chase-freedom',
+  'chase-freedom-flex',
+  'chase-freedom-unlimited',
+  'chase-ink-business-cash',
+  'chase-ink-business-preferred',
+  'citi-aadvantage-platinum-select',
+  'citi-custom-cash',
+  'us-bank-cash-plus',
+  'wells-fargo-bilt-mastercard',
+]);

@@ -13,9 +13,26 @@ export const VENTURE_X_REWARDS: Card = {
   annualFee: 395,
   isBusiness: false,
   baseRewardRate: 2.0,
-  imageUrl: '/images/cards/capital-one-venture-x-rewards.png',
-  rewardTiers: [],
-  // TODO(Phase 6): verify against Capital One's current terms
+  termsCheckedOn: '2026-10-11',
+  referralCapPerYear: 100000,
+  rewardTiers: [
+    {
+      id: 'venture-x-hotels-cars-portal',
+      name: 'Hotels & Rental Cars',
+      rewardRate: 10.0,
+      behavior: { type: 'AUTOMATIC' },
+      eligibleCategories: ['hotels', 'car-rentals'],
+      onlyWhen: 'Booked through Capital One Travel'
+    },
+    {
+      id: 'venture-x-flights-portal',
+      name: 'Flights & Vacation Rentals',
+      rewardRate: 5.0,
+      behavior: { type: 'AUTOMATIC' },
+      eligibleCategories: ['airfare'],
+      onlyWhen: 'Booked through Capital One Travel'
+    }
+  ],
   benefits: [
     {
       id: 'venture-x-travel-credit',

@@ -43,7 +43,9 @@ export type CardIssuer =
   | 'Bank of America'
   | 'Wells Fargo'
   | 'US Bank'
-  | 'Discover';
+  | 'Discover'
+  | 'Barclays'
+  | 'Cardless';
 
 // ============================================================================
 // 3. REWARDS PROGRAMS
@@ -54,7 +56,9 @@ export type RewardsProgram =
   | 'Amex Membership Rewards'
   | 'Citi ThankYou'
   | 'Wells Fargo Rewards'
-  | 'BILT';
+  | 'BILT'
+  | 'American Airlines AAdvantage'
+  | 'U.S. Bank Rewards';
 
 // ============================================================================
 // 4. REWARD TIER DEFINITION
@@ -80,6 +84,16 @@ export interface RewardTier {
     amount: number;
     period: 'MONTHLY' | 'QUARTERLY' | 'ANNUAL';
   };
+
+  /**
+   * Set when the rate only applies through one channel, e.g. 'Booked through Capital One Travel'
+   * or 'American Airlines purchases'. These tiers are shown on the card but left out of
+   * category rankings, since most purchases in the category don't qualify.
+   */
+  onlyWhen?: string;
+
+  /** Extra detail shown with the tier, e.g. how a variable rate is earned */
+  note?: string;
 }
 
 // ============================================================================
@@ -199,8 +213,11 @@ export interface Card {
   /** Most referral bonus the issuer pays per calendar year, in the card's rewards currency */
   referralCapPerYear?: number;
 
-  /** Optional link or path to card artwork asset */
-  imageUrl?: string;
+  /** True when the issuer no longer accepts new applications (existing cards still work) */
+  discontinued?: boolean;
+
+  /** When these terms were last checked against the issuer (ISO date) */
+  termsCheckedOn?: string;
 
   /**
    * Card-specific custom settings.

@@ -13,6 +13,15 @@ export const QUICKSILVER_REWARDS: Card = {
   annualFee: 0,
   isBusiness: false,
   baseRewardRate: 1.5,
-  imageUrl: '/images/cards/capital-one-quicksilver-rewards.png',
-  rewardTiers: []
+  termsCheckedOn: '2026-10-11',
+  rewardTiers: [
+    {
+      id: 'quicksilver-travel-portal',
+      name: 'Hotels & Rental Cars',
+      rewardRate: 5.0,
+      behavior: { type: 'AUTOMATIC' },
+      eligibleCategories: ['hotels', 'car-rentals'],
+      onlyWhen: 'Booked through Capital One Travel'
+    }
+  ]
 };

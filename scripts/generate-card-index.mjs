@@ -7,6 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const cardsDir = path.join(__dirname, '../src/app/core/data/cards');
+const imagesDir = path.join(__dirname, '../public/images/cards');
 const indexFile = path.join(cardsDir, 'index.ts');
 
 /**
@@ -35,6 +36,14 @@ const allFiles = getCardFiles(cardsDir);
 const imports = [];
 const exports = [];
 const seenVarNames = new Map();
+const seenCardIds = new Map();
+/** Card ids with artwork at public/images/cards/<card id>.png */
+const cardIdsWithImages = [];
+
+function fail(message) {
+  console.error(`\x1b[31m[Card Indexer]\x1b[0m ${message}`);
+  process.exit(1);
+}
 
 allFiles.forEach((filePath) => {
   const relativePath = path
@@ -52,6 +61,22 @@ allFiles.forEach((filePath) => {
     process.exit(1);
   }
   seenVarNames.set(varName, relativePath);
+
+  // Catalog checks (category ids are already checked by the CategoryId type)
+  const source = fs.readFileSync(filePath, 'utf8');
+  const cardId = /^  id: '([^']+)'/m.exec(source)?.[1];
+  if (!cardId) {
+    fail(`${relativePath}.ts has no top-level card id.`);
+  } else if (seenCardIds.has(cardId)) {
+    fail(`${relativePath}.ts and ${seenCardIds.get(cardId)}.ts both use the card id '${cardId}'.`);
+  }
+  seenCardIds.set(cardId, relativePath);
+
+  if (fs.existsSync(path.join(imagesDir, `${cardId}.png`))) {
+    cardIdsWithImages.push(cardId);
+  } else {
+    console.warn(`\x1b[33m[Card Indexer]\x1b[0m No image for '${cardId}'; add public/images/cards/${cardId}.png`);
+  }
 
   imports.push(`import { ${varName} } from './${relativePath}';`);
   exports.push(`  ${varName},`);
@@ -72,7 +97,19 @@ ${exports.join('\n')}
 export const CARD_MAP = new Map<string, Card>(
   ALL_CARDS.map(card => [card.id, card])
 );
+
+/** Card ids with artwork at public/images/cards/<card id>.png */
+export const CARD_IDS_WITH_IMAGES = new Set<string>([
+${cardIdsWithImages.sort().map(id => `  '${id}',`).join('\n')}
+]);
 `;
+
+const knownIds = new Set(seenCardIds.keys());
+for (const image of fs.readdirSync(imagesDir)) {
+  if (!knownIds.has(image.replace(/\.png$/, ''))) {
+    console.warn(`\x1b[33m[Card Indexer]\x1b[0m public/images/cards/${image} doesn't match any card id`);
+  }
+}
 
 fs.writeFileSync(indexFile, content);
 console.log(`\x1b[32m[Card Indexer]\x1b[0m Successfully indexed ${allFiles.length} card files in cards/index.ts`);

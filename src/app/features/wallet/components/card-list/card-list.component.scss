@@ -5,7 +5,6 @@
 }
 
 .card-item {
-  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -24,13 +23,20 @@
   }
 }
 
+.card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
 .card-actions {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
   display: flex;
   align-items: center;
   gap: 0.375rem;
+  margin-left: auto;
 }
 
 .action-button {
@@ -103,7 +109,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: auto;
 }
 
 .chip {

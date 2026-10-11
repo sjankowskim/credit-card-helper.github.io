@@ -1,6 +1,11 @@
 import { Component, input, output } from '@angular/core';
 import { CardStatus, type Card, type UserCard } from '../../../../core/models/card.model';
-import { getCardDisplayName, getDisplayInstanceNumber, getOriginalCardName } from '../../../../core/utils/card-display.utils';
+import {
+  getCardDisplayName,
+  getCardImageUrl,
+  getDisplayInstanceNumber,
+  getOriginalCardName
+} from '../../../../core/utils/card-display.utils';
 
 export interface CardListItem {
   card: Card;
@@ -52,6 +57,10 @@ export class CardListComponent {
 
   getDisplayNumber(item: CardListItem): number | undefined {
     return item.userCard && getDisplayInstanceNumber(item.userCard, this.contextCards());
+  }
+
+  getImageUrl(item: CardListItem): string | undefined {
+    return getCardImageUrl(item.card);
   }
 
   getStatusBadge(item: CardListItem): { label: string; class: string } | undefined {

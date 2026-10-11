@@ -4,6 +4,7 @@ export type CategoryGroup =
   | 'shopping-and-retail'
   | 'bills-and-utilities'
   | 'entertainment-and-leisure'
+  | 'business'
   | 'everyday';
 
 export interface CategoryMetadata {

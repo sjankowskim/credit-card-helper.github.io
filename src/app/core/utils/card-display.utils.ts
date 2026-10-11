@@ -1,3 +1,4 @@
+import { CARD_IDS_WITH_IMAGES } from '../data/cards';
 import type { Card, RewardTier, UserCard } from '../models/card.model';
 import type { RateUnit } from '../services/card-ranking.service';
 import { addMonths, parseLocalDate, today } from './date.utils';
@@ -81,4 +82,9 @@ export function getNextAnniversary(accountStartDate: string | undefined, referen
     anniversary = addMonths(opened, 12 * ++years);
   }
   return anniversary;
+}
+
+/** Artwork lives at public/images/cards/<card id>.png; undefined when there's none yet */
+export function getCardImageUrl(card: Card): string | undefined {
+  return CARD_IDS_WITH_IMAGES.has(card.id) ? `/images/cards/${card.id}.png` : undefined;
 }

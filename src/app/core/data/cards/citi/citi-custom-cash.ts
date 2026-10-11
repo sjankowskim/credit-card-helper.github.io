@@ -13,16 +13,10 @@ export const CITI_CUSTOM_CASH: Card = {
   annualFee: 0,
   isBusiness: false,
   baseRewardRate: 1.0,
-  imageUrl: '/images/cards/citi-custom-cash.png',
+  // Closed to new applicants on 2026-05-28
+  discontinued: true,
+  termsCheckedOn: '2026-10-11',
   rewardTiers: [
-    {
-      id: 'citi-custom-cash-flights-and-hotels',
-      name: 'Flights and Hotels',
-      rewardRate: 5.0,
-      behavior: { type: 'AUTOMATIC' },
-      // TODO(Phase 6): verify against Citi's current terms; this looks like a Citi Travel portal rate
-      eligibleCategories: ['airfare', 'hotels']
-    },
     {
       id: 'citi-custom-cash-bonus',
       name: 'Bonus Categories',
@@ -41,6 +35,15 @@ export const CITI_CUSTOM_CASH: Card = {
         'live-entertainment'
       ],
       spendingCap: { amount: 500, period: 'MONTHLY' }
+    },
+    {
+      id: 'citi-custom-cash-travel-portal',
+      name: 'Hotels, Car Rentals & Attractions',
+      rewardRate: 5.0,
+      behavior: { type: 'AUTOMATIC' },
+      eligibleCategories: ['hotels', 'car-rentals'],
+      onlyWhen: 'Booked through Citi Travel',
+      note: 'Citi listed this through 6/30/2026; check whether it has been extended.'
     }
   ]
 };

@@ -1,8 +1,9 @@
 import type { Card } from '../../../models/card.model';
 
+// The id predates the SavorOne -> Savor rename; it's kept so saved cards still match.
 export const SAVOR_ONE_REWARDS: Card = {
   id: 'capital-one-savor-one-rewards',
-  name: 'Capital One Savor One Rewards',
+  name: 'Capital One Savor',
   issuer: 'Capital One',
   rewardsProgram: 'Capital One Rewards',
   rewardsCurrency: 'Cashback',
@@ -13,7 +14,8 @@ export const SAVOR_ONE_REWARDS: Card = {
   annualFee: 0,
   isBusiness: false,
   baseRewardRate: 1.0,
-  imageUrl: '/images/cards/capital-one-savor-one-rewards.png',
+  termsCheckedOn: '2026-10-11',
+  defaultSignUpBonus: { amount: 200, currency: 'Cashback', spendRequired: 500, windowMonths: 3 },
   rewardTiers: [
     {
       id: 'savor-one-bonus',
@@ -21,6 +23,22 @@ export const SAVOR_ONE_REWARDS: Card = {
       rewardRate: 3.0,
       behavior: { type: 'AUTOMATIC' },
       eligibleCategories: ['grocery-stores', 'dining', 'entertainment', 'streaming']
+    },
+    {
+      id: 'savor-capital-one-entertainment',
+      name: 'Capital One Entertainment',
+      rewardRate: 8.0,
+      behavior: { type: 'AUTOMATIC' },
+      eligibleCategories: ['entertainment'],
+      onlyWhen: 'Tickets bought through Capital One Entertainment'
+    },
+    {
+      id: 'savor-travel-portal',
+      name: 'Hotels, Rental Cars & Vacation Rentals',
+      rewardRate: 5.0,
+      behavior: { type: 'AUTOMATIC' },
+      eligibleCategories: ['hotels', 'car-rentals'],
+      onlyWhen: 'Booked through Capital One Travel'
     }
   ]
 };

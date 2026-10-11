@@ -88,6 +88,12 @@ export const CATEGORY_REGISTRY = {
     name: 'Fitness Clubs',
     group: 'entertainment-and-leisure'
   },
+  'movie-theaters': {
+    id: 'movie-theaters',
+    name: 'Movie Theaters',
+    group: 'entertainment-and-leisure',
+    parentId: 'entertainment'
+  },
   'online-retail': {
     id: 'online-retail',
     name: 'Online Shopping',
@@ -101,6 +107,31 @@ export const CATEGORY_REGISTRY = {
   'home-improvement': {
     id: 'home-improvement',
     name: 'Home Improvement',
+    group: 'shopping-and-retail'
+  },
+  'department-stores': {
+    id: 'department-stores',
+    name: 'Department Stores',
+    group: 'shopping-and-retail'
+  },
+  'clothing-stores': {
+    id: 'clothing-stores',
+    name: 'Clothing Stores',
+    group: 'shopping-and-retail'
+  },
+  'electronics-stores': {
+    id: 'electronics-stores',
+    name: 'Electronics Stores',
+    group: 'shopping-and-retail'
+  },
+  'sporting-goods-stores': {
+    id: 'sporting-goods-stores',
+    name: 'Sporting Goods Stores',
+    group: 'shopping-and-retail'
+  },
+  'furniture-stores': {
+    id: 'furniture-stores',
+    name: 'Furniture Stores',
     group: 'shopping-and-retail'
   },
   'utilities': {
@@ -122,6 +153,27 @@ export const CATEGORY_REGISTRY = {
     id: 'rent',
     name: 'Rent',
     group: 'bills-and-utilities'
+  },
+  'mortgage': {
+    id: 'mortgage',
+    name: 'Mortgage',
+    group: 'bills-and-utilities'
+  },
+  'office-supply-stores': {
+    id: 'office-supply-stores',
+    name: 'Office Supply Stores',
+    group: 'business'
+  },
+  'shipping': {
+    id: 'shipping',
+    name: 'Shipping',
+    group: 'business'
+  },
+  'advertising': {
+    id: 'advertising',
+    name: 'Online Advertising',
+    group: 'business',
+    note: 'Social media and search engine ads'
   }
 } as const satisfies Record<string, CategoryMetadata>;
 

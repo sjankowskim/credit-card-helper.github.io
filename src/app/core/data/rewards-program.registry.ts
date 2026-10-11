@@ -50,5 +50,17 @@ export const REWARDS_PROGRAM_REGISTRY: Record<RewardsProgram, RewardsProgramMeta
     name: 'BILT',
     allowsTransfers: true,
     hasTravelPartners: true
+  },
+  'American Airlines AAdvantage': {
+    id: 'American Airlines AAdvantage',
+    name: 'American Airlines AAdvantage',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'U.S. Bank Rewards': {
+    id: 'U.S. Bank Rewards',
+    name: 'U.S. Bank Rewards',
+    allowsTransfers: false,
+    hasTravelPartners: false
   }
 };

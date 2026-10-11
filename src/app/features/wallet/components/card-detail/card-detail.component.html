@@ -216,6 +216,9 @@
 
   <section>
     <h3>Card details</h3>
+    @if (card().discontinued) {
+      <p class="discontinued">No longer offered to new applicants. Existing cards keep working.</p>
+    }
     <div class="rows">
       <div class="row"><span class="label">Issuer</span><span class="value">{{ card().issuer }}</span></div>
       <div class="row"><span class="label">Rewards program</span><span class="value">{{ card().rewardsProgram }}</span></div>
@@ -229,6 +232,12 @@
         <span class="label">Foreign transaction fee</span>
         <span class="value">{{ card().hasForeignTransactionFee ? 'Yes' : 'No' }}</span>
       </div>
+      @if (card().termsCheckedOn) {
+        <div class="row">
+          <span class="label">Terms last checked</span>
+          <span class="value">{{ formatDate(card().termsCheckedOn) }}</span>
+        </div>
+      }
       @if (card().defaultSignUpBonus; as sub) {
         <div class="row">
           <span class="label">Current offer</span>
@@ -254,10 +263,16 @@
               <span class="badge">{{ getCategoryName(categoryId) }}</span>
             }
           </div>
+          @if (tier.onlyWhen) {
+            <div class="only-when">Only when: {{ tier.onlyWhen }}</div>
+          }
           @if (describeBehavior(tier) || tier.spendingCap) {
             <div class="muted">
               {{ describeBehavior(tier) }}{{ describeBehavior(tier) && tier.spendingCap ? ' · ' : '' }}{{ formatSpendingCap(tier) }}
             </div>
+          }
+          @if (tier.note) {
+            <div class="muted">{{ tier.note }}</div>
           }
         </li>
       }

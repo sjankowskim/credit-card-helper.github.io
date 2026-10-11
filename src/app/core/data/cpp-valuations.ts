@@ -11,7 +11,10 @@ export const DEFAULT_CPP_VALUATIONS: Record<RewardsProgram, number> = {
   'Amex Membership Rewards': 2.0,
   'Citi ThankYou': 1.9,
   'Wells Fargo Rewards': 1.75,
-  'BILT': 2.2
+  'BILT': 2.2,
+  'American Airlines AAdvantage': 1.65,
+  // Cash back only; no travel partners
+  'U.S. Bank Rewards': 1.0
 };
 
 /**

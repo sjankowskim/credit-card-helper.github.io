@@ -27,6 +27,9 @@ export function getQuarter(date: Date): 1 | 2 | 3 | 4 {
 /**
  * Earn rate for one card instance in one category.
  * Tiers on a parent category also apply to its children (Dining covers Fast Food).
+ * The best active matching tier sets the rate, even below the base rate (a card can earn
+ * 2x everywhere but less on rent); the base rate applies when no tier matches.
+ * Tiers limited to one channel (`onlyWhen`, e.g. a travel portal) are ignored.
  * `userCard` supplies category selections and activations; pass null for a catalog card.
  */
 export function getRewardRate(
@@ -42,11 +45,11 @@ export function getRewardRate(
   const warnings: NonNullable<RewardRateResult['warning']>[] = [];
 
   for (const tier of card.rewardTiers) {
-    if (!tier.eligibleCategories.some(c => lineage.includes(c))) continue;
+    if (tier.onlyWhen || !tier.eligibleCategories.some(c => lineage.includes(c))) continue;
 
     const status = getTierStatus(tier, userCard, lineage, date);
     if (status === 'ACTIVE') {
-      if (tier.rewardRate > result.rate) {
+      if (!result.tier || tier.rewardRate > result.rate) {
         result.rate = tier.rewardRate;
         result.tier = tier;
       }

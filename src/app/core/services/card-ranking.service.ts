@@ -90,7 +90,7 @@ export class CardRankingService {
   private getCoveredCategories(cards: Card[]): string[] {
     const covered = new Set<string>();
     for (const card of cards) {
-      for (const tier of card.rewardTiers) {
+      for (const tier of card.rewardTiers.filter(t => !t.onlyWhen)) {
         for (const categoryId of tier.eligibleCategories) {
           covered.add(categoryId);
           const parentId = getCategory(categoryId)?.parentId;

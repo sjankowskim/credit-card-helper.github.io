@@ -8,27 +8,8 @@
       (click)="open.emit(item)"
       (keydown.enter)="onEnter($event, item)"
     >
-      <div class="card-actions">
-        @if (mode() === 'wallet') {
-          <button class="action-button" (click)="fire($event, remove, item)" aria-label="Remove from wallet" title="Remove from wallet">
-            ✕
-          </button>
-        } @else {
-          <button class="btn btn-small" (click)="fire($event, add, item)" title="Add to wallet">+ Add</button>
-          <button
-            class="action-button star"
-            [class.active]="isStarred(item)"
-            (click)="fire($event, toggleWishlist, item)"
-            [attr.aria-label]="isStarred(item) ? 'Remove from wishlist' : 'Add to wishlist'"
-            [title]="isStarred(item) ? 'Remove from wishlist' : 'Add to wishlist'"
-          >
-            ★
-          </button>
-        }
-      </div>
-
-      @if (item.card.imageUrl) {
-        <img [src]="item.card.imageUrl" [alt]="item.card.name" class="card-image" />
+      @if (getImageUrl(item); as imageUrl) {
+        <img [src]="imageUrl" [alt]="item.card.name" class="card-image" />
       }
 
       <div>
@@ -59,15 +40,38 @@
         @if (item.card.isBusiness) {
           <span class="badge">Business</span>
         }
+        @if (mode() === 'catalog' && item.card.discontinued) {
+          <span class="badge">No longer offered</span>
+        }
       </div>
 
       @for (line of item.lines ?? []; track $index) {
         <p class="line">{{ line }}</p>
       }
 
-      <div class="card-details">
-        <span class="chip">{{ item.card.network }}</span>
-        <span class="chip">{{ item.card.rewardsCurrency }}</span>
+      <div class="card-footer">
+        <div class="card-details">
+          <span class="chip">{{ item.card.network }}</span>
+          <span class="chip">{{ item.card.rewardsCurrency }}</span>
+        </div>
+        <div class="card-actions">
+          @if (mode() === 'wallet') {
+            <button class="action-button" (click)="fire($event, remove, item)" aria-label="Remove from wallet" title="Remove from wallet">
+              ✕
+            </button>
+          } @else {
+            <button class="btn btn-small" (click)="fire($event, add, item)" title="Add to wallet">+ Add</button>
+            <button
+              class="action-button star"
+              [class.active]="isStarred(item)"
+              (click)="fire($event, toggleWishlist, item)"
+              [attr.aria-label]="isStarred(item) ? 'Remove from wishlist' : 'Add to wishlist'"
+              [title]="isStarred(item) ? 'Remove from wishlist' : 'Add to wishlist'"
+            >
+              ★
+            </button>
+          }
+        </div>
       </div>
     </article>
   } @empty {
