@@ -3,7 +3,7 @@ import type { Card } from '../../../models/card.model';
 // Amex welcome offers vary by applicant, so no default sign-up bonus is listed.
 export const HILTON_HONORS: Card = {
   id: 'amex-hilton-honors',
-  name: 'Hilton Honors',
+  name: 'Hilton Honors American Express Card',
   issuer: 'American Express',
   rewardsProgram: 'Hilton Honors',
   rewardsCurrency: 'Hilton Honors Points',

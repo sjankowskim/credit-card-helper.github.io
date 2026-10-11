@@ -3,7 +3,7 @@ import type { Card } from '../../../models/card.model';
 // Amex welcome offers vary by applicant, so no default sign-up bonus is listed.
 export const GREEN: Card = {
   id: 'amex-green',
-  name: 'Green',
+  name: 'American Express Green Card',
   issuer: 'American Express',
   rewardsProgram: 'Amex Membership Rewards',
   rewardsCurrency: 'Membership Rewards',

@@ -2,7 +2,7 @@ import type { Card } from '../../../models/card.model';
 
 export const BLUE_CASH_PREFERRED: Card = {
   id: 'amex-blue-cash-preferred',
-  name: 'Blue Cash Preferred',
+  name: 'Blue Cash Preferred Card from American Express',
   issuer: 'American Express',
   rewardsProgram: 'Amex Cash Back',
   rewardsCurrency: 'Cashback',

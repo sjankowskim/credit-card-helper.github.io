@@ -3,7 +3,7 @@ import type { Card } from '../../../models/card.model';
 // Amex welcome offers vary by applicant, so no default sign-up bonus is listed.
 export const BLUE_BUSINESS_PLUS: Card = {
   id: 'amex-blue-business-plus',
-  name: 'Blue Business Plus',
+  name: 'The Blue Business Plus Card from American Express',
   issuer: 'American Express',
   rewardsProgram: 'Amex Membership Rewards',
   rewardsCurrency: 'Membership Rewards',

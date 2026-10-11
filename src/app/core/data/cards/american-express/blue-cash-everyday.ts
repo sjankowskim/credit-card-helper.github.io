@@ -3,7 +3,7 @@ import type { Card } from '../../../models/card.model';
 // Amex welcome offers vary by applicant, so no default sign-up bonus is listed.
 export const BLUE_CASH_EVERYDAY: Card = {
   id: 'amex-blue-cash-everyday',
-  name: 'Blue Cash Everyday',
+  name: 'Blue Cash Everyday Card from American Express',
   issuer: 'American Express',
   rewardsProgram: 'Amex Cash Back',
   rewardsCurrency: 'Cashback',

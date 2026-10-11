@@ -65,7 +65,9 @@ export type RewardsProgram =
   | 'Delta SkyMiles'
   | 'Hilton Honors'
   | 'Marriott Bonvoy'
-  | 'Store Rewards';
+  | 'Store Rewards'
+  | 'Atmos Rewards'
+  | 'Flying Blue';
 
 // ============================================================================
 // 4. REWARD TIER DEFINITION

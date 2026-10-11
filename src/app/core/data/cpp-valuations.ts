@@ -22,7 +22,11 @@ export const DEFAULT_CPP_VALUATIONS: Record<RewardsProgram, number> = {
   'Hilton Honors': 0.5,
   'Marriott Bonvoy': 0.8,
   // Store credit at one retailer
-  'Store Rewards': 1.0
+  'Store Rewards': 1.0,
+  // Alaska Airlines and Hawaiian Airlines points
+  'Atmos Rewards': 1.45,
+  // Air France KLM miles
+  'Flying Blue': 1.3
 };
 
 /**

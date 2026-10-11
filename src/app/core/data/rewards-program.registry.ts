@@ -104,5 +104,17 @@ export const REWARDS_PROGRAM_REGISTRY: Record<RewardsProgram, RewardsProgramMeta
     name: 'Store Rewards',
     allowsTransfers: false,
     hasTravelPartners: false
+  },
+  'Atmos Rewards': {
+    id: 'Atmos Rewards',
+    name: 'Atmos Rewards',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'Flying Blue': {
+    id: 'Flying Blue',
+    name: 'Flying Blue',
+    allowsTransfers: false,
+    hasTravelPartners: true
   }
 };

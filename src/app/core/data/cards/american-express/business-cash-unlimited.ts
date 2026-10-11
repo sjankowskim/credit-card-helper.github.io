@@ -3,7 +3,7 @@ import type { Card } from '../../../models/card.model';
 // Amex welcome offers vary by applicant, so no default sign-up bonus is listed.
 export const BUSINESS_CASH_UNLIMITED: Card = {
   id: 'amex-graphite-business-cash-unlimited',
-  name: 'Graphite Business Cash Unlimited',
+  name: 'American Express Graphite Business Cash Unlimited Card',
   issuer: 'American Express',
   rewardsProgram: 'Amex Cash Back',
   rewardsCurrency: 'Cashback',

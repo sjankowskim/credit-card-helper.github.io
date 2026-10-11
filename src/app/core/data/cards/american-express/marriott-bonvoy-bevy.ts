@@ -3,7 +3,7 @@ import type { Card } from '../../../models/card.model';
 // Amex welcome offers vary by applicant, so no default sign-up bonus is listed.
 export const MARRIOTT_BONVOY_BEVY: Card = {
   id: 'amex-marriott-bonvoy-bevy',
-  name: 'Marriott Bonvoy Bevy',
+  name: 'Marriott Bonvoy Bevy American Express Card',
   issuer: 'American Express',
   rewardsProgram: 'Marriott Bonvoy',
   rewardsCurrency: 'Marriott Bonvoy Points',

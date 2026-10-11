@@ -3,7 +3,7 @@ import type { Card } from '../../../models/card.model';
 // Amex welcome offers vary by applicant, so no default sign-up bonus is listed.
 export const DELTA_SKYMILES_RESERVE_BUSINESS: Card = {
   id: 'amex-delta-skymiles-reserve-business',
-  name: 'Delta SkyMiles Reserve Business',
+  name: 'Delta SkyMiles Reserve Business American Express Card',
   issuer: 'American Express',
   rewardsProgram: 'Delta SkyMiles',
   rewardsCurrency: 'SkyMiles',

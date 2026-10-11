@@ -29,8 +29,30 @@ import { MARRIOTT_BONVOY_BRILLIANT } from './american-express/marriott-bonvoy-br
 import { MARRIOTT_BONVOY_BUSINESS } from './american-express/marriott-bonvoy-business';
 import { PLATINUM_DELTA_SKYMILES_BUSINESS } from './american-express/platinum-delta-skymiles-business';
 import { PLATINUM } from './american-express/platinum';
+import { AIR_FRANCE_KLM } from './bank-of-america/air-france-klm';
+import { ALLWAYS_REWARDS } from './bank-of-america/allways-rewards';
+import { ATMOS_REWARDS_ASCENT } from './bank-of-america/atmos-rewards-ascent';
+import { ATMOS_REWARDS_SUMMIT } from './bank-of-america/atmos-rewards-summit';
+import { BANKAMERICARD_SECURED } from './bank-of-america/bankamericard-secured';
+import { BANKAMERICARD_STUDENTS } from './bank-of-america/bankamericard-students';
+import { BANKAMERICARD } from './bank-of-america/bankamericard';
+import { CUSTOMIZED_CASH_REWARDS_BUSINESS } from './bank-of-america/customized-cash-rewards-business';
+import { CUSTOMIZED_CASH_REWARDS_SECURED } from './bank-of-america/customized-cash-rewards-secured';
+import { CUSTOMIZED_CASH_REWARDS_STUDENTS } from './bank-of-america/customized-cash-rewards-students';
 import { CUSTOMIZED_CASH_REWARDS } from './bank-of-america/customized-cash-rewards';
+import { NORWEGIAN_CRUISE_LINE } from './bank-of-america/norwegian-cruise-line';
+import { PREMIUM_REWARDS_ELITE } from './bank-of-america/premium-rewards-elite';
 import { PREMIUM_REWARDS } from './bank-of-america/premium-rewards';
+import { ROYAL_ONE_PLUS } from './bank-of-america/royal-one-plus';
+import { ROYAL_ONE } from './bank-of-america/royal-one';
+import { TRAVEL_REWARDS_BUSINESS } from './bank-of-america/travel-rewards-business';
+import { TRAVEL_REWARDS_SECURED } from './bank-of-america/travel-rewards-secured';
+import { TRAVEL_REWARDS_STUDENTS } from './bank-of-america/travel-rewards-students';
+import { TRAVEL_REWARDS } from './bank-of-america/travel-rewards';
+import { UNLIMITED_CASH_REWARDS_BUSINESS } from './bank-of-america/unlimited-cash-rewards-business';
+import { UNLIMITED_CASH_REWARDS_SECURED } from './bank-of-america/unlimited-cash-rewards-secured';
+import { UNLIMITED_CASH_REWARDS_STUDENTS } from './bank-of-america/unlimited-cash-rewards-students';
+import { UNLIMITED_CASH_REWARDS } from './bank-of-america/unlimited-cash-rewards';
 import { AADVANTAGE_AVIATOR_RED } from './barclays/aadvantage-aviator-red';
 import { BASS_PRO_SHOPS_AND_CABELAS_CLUB_BUSINESS } from './capital-one/bass-pro-shops-and-cabelas-club-business';
 import { BASS_PRO_SHOPS_CLUB } from './capital-one/bass-pro-shops-club';
@@ -113,8 +135,30 @@ export const ALL_CARDS: Card[] = [
   MARRIOTT_BONVOY_BUSINESS,
   PLATINUM_DELTA_SKYMILES_BUSINESS,
   PLATINUM,
+  AIR_FRANCE_KLM,
+  ALLWAYS_REWARDS,
+  ATMOS_REWARDS_ASCENT,
+  ATMOS_REWARDS_SUMMIT,
+  BANKAMERICARD_SECURED,
+  BANKAMERICARD_STUDENTS,
+  BANKAMERICARD,
+  CUSTOMIZED_CASH_REWARDS_BUSINESS,
+  CUSTOMIZED_CASH_REWARDS_SECURED,
+  CUSTOMIZED_CASH_REWARDS_STUDENTS,
   CUSTOMIZED_CASH_REWARDS,
+  NORWEGIAN_CRUISE_LINE,
+  PREMIUM_REWARDS_ELITE,
   PREMIUM_REWARDS,
+  ROYAL_ONE_PLUS,
+  ROYAL_ONE,
+  TRAVEL_REWARDS_BUSINESS,
+  TRAVEL_REWARDS_SECURED,
+  TRAVEL_REWARDS_STUDENTS,
+  TRAVEL_REWARDS,
+  UNLIMITED_CASH_REWARDS_BUSINESS,
+  UNLIMITED_CASH_REWARDS_SECURED,
+  UNLIMITED_CASH_REWARDS_STUDENTS,
+  UNLIMITED_CASH_REWARDS,
   AADVANTAGE_AVIATOR_RED,
   BASS_PRO_SHOPS_AND_CABELAS_CLUB_BUSINESS,
   BASS_PRO_SHOPS_CLUB,
@@ -203,6 +247,26 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['amex-marriott-bonvoy-business', ['/images/cards/american-express/marriott-bonvoy-business.png']],
   ['amex-delta-skymiles-platinum-business', ['/images/cards/american-express/platinum-delta-skymiles-business.png']],
   ['amex-platinum', ['/images/cards/american-express/platinum.png']],
+  ['bofa-air-france-klm', ['/images/cards/bank-of-america/air-france-klm.png']],
+  ['bofa-allways-rewards', ['/images/cards/bank-of-america/allways-rewards.png']],
+  ['bofa-atmos-rewards-ascent', ['/images/cards/bank-of-america/atmos-rewards-ascent.png']],
+  ['bofa-atmos-rewards-summit', ['/images/cards/bank-of-america/atmos-rewards-summit.png']],
+  ['bofa-bankamericard-secured', ['/images/cards/bank-of-america/bankamericard-secured.png']],
+  ['bofa-bankamericard', ['/images/cards/bank-of-america/bankamericard.png']],
+  ['bofa-business-advantage-customized-cash-rewards', ['/images/cards/bank-of-america/customized-cash-rewards-business.png']],
+  ['bofa-customized-cash-rewards-secured', ['/images/cards/bank-of-america/customized-cash-rewards-secured.png']],
+  ['bofa-customized-cash-rewards', ['/images/cards/bank-of-america/customized-cash-rewards.png', '/images/cards/bank-of-america/customized-cash-rewards-2.png']],
+  ['bofa-norwegian-cruise-line', ['/images/cards/bank-of-america/norwegian-cruise-line.png']],
+  ['bofa-premium-rewards-elite', ['/images/cards/bank-of-america/premium-rewards-elite.png']],
+  ['bofa-premium-rewards', ['/images/cards/bank-of-america/premium-rewards.png']],
+  ['bofa-royal-one-plus', ['/images/cards/bank-of-america/royal-one-plus.png']],
+  ['bofa-royal-one', ['/images/cards/bank-of-america/royal-one.png']],
+  ['bofa-business-advantage-travel-rewards', ['/images/cards/bank-of-america/travel-rewards-business.png']],
+  ['bofa-travel-rewards-secured', ['/images/cards/bank-of-america/travel-rewards-secured.png']],
+  ['bofa-travel-rewards', ['/images/cards/bank-of-america/travel-rewards.png']],
+  ['bofa-business-advantage-unlimited-cash-rewards', ['/images/cards/bank-of-america/unlimited-cash-rewards-business.png']],
+  ['bofa-unlimited-cash-rewards-secured', ['/images/cards/bank-of-america/unlimited-cash-rewards-secured.png']],
+  ['bofa-unlimited-cash-rewards', ['/images/cards/bank-of-america/unlimited-cash-rewards.png']],
   ['barclays-aadvantage-aviator-red', ['/images/cards/barclays/aadvantage-aviator-red.png']],
   ['capital-one-club-business-card', ['/images/cards/capital-one/bass-pro-shops-and-cabelas-club-business.png']],
   ['capital-one-bass-pro-shops-club-card', ['/images/cards/capital-one/bass-pro-shops-club.png']],
@@ -243,6 +307,10 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['discover-it-cash-back', ['/images/cards/discover/discover-it-cash-back.png']],
   ['us-bank-cash-plus', ['/images/cards/us-bank/cash-plus.png']],
   ['wells-fargo-bilt-mastercard', ['/images/cards/wells-fargo/bilt-mastercard.png']],
+  ['bofa-bankamericard-students', ['/images/cards/bank-of-america/bankamericard.png']],
+  ['bofa-customized-cash-rewards-students', ['/images/cards/bank-of-america/customized-cash-rewards.png', '/images/cards/bank-of-america/customized-cash-rewards-2.png']],
+  ['bofa-travel-rewards-students', ['/images/cards/bank-of-america/travel-rewards.png']],
+  ['bofa-unlimited-cash-rewards-students', ['/images/cards/bank-of-america/unlimited-cash-rewards.png']],
   ['capital-one-platinum-secured', ['/images/cards/capital-one/platinum-mastercard.png']],
   ['capital-one-quicksilver-rewards-good-credit', ['/images/cards/capital-one/quicksilver-rewards.png']],
   ['capital-one-quicksilver-rewards-students', ['/images/cards/capital-one/quicksilver-rewards.png']],
