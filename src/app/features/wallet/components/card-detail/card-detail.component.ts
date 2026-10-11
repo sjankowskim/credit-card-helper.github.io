@@ -106,6 +106,21 @@ export class CardDetailComponent {
     return id ? CARD_MAP.get(id) : undefined;
   });
 
+  /** The card this one's accounts were moved to, if the issuer transitioned it */
+  readonly transitionedTo = computed(() => {
+    const transition = this.card().transitionedTo;
+    const card = transition && CARD_MAP.get(transition.cardId);
+    return card && transition ? { name: card.name, startedOn: formatDate(transition.startedOn) } : undefined;
+  });
+
+  /** Cards whose accounts were moved to this one */
+  readonly transitionedFrom = computed(() =>
+    ALL_CARDS.filter(c => c.transitionedTo?.cardId === this.card().id).map(c => ({
+      name: c.name,
+      startedOn: formatDate(c.transitionedTo!.startedOn)
+    }))
+  );
+
   readonly productChangedFrom = computed(() => {
     const fromId = this.userData().productChangedFromId;
     const from = fromId ? this.userCardsService.getById(fromId) : undefined;

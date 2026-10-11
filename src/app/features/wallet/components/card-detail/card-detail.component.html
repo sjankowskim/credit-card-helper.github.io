@@ -219,8 +219,13 @@
 
   <section>
     <h3>Card details</h3>
-    @if (card().discontinued) {
+    @if (transitionedTo(); as to) {
+      <p class="discontinued">No longer offered. Accounts moved to the {{ to.name }} starting {{ to.startedOn }}.</p>
+    } @else if (card().discontinued) {
       <p class="discontinued">No longer offered to new applicants. Existing cards keep working.</p>
+    }
+    @for (from of transitionedFrom(); track from.name) {
+      <p class="muted card-note">{{ from.name }} accounts were moved to this card starting {{ from.startedOn }}.</p>
     }
     @if (card().note) {
       <p class="muted card-note">{{ card().note }}</p>

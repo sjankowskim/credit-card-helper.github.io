@@ -45,6 +45,8 @@ for (const image of getFiles(imagesDir, '.png')) {
 const cardImages = [];
 /** [card id, id of the card whose artwork it reuses, card file path] from `imageOf` */
 const borrowedImages = [];
+/** [card file path, id of the card its accounts moved to] from `transitionedTo` */
+const transitions = [];
 
 function fail(message) {
   console.error(`\x1b[31m[Card Indexer]\x1b[0m ${message}`);
@@ -80,6 +82,8 @@ allFiles.forEach((filePath) => {
 
   const images = imagesByCardPath.get(relativePath);
   const imageOf = /^  imageOf: '([^']+)'/m.exec(source)?.[1];
+  const transitionedTo = /^  transitionedTo: \{ cardId: '([^']+)'/m.exec(source)?.[1];
+  if (transitionedTo) transitions.push([relativePath, transitionedTo]);
   if (imageOf) {
     if (images) console.warn(`\x1b[33m[Card Indexer]\x1b[0m ${relativePath}.ts has its own image and imageOf; the imageOf is ignored`);
     else borrowedImages.push([cardId, imageOf, relativePath]);
@@ -94,11 +98,16 @@ allFiles.forEach((filePath) => {
   exports.push(`  ${varName},`);
 });
 
-// Cards that reuse another card's artwork
+for (const [relativePath, cardId] of transitions) {
+  if (!seenCardIds.has(cardId)) fail(`${relativePath}.ts transitions to '${cardId}', which isn't a card id.`);
+}
+
+// Cards that reuse another card's artwork take only its default design; alternate
+// designs (e.g. a charity version) usually aren't offered on the borrowing card
 const imagesById = new Map(cardImages);
 for (const [cardId, imageOf, relativePath] of borrowedImages) {
   const images = imagesById.get(imageOf);
-  if (images) cardImages.push([cardId, images]);
+  if (images) cardImages.push([cardId, images.slice(0, 1)]);
   else console.warn(`\x1b[33m[Card Indexer]\x1b[0m ${relativePath}.ts uses the image of '${imageOf}', which has none`);
 }
 

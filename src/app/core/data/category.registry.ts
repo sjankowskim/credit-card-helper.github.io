@@ -16,6 +16,13 @@ export const CATEGORY_REGISTRY = {
     group: 'food-and-drink',
     parentId: 'dining'
   },
+  'food-delivery': {
+    id: 'food-delivery',
+    name: 'Food Delivery',
+    group: 'food-and-drink',
+    parentId: 'dining',
+    note: 'DoorDash, Grubhub, Uber Eats, and similar'
+  },
   'grocery-stores': {
     id: 'grocery-stores',
     name: 'Grocery Stores',

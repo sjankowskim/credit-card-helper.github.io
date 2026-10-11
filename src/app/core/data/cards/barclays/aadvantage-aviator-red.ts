@@ -15,6 +15,7 @@ export const AADVANTAGE_AVIATOR_RED: Card = {
   isBusiness: false,
   baseRewardRate: 1.0,
   discontinued: true,
+  transitionedTo: { cardId: 'citi-aadvantage-platinum-select', startedOn: '2026-04-24' },
   termsCheckedOn: '2026-10-11',
   rewardTiers: [
     {

@@ -53,7 +53,38 @@ import { UNLIMITED_CASH_REWARDS_BUSINESS } from './bank-of-america/unlimited-cas
 import { UNLIMITED_CASH_REWARDS_SECURED } from './bank-of-america/unlimited-cash-rewards-secured';
 import { UNLIMITED_CASH_REWARDS_STUDENTS } from './bank-of-america/unlimited-cash-rewards-students';
 import { UNLIMITED_CASH_REWARDS } from './bank-of-america/unlimited-cash-rewards';
+import { AADVANTAGE_AVIATOR_BLUE } from './barclays/aadvantage-aviator-blue';
+import { AADVANTAGE_AVIATOR_BUSINESS } from './barclays/aadvantage-aviator-business';
 import { AADVANTAGE_AVIATOR_RED } from './barclays/aadvantage-aviator-red';
+import { AADVANTAGE_AVIATOR_SILVER } from './barclays/aadvantage-aviator-silver';
+import { AADVANTAGE_AVIATOR } from './barclays/aadvantage-aviator';
+import { AARP_ESSENTIAL_REWARDS_MASTERCARD } from './barclays/aarp-essential-rewards-mastercard';
+import { AARP_TRAVEL_REWARDS_MASTERCARD } from './barclays/aarp-travel-rewards-mastercard';
+import { ATHLETA_ENCORE_MASTERCARD } from './barclays/athleta-encore-mastercard';
+import { BANANA_REPUBLIC_ENCORE_MASTERCARD } from './barclays/banana-republic-encore-mastercard';
+import { BARNES_NOBLE_MASTERCARD } from './barclays/barnes-noble-mastercard';
+import { BREEZE_EASY_VISA } from './barclays/breeze-easy-visa';
+import { CAPITAL_VACATIONS_WORLD_MASTERCARD } from './barclays/capital-vacations-world-mastercard';
+import { CARNIVAL_REWARDS_MASTERCARD } from './barclays/carnival-rewards-mastercard';
+import { EMIRATES_SKYWARDS_PREMIUM } from './barclays/emirates-skywards-premium';
+import { EMIRATES_SKYWARDS_REWARDS } from './barclays/emirates-skywards-rewards';
+import { FRONTIER_AIRLINES_WORLD_MASTERCARD } from './barclays/frontier-airlines-world-mastercard';
+import { GAP_ENCORE_MASTERCARD } from './barclays/gap-encore-mastercard';
+import { GM_BUSINESS_MASTERCARD } from './barclays/gm-business-mastercard';
+import { GM_REWARDS_MASTERCARD } from './barclays/gm-rewards-mastercard';
+import { JETBLUE_BUSINESS } from './barclays/jetblue-business';
+import { JETBLUE_PLUS } from './barclays/jetblue-plus';
+import { JETBLUE_PREMIER } from './barclays/jetblue-premier';
+import { JETBLUE } from './barclays/jetblue';
+import { LUFTHANSA_MILES_MORE_WORLD_ELITE_MASTERCARD } from './barclays/lufthansa-miles-more-world-elite-mastercard';
+import { OLD_NAVY_ENCORE_MASTERCARD } from './barclays/old-navy-encore-mastercard';
+import { RCI_ELITE_REWARDS_MASTERCARD } from './barclays/rci-elite-rewards-mastercard';
+import { UPROMISE_WORLD_MASTERCARD } from './barclays/upromise-world-mastercard';
+import { WYNDHAM_REWARDS_EARNER_BUSINESS } from './barclays/wyndham-rewards-earner-business';
+import { WYNDHAM_REWARDS_EARNER_PLUS } from './barclays/wyndham-rewards-earner-plus';
+import { WYNDHAM_REWARDS_EARNER_PREMIER } from './barclays/wyndham-rewards-earner-premier';
+import { WYNDHAM_REWARDS_EARNER } from './barclays/wyndham-rewards-earner';
+import { XBOX_MASTERCARD } from './barclays/xbox-mastercard';
 import { BASS_PRO_SHOPS_AND_CABELAS_CLUB_BUSINESS } from './capital-one/bass-pro-shops-and-cabelas-club-business';
 import { BASS_PRO_SHOPS_CLUB } from './capital-one/bass-pro-shops-club';
 import { BJS_ONE_PLUS } from './capital-one/bjs-one-plus';
@@ -99,6 +130,10 @@ import { INK_BUSINESS_PREFERRED } from './chase/ink-business-preferred';
 import { INK_BUSINESS_UNLIMITED } from './chase/ink-business-unlimited';
 import { SAPPHIRE_PREFERRED } from './chase/sapphire-preferred';
 import { SAPPHIRE_RESERVE } from './chase/sapphire-reserve';
+import { AADVANTAGE_BUSINESS } from './citi/aadvantage-business';
+import { AADVANTAGE_GLOBE } from './citi/aadvantage-globe';
+import { AADVANTAGE_GOLD } from './citi/aadvantage-gold';
+import { AADVANTAGE_MILEUP } from './citi/aadvantage-mileup';
 import { AADVANTAGE_PLATINUM_SELECT } from './citi/aadvantage-platinum-select';
 import { CITI_CUSTOM_CASH } from './citi/citi-custom-cash';
 import { DOUBLE_CASH } from './citi/double-cash';
@@ -159,7 +194,38 @@ export const ALL_CARDS: Card[] = [
   UNLIMITED_CASH_REWARDS_SECURED,
   UNLIMITED_CASH_REWARDS_STUDENTS,
   UNLIMITED_CASH_REWARDS,
+  AADVANTAGE_AVIATOR_BLUE,
+  AADVANTAGE_AVIATOR_BUSINESS,
   AADVANTAGE_AVIATOR_RED,
+  AADVANTAGE_AVIATOR_SILVER,
+  AADVANTAGE_AVIATOR,
+  AARP_ESSENTIAL_REWARDS_MASTERCARD,
+  AARP_TRAVEL_REWARDS_MASTERCARD,
+  ATHLETA_ENCORE_MASTERCARD,
+  BANANA_REPUBLIC_ENCORE_MASTERCARD,
+  BARNES_NOBLE_MASTERCARD,
+  BREEZE_EASY_VISA,
+  CAPITAL_VACATIONS_WORLD_MASTERCARD,
+  CARNIVAL_REWARDS_MASTERCARD,
+  EMIRATES_SKYWARDS_PREMIUM,
+  EMIRATES_SKYWARDS_REWARDS,
+  FRONTIER_AIRLINES_WORLD_MASTERCARD,
+  GAP_ENCORE_MASTERCARD,
+  GM_BUSINESS_MASTERCARD,
+  GM_REWARDS_MASTERCARD,
+  JETBLUE_BUSINESS,
+  JETBLUE_PLUS,
+  JETBLUE_PREMIER,
+  JETBLUE,
+  LUFTHANSA_MILES_MORE_WORLD_ELITE_MASTERCARD,
+  OLD_NAVY_ENCORE_MASTERCARD,
+  RCI_ELITE_REWARDS_MASTERCARD,
+  UPROMISE_WORLD_MASTERCARD,
+  WYNDHAM_REWARDS_EARNER_BUSINESS,
+  WYNDHAM_REWARDS_EARNER_PLUS,
+  WYNDHAM_REWARDS_EARNER_PREMIER,
+  WYNDHAM_REWARDS_EARNER,
+  XBOX_MASTERCARD,
   BASS_PRO_SHOPS_AND_CABELAS_CLUB_BUSINESS,
   BASS_PRO_SHOPS_CLUB,
   BJS_ONE_PLUS,
@@ -205,6 +271,10 @@ export const ALL_CARDS: Card[] = [
   INK_BUSINESS_UNLIMITED,
   SAPPHIRE_PREFERRED,
   SAPPHIRE_RESERVE,
+  AADVANTAGE_BUSINESS,
+  AADVANTAGE_GLOBE,
+  AADVANTAGE_GOLD,
+  AADVANTAGE_MILEUP,
   AADVANTAGE_PLATINUM_SELECT,
   CITI_CUSTOM_CASH,
   DOUBLE_CASH,
@@ -308,7 +378,7 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['us-bank-cash-plus', ['/images/cards/us-bank/cash-plus.png']],
   ['wells-fargo-bilt-mastercard', ['/images/cards/wells-fargo/bilt-mastercard.png']],
   ['bofa-bankamericard-students', ['/images/cards/bank-of-america/bankamericard.png']],
-  ['bofa-customized-cash-rewards-students', ['/images/cards/bank-of-america/customized-cash-rewards.png', '/images/cards/bank-of-america/customized-cash-rewards-2.png']],
+  ['bofa-customized-cash-rewards-students', ['/images/cards/bank-of-america/customized-cash-rewards.png']],
   ['bofa-travel-rewards-students', ['/images/cards/bank-of-america/travel-rewards.png']],
   ['bofa-unlimited-cash-rewards-students', ['/images/cards/bank-of-america/unlimited-cash-rewards.png']],
   ['capital-one-platinum-secured', ['/images/cards/capital-one/platinum-mastercard.png']],

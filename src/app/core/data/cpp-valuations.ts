@@ -26,7 +26,16 @@ export const DEFAULT_CPP_VALUATIONS: Record<RewardsProgram, number> = {
   // Alaska Airlines and Hawaiian Airlines points
   'Atmos Rewards': 1.45,
   // Air France KLM miles
-  'Flying Blue': 1.3
+  'Flying Blue': 1.3,
+  'Emirates Skywards': 1.2,
+  'Wyndham Rewards': 1.1,
+  'JetBlue TrueBlue': 1.3,
+  // Lufthansa Group miles
+  'Miles & More': 1.2,
+  'Frontier Miles': 1.1,
+  // 500 points = $1
+  'Gap Inc. Rewards': 0.2,
+  'Barclays Cash Back': 1.0
 };
 
 /**

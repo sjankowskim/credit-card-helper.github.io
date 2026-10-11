@@ -116,5 +116,47 @@ export const REWARDS_PROGRAM_REGISTRY: Record<RewardsProgram, RewardsProgramMeta
     name: 'Flying Blue',
     allowsTransfers: false,
     hasTravelPartners: true
+  },
+  'Emirates Skywards': {
+    id: 'Emirates Skywards',
+    name: 'Emirates Skywards',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'Wyndham Rewards': {
+    id: 'Wyndham Rewards',
+    name: 'Wyndham Rewards',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'JetBlue TrueBlue': {
+    id: 'JetBlue TrueBlue',
+    name: 'JetBlue TrueBlue',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'Miles & More': {
+    id: 'Miles & More',
+    name: 'Miles & More',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'Frontier Miles': {
+    id: 'Frontier Miles',
+    name: 'Frontier Miles',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'Gap Inc. Rewards': {
+    id: 'Gap Inc. Rewards',
+    name: 'Gap Inc. Rewards',
+    allowsTransfers: false,
+    hasTravelPartners: false
+  },
+  'Barclays Cash Back': {
+    id: 'Barclays Cash Back',
+    name: 'Barclays Cash Back',
+    allowsTransfers: false,
+    hasTravelPartners: false
   }
 };

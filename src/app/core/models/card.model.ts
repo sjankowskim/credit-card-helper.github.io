@@ -67,7 +67,14 @@ export type RewardsProgram =
   | 'Marriott Bonvoy'
   | 'Store Rewards'
   | 'Atmos Rewards'
-  | 'Flying Blue';
+  | 'Flying Blue'
+  | 'Emirates Skywards'
+  | 'Wyndham Rewards'
+  | 'JetBlue TrueBlue'
+  | 'Miles & More'
+  | 'Frontier Miles'
+  | 'Gap Inc. Rewards'
+  | 'Barclays Cash Back';
 
 // ============================================================================
 // 4. REWARD TIER DEFINITION
@@ -231,8 +238,14 @@ export interface Card {
   /** Card-wide caveats shown with the details, e.g. a cap on the base rate */
   note?: string;
 
-  /** Id of another card whose artwork this card reuses (e.g. a student version of the same design) */
+  /** Id of another card whose default design this card reuses (e.g. a student version of the same card) */
   imageOf?: string;
+
+  /**
+   * When the issuer moved this card's accounts to another card (e.g. Barclays Aviator cards
+   * becoming Citi AAdvantage cards): the new card's id and the date it started (ISO date)
+   */
+  transitionedTo?: { cardId: string; startedOn: string };
 
   /**
    * Card-specific custom settings.
