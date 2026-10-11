@@ -1,0 +1,28 @@
+@if (isEditing()) {
+  <div class="edit-row">
+    <input
+      class="input"
+      [type]="inputType()"
+      [value]="draft()"
+      [placeholder]="placeholder()"
+      [attr.min]="min()"
+      [attr.max]="max()"
+      (input)="draft.set($any($event.target).value)"
+      (keydown)="onKeydown($event)"
+      #editInput
+    />
+    <button type="button" class="icon-button save" (click)="save()" aria-label="Save">✓</button>
+    <button type="button" class="icon-button cancel" (click)="cancel()" aria-label="Cancel">✕</button>
+  </div>
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+} @else {
+  <div class="display-row">
+    <span class="value" [class.empty]="!displayValue()">{{ displayValue() || emptyLabel() }}</span>
+    <button type="button" class="icon-button" (click)="startEditing()" aria-label="Edit">✏️</button>
+    @if (displayValue()) {
+      <button type="button" class="icon-button" (click)="clear()" aria-label="Clear">↩️</button>
+    }
+  </div>
+}

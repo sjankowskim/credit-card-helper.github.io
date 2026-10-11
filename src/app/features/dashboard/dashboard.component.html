@@ -1,111 +1,106 @@
 <div class="page-container">
   <h1>Credit Card Dashboard</h1>
   <p>View category breakdowns and optimize your rewards</p>
-  
+
   <div class="controls">
     <label>Show top</label>
     <div class="num-cards-selector">
-      <button 
-        [class.active]="numCards() === 1" 
-        (click)="setNumCards(1)"
-      >1</button>
-      <button 
-        [class.active]="numCards() === 3" 
-        (click)="setNumCards(3)"
-      >3</button>
-      <button 
-        [class.active]="numCards() === 5" 
-        (click)="setNumCards(5)"
-      >5</button>
+      @for (n of numCardOptions; track n) {
+        <button [class.active]="numCards() === n" (click)="setNumCards(n)">{{ n }}</button>
+      }
     </div>
     <label>cards per category</label>
   </div>
-  
+
   <div class="toggle-controls">
     <label class="toggle-label">
-      <input 
-        type="checkbox" 
-        [checked]="includeWishlisted()" 
-        (change)="toggleIncludeWishlisted()"
-      />
+      <input type="checkbox" [checked]="includeWishlisted()" (change)="toggleIncludeWishlisted()" />
       <span>Include wishlisted cards</span>
     </label>
     <label class="toggle-label">
-      <input 
-        type="checkbox" 
-        [checked]="excludeForeignFee()" 
-        (change)="toggleExcludeForeignFee()"
-      />
+      <input type="checkbox" [checked]="excludeForeignFee()" (change)="toggleExcludeForeignFee()" />
       <span>Exclude cards with foreign transaction fee</span>
     </label>
     <label class="toggle-label">
-      <input 
-        type="checkbox" 
-        [checked]="includeDuplicates()" 
+      <input
+        type="checkbox"
+        [checked]="includeDuplicates()"
         (change)="toggleIncludeDuplicates()"
         [disabled]="!hasDuplicates()"
       />
       <span>Include duplicate cards</span>
     </label>
     <label class="toggle-label">
-      <input 
-        type="checkbox" 
-        [checked]="travelRedemption()" 
+      <input
+        type="checkbox"
+        [checked]="travelRedemption()"
         (change)="toggleTravelRedemption()"
         [disabled]="!hasTravelPartnerAccess()"
       />
-      <span>Apply travel redemption bonus (TPG CPP)</span>
+      <span>Apply travel redemption bonus (CPP)</span>
     </label>
-    <button class="cpp-settings-button" (click)="toggleCppSettings()">
-      ⚙️ CPP Settings
-    </button>
+    <button class="btn" (click)="toggleCppSettings()">⚙️ CPP Settings</button>
   </div>
-  
-  @if (rankings()) {
-    <app-category-rankings-table 
-      [rankings]="rankings()!" 
-      [numColumns]="numCards()"
-    />
+
+  @if (rankings(); as rankings) {
+    <section class="lookup">
+      <label class="form-field">
+        <span>Which card for…?</span>
+        <select class="input" [value]="lookupCategoryId()" (change)="lookupCategoryId.set($any($event.target).value)">
+          <option value="">Pick a category</option>
+          @for (category of categoryOptions; track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+          }
+        </select>
+      </label>
+      @if (lookupRankings(); as lookup) {
+        <app-category-rankings-table [rankings]="lookup" [contextCards]="candidateCards()" />
+      }
+    </section>
+
+    <p class="rate-legend">
+      % = cash back · x = points per dollar
+      @if (travelRedemption()) {
+        · ¢ = cents per dollar after your CPP valuation
+      }
+    </p>
+    <app-category-rankings-table [rankings]="rankings" [contextCards]="candidateCards()" />
   } @else {
     <div class="empty-state">
-      <p>No owned cards. Add cards to your portfolio to see rankings.</p>
+      <p>No active cards. Add cards to your wallet to see rankings.</p>
     </div>
   }
-  
+
   @if (showCppSettings()) {
-    <div class="cpp-settings-overlay" (click)="toggleCppSettings()">
-      <div class="cpp-settings-modal" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h2>CPP Valuation Settings</h2>
-          <button class="close-button" (click)="toggleCppSettings()">✕</button>
-        </div>
-        <div class="modal-content">
-          <p class="modal-description">Customize the cents-per-point (CPP) valuation for each rewards program. These values are used when travel redemption bonus is enabled. Cards in transferable programs can use CPP multipliers if you own a travel partner card in the same program.</p>
-          <div class="cpp-list">
-            @for (program of rewardsPrograms(); track program) {
-              <div class="cpp-item">
-                <label class="cpp-label">{{ program }}</label>
-                <div class="cpp-input-group">
-                  <input 
-                    type="number" 
-                    step="0.1" 
-                    min="0" 
-                    [value]="getCppValue(program)"
-                    (input)="onCppChange(program, $any($event.target).value)"
-                    class="cpp-input"
-                  />
-                  <span class="cpp-default-hint" [class.hidden]="isCustomCpp(program)">
-                    (default: {{ getDefaultCpp(program) }})
-                  </span>
-                  @if (isCustomCpp(program)) {
-                    <button class="reset-button" (click)="resetCpp(program)">Reset</button>
-                  }
-                </div>
-              </div>
-            }
+    <app-modal title="CPP Valuation Settings" (closed)="toggleCppSettings()">
+      <p class="modal-description">
+        Customize the cents-per-point (CPP) valuation for each rewards program. These values are used
+        when the travel redemption bonus is enabled. Cards in transferable programs use them when you
+        own a travel partner card in the same program.
+      </p>
+      <div class="cpp-list">
+        @for (program of rewardsPrograms(); track program) {
+          <div class="cpp-item">
+            <label class="cpp-label" [for]="'cpp-' + $index">{{ program }}</label>
+            <div class="cpp-input-group">
+              <input
+                [id]="'cpp-' + $index"
+                type="number"
+                step="0.05"
+                min="0"
+                [value]="getCppValue(program)"
+                (input)="onCppChange(program, $any($event.target).value)"
+                class="input cpp-input"
+              />
+              @if (isCustomCpp(program)) {
+                <button class="btn btn-small" (click)="resetCpp(program)">Reset</button>
+              } @else {
+                <span class="cpp-default-hint">(default)</span>
+              }
+            </div>
           </div>
-        </div>
+        }
       </div>
-    </div>
+    </app-modal>
   }
 </div>

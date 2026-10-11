@@ -1,15 +1,36 @@
 import { Injectable, inject } from '@angular/core';
-import { ALL_CARDS, CARD_MAP } from '../data/cards';
-import { getCategory } from '../data/category.registry';
+import { CARD_MAP } from '../data/cards';
+import { ALL_CATEGORIES, getCategory, getCategoryName } from '../data/category.registry';
 import { REWARDS_PROGRAM_REGISTRY } from '../data/rewards-program.registry';
 import { CppSettingsService } from './cpp-settings.service';
-import type { CategoryId } from '../data/category.registry';
-import type { Card, UserCard } from '../models/card.model';
+import type { Card, RewardTier, UserCard } from '../models/card.model';
+import { FALLTHROUGH_CATEGORY, getRewardRate } from '../utils/reward-rate.utils';
+import { today } from '../utils/date.utils';
+import { getEarnUnit } from '../utils/card-display.utils';
+
+/** '%' cash back, 'x' points per dollar, '¢' effective cents per dollar after CPP valuation */
+export type RateUnit = '%' | 'x' | '¢';
 
 export interface CardRanking {
+  userCard: UserCard;
   card: Card;
   rewardRate: number;
-  hasAutoTopSpendWarning?: boolean;
+  unit: RateUnit;
+  /** Tier that produced the rate (for caps and labels); undefined means the base rate */
+  tier?: RewardTier;
+  /** Explains how to unlock a better rate on this card, if one exists */
+  warning?: string;
+}
+
+export interface RankingOptions {
+  /** Value points at the user's CPP when the card can reach a travel partner */
+  applyCpp: boolean;
+  /** When false, only the best instance of each catalog card is kept per category */
+  includeDuplicates: boolean;
+  /** Maximum rankings per category; omit for all */
+  limit?: number;
+  /** Date used for rotating categories (defaults to today) */
+  date?: Date;
 }
 
 @Injectable({
@@ -19,186 +40,90 @@ export class CardRankingService {
   private readonly cppSettingsService = inject(CppSettingsService);
 
   /**
-   * Check if a card can apply CPP multiplier through point transfers
-   * Returns true if:
-   * - Card has direct travel partner access, OR
-   * - Card's rewards program allows transfers AND user owns another card in same program with travel partner access
+   * Rank card instances for one category, best first.
+   * Earlier instances win ties, so pass owned cards before wishlist cards.
    */
-  private canApplyCppMultiplier(card: Card, cardIds: string[], userCards: UserCard[]): boolean {
-    // Direct travel partner access
-    if (card.hasTravelPartnerAccess) {
-      return true;
-    }
+  rankCategory(categoryId: string, userCards: UserCard[], options: RankingOptions): CardRanking[] {
+    const instances = this.resolveCards(userCards);
+    const cardsInPlay = instances.map(i => i.card);
+    const date = options.date ?? today();
 
-    // Check for transferable program with travel partner card
-    const program = REWARDS_PROGRAM_REGISTRY[card.rewardsProgram];
-    if (!program.allowsTransfers) {
-      return false;
-    }
+    const rankings = instances.map(({ userCard, card }) => {
+      const { rate, tier, warning } = getRewardRate(card, userCard, categoryId, date);
+      const valued = options.applyCpp && this.canTransferToTravelPartner(card, cardsInPlay);
+      const multiplier = valued ? this.cppSettingsService.getCppValuation(card.rewardsProgram) : 1;
 
-    // Check if user owns any card in same program with travel partner access
-    // Only check cards that are in the current cardIds (respects wishlist toggle)
-    return cardIds.some(cardId => {
-      const otherCard = CARD_MAP.get(cardId);
-      return (
-        otherCard &&
-        otherCard.rewardsProgram === card.rewardsProgram &&
-        otherCard.hasTravelPartnerAccess
-      );
+      return {
+        userCard,
+        card,
+        rewardRate: round(rate * multiplier),
+        unit: valued ? '¢' : getEarnUnit(card),
+        tier,
+        warning: warning && describeWarning(warning.reason, warning.tier)
+      } satisfies CardRanking;
     });
+
+    rankings.sort((a, b) => b.rewardRate - a.rewardRate);
+
+    const deduped = options.includeDuplicates
+      ? rankings
+      : rankings.filter((r, i) => rankings.findIndex(other => other.card.id === r.card.id) === i);
+
+    return options.limit === undefined ? deduped : deduped.slice(0, options.limit);
+  }
+
+  /** Rankings for every category the cards earn a bonus in, plus the fallthrough row. */
+  rankAllCategories(userCards: UserCard[], options: RankingOptions): Map<string, CardRanking[]> {
+    const cards = this.resolveCards(userCards).map(i => i.card);
+    return new Map(
+      this.getCoveredCategories(cards).map(categoryId => [categoryId, this.rankCategory(categoryId, userCards, options)])
+    );
+  }
+
+  getCategoryLabel(categoryId: string): string {
+    return categoryId === FALLTHROUGH_CATEGORY ? 'Everything Else' : getCategoryName(categoryId);
   }
 
   /**
-   * Get the reward rate for a specific card and category
-   * Checks reward tiers first, then falls back to base rate
-   * For AUTO_TOP_SPEND cards, only applies bonus rate if the category matches the user's selection
+   * Categories named by any tier, plus their parents, in registry order, then fallthrough.
    */
-  private getCardRewardRate(card: Card, categoryId: CategoryId, userCard?: UserCard, applyCpp: boolean = false, cardIds: string[] = [], allUserCards: UserCard[] = []): { rate: number; hasWarning: boolean } {
-    const canApplyCpp = applyCpp && this.canApplyCppMultiplier(card, cardIds, allUserCards);
-    
-    // Check if card has a reward tier that covers this category
-    for (const tier of card.rewardTiers) {
-      if (tier.eligibleCategories.includes(categoryId)) {
-        // For AUTO_TOP_SPEND cards, only apply bonus rate if this is the selected category
-        if (tier.behavior.type === 'AUTO_TOP_SPEND') {
-          if (!userCard?.userData.autoTopSpendCategory) {
-            // No category selected - this is a warning state
-            let rate = card.baseRewardRate;
-            if (canApplyCpp) {
-              rate *= this.cppSettingsService.getCppValuation(card.rewardsProgram);
-            }
-            return { rate: parseFloat(rate.toFixed(2)), hasWarning: true };
-          }
-          if (userCard.userData.autoTopSpendCategory === categoryId) {
-            let rate = tier.rewardRate;
-            if (canApplyCpp) {
-              rate *= this.cppSettingsService.getCppValuation(card.rewardsProgram);
-            }
-            return { rate: parseFloat(rate.toFixed(2)), hasWarning: false };
-          }
-          // Not the selected category - use base rate
-          let baseRate = card.baseRewardRate;
-          if (canApplyCpp) {
-            baseRate *= this.cppSettingsService.getCppValuation(card.rewardsProgram);
-          }
-          return { rate: parseFloat(baseRate.toFixed(2)), hasWarning: false };
-        }
-        // For USER_CHOICE cards, only apply bonus rate if this category is in the selected categories
-        if (tier.behavior.type === 'USER_CHOICE') {
-          const selectedCategories = userCard?.userData.activeData?.selectedCategories?.[tier.id] || [];
-          if (selectedCategories.length === 0) {
-            // No categories selected - this is a warning state
-            let rate = card.baseRewardRate;
-            if (canApplyCpp) {
-              rate *= this.cppSettingsService.getCppValuation(card.rewardsProgram);
-            }
-            return { rate: parseFloat(rate.toFixed(2)), hasWarning: true };
-          }
-          if (selectedCategories.includes(categoryId)) {
-            let rate = tier.rewardRate;
-            if (canApplyCpp) {
-              rate *= this.cppSettingsService.getCppValuation(card.rewardsProgram);
-            }
-            return { rate: parseFloat(rate.toFixed(2)), hasWarning: false };
-          }
-          // Not in selected categories - use base rate
-          let baseRate = card.baseRewardRate;
-          if (canApplyCpp) {
-            baseRate *= this.cppSettingsService.getCppValuation(card.rewardsProgram);
-          }
-          return { rate: parseFloat(baseRate.toFixed(2)), hasWarning: false };
-        }
-        let rate = tier.rewardRate;
-        if (canApplyCpp) {
-          rate *= this.cppSettingsService.getCppValuation(card.rewardsProgram);
-        }
-        return { rate: parseFloat(rate.toFixed(2)), hasWarning: false };
-      }
-    }
-    
-    // Fall back to base rate
-    let baseRate = card.baseRewardRate;
-    if (canApplyCpp) {
-      baseRate *= this.cppSettingsService.getCppValuation(card.rewardsProgram);
-    }
-    return { rate: parseFloat(baseRate.toFixed(2)), hasWarning: false };
-  }
-
-  /**
-   * Get all categories that are covered by the given cards
-   * This includes categories explicitly mentioned in reward tiers
-   * and their parent categories
-   */
-  private getCoveredCategories(cardIds: string[]): Set<string> {
+  private getCoveredCategories(cards: Card[]): string[] {
     const covered = new Set<string>();
-    const cards = ALL_CARDS.filter(card => cardIds.includes(card.id));
-    
     for (const card of cards) {
       for (const tier of card.rewardTiers) {
         for (const categoryId of tier.eligibleCategories) {
           covered.add(categoryId);
-          
-          // Add parent category if it exists
-          const category = getCategory(categoryId);
-          if (category?.parentId) {
-            covered.add(category.parentId);
-          }
+          const parentId = getCategory(categoryId)?.parentId;
+          if (parentId) covered.add(parentId);
         }
       }
     }
-    
-    // Always include fallthrough/base rate category
-    covered.add('fallthrough');
-    
-    return covered;
+    return [...ALL_CATEGORIES.map(c => c.id).filter(id => covered.has(id)), FALLTHROUGH_CATEGORY];
   }
 
   /**
-   * Get top N cards for a specific category, sorted by reward rate (highest first)
+   * A card's points can be valued at CPP if it has travel partners itself, or if its
+   * program allows pooling points onto another card in play that does.
    */
-  getTopCardsForCategory(categoryId: string, cardIds: string[], userCards: UserCard[], n: number, applyCpp: boolean = false): CardRanking[] {
-    const cards = ALL_CARDS.filter(card => cardIds.includes(card.id));
-    
-    const rankings = cards.map(card => {
-      // For fallthrough category, always use base rate
-      if (categoryId === 'fallthrough') {
-        let rate = card.baseRewardRate;
-        if (applyCpp && this.canApplyCppMultiplier(card, cardIds, userCards)) {
-          rate *= this.cppSettingsService.getCppValuation(card.rewardsProgram);
-        }
-        return {
-          card,
-          rewardRate: parseFloat(rate.toFixed(2)),
-          hasAutoTopSpendWarning: false
-        };
-      }
-      
-      const userCard = userCards.find(uc => uc.cardId === card.id);
-      const { rate, hasWarning } = this.getCardRewardRate(card, categoryId as CategoryId, userCard, applyCpp, cardIds, userCards);
-      return {
-        card,
-        rewardRate: rate,
-        hasAutoTopSpendWarning: hasWarning
-      };
+  private canTransferToTravelPartner(card: Card, cardsInPlay: Card[]): boolean {
+    if (card.hasTravelPartnerAccess) return true;
+    if (!REWARDS_PROGRAM_REGISTRY[card.rewardsProgram].allowsTransfers) return false;
+    return cardsInPlay.some(other => other.rewardsProgram === card.rewardsProgram && other.hasTravelPartnerAccess);
+  }
+
+  private resolveCards(userCards: UserCard[]): { userCard: UserCard; card: Card }[] {
+    return userCards.flatMap(userCard => {
+      const card = CARD_MAP.get(userCard.cardId);
+      return card ? [{ userCard, card }] : [];
     });
-    
-    // Sort by reward rate descending
-    rankings.sort((a, b) => b.rewardRate - a.rewardRate);
-    
-    return rankings.slice(0, n);
   }
+}
 
-  /**
-   * Get rankings for all categories covered by the given cards
-   */
-  getAllCategoryRankings(cardIds: string[], userCards: UserCard[], n: number, applyCpp: boolean = false): Map<string, CardRanking[]> {
-    const rankings = new Map<string, CardRanking[]>();
-    const coveredCategories = this.getCoveredCategories(cardIds);
-    
-    for (const categoryId of coveredCategories) {
-      rankings.set(categoryId, this.getTopCardsForCategory(categoryId, cardIds, userCards, n, applyCpp));
-    }
-    
-    return rankings;
-  }
+function describeWarning(reason: 'NEEDS_SELECTION' | 'NEEDS_ACTIVATION', tier: RewardTier): string {
+  const action = reason === 'NEEDS_SELECTION' ? 'Choose a category for' : 'Activate';
+  return `${action} "${tier.name}" in the card's details to earn ${tier.rewardRate}x here.`;
+}
+
+function round(value: number): number {
+  return Math.round(value * 100) / 100;
 }

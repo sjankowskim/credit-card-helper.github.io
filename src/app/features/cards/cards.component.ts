@@ -1,78 +1,105 @@
 import { Component, signal, computed, inject } from '@angular/core';
-import { SearchBarComponent } from '../portfolio/components/search-bar/search-bar.component';
-import { CardListComponent } from '../portfolio/components/card-list/card-list.component';
-import { CardDetailComponent } from '../portfolio/components/card-detail/card-detail.component';
+import { SearchBarComponent } from '../wallet/components/search-bar/search-bar.component';
+import { CardListComponent, type CardListItem } from '../wallet/components/card-list/card-list.component';
+import { CardDetailComponent } from '../wallet/components/card-detail/card-detail.component';
+import { AddCardDialogComponent } from '../wallet/components/add-card-dialog/add-card-dialog.component';
 import { ALL_CARDS } from '../../core/data/cards';
-import { UserCardsService } from '../../core/services/user-cards.service';
+import { UserCardsService, type WalletEntry } from '../../core/services/user-cards.service';
 import { ToastService } from '../../core/services/toast.service';
-import type { Card, UserCard } from '../../core/models/card.model';
+import type { Card } from '../../core/models/card.model';
+import { formatCurrency } from '../../core/utils/card-display.utils';
+
+export interface CardFilters {
+  issuer: string;
+  network: string;
+  fee: '' | 'none' | 'paid';
+  type: '' | 'personal' | 'business';
+}
+
+const NO_FILTERS: CardFilters = { issuer: '', network: '', fee: '', type: '' };
 
 @Component({
   selector: 'app-cards',
-  imports: [SearchBarComponent, CardListComponent, CardDetailComponent],
-  templateUrl: './cards.component.html'
+  imports: [SearchBarComponent, CardListComponent, CardDetailComponent, AddCardDialogComponent],
+  templateUrl: './cards.component.html',
+  styleUrl: './cards.component.scss'
 })
 export class CardsComponent {
   private readonly userCardsService = inject(UserCardsService);
   private readonly toastService = inject(ToastService);
-  
+
   readonly searchQuery = signal('');
-  readonly selectedCard = signal<Card | null>(null);
+  readonly filters = signal<CardFilters>(NO_FILTERS);
+  readonly selected = signal<Card | null>(null);
+  readonly adding = signal<Card | null>(null);
 
-  readonly userCards = this.userCardsService.cards;
+  readonly issuers = [...new Set(ALL_CARDS.map(c => c.issuer))].sort();
+  readonly networks = [...new Set(ALL_CARDS.map(c => c.network))].sort();
 
-  readonly wishlistedCardIds = computed(() => {
-    return new Set(this.userCardsService.cards().filter(c => c.isWishlist).map(c => c.cardId));
+  readonly ownedCardIds = computed(
+    () => new Set(this.userCardsService.cards().filter(c => !c.isWishlist).map(c => c.cardId))
+  );
+  readonly wishlistedCardIds = computed(
+    () => new Set(this.userCardsService.cards().filter(c => c.isWishlist).map(c => c.cardId))
+  );
+
+  readonly hasFilters = computed(() => Object.values(this.filters()).some(Boolean));
+
+  readonly items = computed<CardListItem[]>(() => {
+    const query = this.searchQuery().trim().toLowerCase();
+    const { issuer, network, fee, type } = this.filters();
+
+    return ALL_CARDS.filter(card => {
+      if (query && ![card.name, card.issuer, card.rewardsCurrency].some(t => t.toLowerCase().includes(query))) return false;
+      if (issuer && card.issuer !== issuer) return false;
+      if (network && card.network !== network) return false;
+      if (fee === 'none' && card.annualFee > 0) return false;
+      if (fee === 'paid' && card.annualFee === 0) return false;
+      if (type && card.isBusiness !== (type === 'business')) return false;
+      return true;
+    }).map(card => ({
+      card,
+      lines: [card.annualFee > 0 ? `${formatCurrency(card.annualFee)} annual fee` : 'No annual fee']
+    }));
   });
 
-  readonly portfolioCardIds = computed(() => {
-    return new Set(this.userCardsService.cards().filter(c => !c.isWishlist).map(c => c.cardId));
-  });
-
-  readonly filteredCards = computed(() => {
-    const query = this.searchQuery().toLowerCase();
-    if (!query) return ALL_CARDS;
-    
-    return ALL_CARDS.filter(card => 
-      card.name.toLowerCase().includes(query) ||
-      card.issuer.toLowerCase().includes(query) ||
-      card.rewardsCurrency.toLowerCase().includes(query)
-    );
-  });
-
-  onSearchChange(query: string): void {
-    this.searchQuery.set(query);
+  setFilter<K extends keyof CardFilters>(key: K, value: CardFilters[K]): void {
+    this.filters.update(f => ({ ...f, [key]: value }));
   }
 
-  onCardClick(data: { card: Card; userCard: UserCard | null }): void {
-    if (!data.userCard) {
-      // If no userCard, add the card to portfolio as active
-      this.userCardsService.addCard(data.card.id, false, 'active');
-      this.toastService.success(`Added ${data.card.name} to portfolio`);
+  clearFilters(): void {
+    this.filters.set(NO_FILTERS);
+  }
+
+  /** The star adds one wishlist entry per card, or removes it if already wishlisted */
+  onToggleWishlist({ card }: CardListItem): void {
+    const existing = this.userCardsService.cards().find(c => c.isWishlist && c.cardId === card.id);
+    if (existing) {
+      this.userCardsService.remove(existing.id);
+      this.toastService.info(`Removed ${card.name} from your wishlist`);
     } else {
-      // If userCard exists, open the detail dialog
-      this.selectedCard.set(data.card);
+      this.userCardsService.addCard(card.id, { isWishlist: true });
+      this.toastService.success(`Added ${card.name} to your wishlist`);
     }
   }
 
-  onCloseDetail(): void {
-    this.selectedCard.set(null);
+  startAdding(card: Card): void {
+    this.selected.set(null);
+    this.adding.set(card);
   }
 
-  onWishlistClick(data: { card: Card; userCard: UserCard | null }): void {
-    if (data.userCard) {
-      // Toggle wishlist status for existing card
-      this.userCardsService.toggleWishlist(data.userCard.id);
-      const isWishlisted = this.userCardsService.cards().find(c => c.id === data.userCard!.id)?.isWishlist;
-      if (isWishlisted) {
-        this.toastService.success(`Added ${data.card.name} to wishlist`);
-      } else {
-        this.toastService.info(`Removed ${data.card.name} from wishlist`);
-      }
+  onAdded(entry: WalletEntry): void {
+    const card = this.adding();
+    if (!card) return;
+
+    // Adding a wishlisted card moves it out of the wishlist
+    const wishlisted = this.userCardsService.cards().find(c => c.isWishlist && c.cardId === card.id);
+    if (wishlisted) {
+      this.userCardsService.moveToWallet(wishlisted.id, entry);
     } else {
-      // Add new wishlist card
-      this.userCardsService.addCard(data.card.id, true);
-      this.toastService.success(`Added ${data.card.name} to wishlist`);
+      this.userCardsService.addCard(card.id, entry);
     }
+    this.toastService.success(`Added ${card.name} to your wallet`);
+    this.adding.set(null);
   }
 }

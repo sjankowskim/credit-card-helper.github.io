@@ -1,3 +1,7 @@
+.table-scroll {
+  overflow-x: auto;
+}
+
 .rankings-table {
   width: 100%;
   border-collapse: collapse;
@@ -18,7 +22,7 @@ th {
 
 tbody tr {
   border-bottom: 1px solid var(--border);
-  
+
   &:hover {
     background: var(--surface-hover);
   }
@@ -26,39 +30,59 @@ tbody tr {
 
 td {
   padding: 1rem;
+  vertical-align: top;
 }
 
 .category-cell {
   font-weight: 500;
   color: var(--text-primary);
+
+  .category-note {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-tertiary);
+  }
 }
 
 .card-cell {
   position: relative;
-  
+
   &.warning {
     background: #fef3c7;
-    
+
     .reward-rate {
       color: #d97706;
     }
   }
-  
+
   .card-name {
     font-weight: 500;
     color: var(--text-primary);
     margin-bottom: 0.25rem;
+    padding-right: 1.5rem;
   }
-  
+
   .reward-rate {
     font-weight: 600;
     color: var(--accent);
   }
-  
+
+  .cap {
+    margin-left: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-tertiary);
+  }
+
+  .badge {
+    margin-top: 0.25rem;
+  }
+
   .warning-icon {
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+    top: 0.75rem;
+    right: 0.75rem;
     font-size: 1rem;
     cursor: help;
   }

@@ -20,14 +20,26 @@ export const CITI_CUSTOM_CASH: Card = {
       name: 'Flights and Hotels',
       rewardRate: 5.0,
       behavior: { type: 'AUTOMATIC' },
-      eligibleCategories: ['flights-and-hotels']
+      // TODO(Phase 6): verify against Citi's current terms; this looks like a Citi Travel portal rate
+      eligibleCategories: ['airfare', 'hotels']
     },
     {
       id: 'citi-custom-cash-bonus',
       name: 'Bonus Categories',
       rewardRate: 5.0,
       behavior: { type: 'AUTO_TOP_SPEND', maxCategories: 1 },
-      eligibleCategories: ['grocery-stores', 'dining', 'entertainment'], // TODO: 
+      eligibleCategories: [
+        'dining',
+        'gas-stations',
+        'grocery-stores',
+        'travel',
+        'transit',
+        'streaming',
+        'drugstores',
+        'home-improvement',
+        'fitness',
+        'live-entertainment'
+      ],
       spendingCap: { amount: 500, period: 'MONTHLY' }
     }
   ]

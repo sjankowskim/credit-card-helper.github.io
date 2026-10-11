@@ -10,7 +10,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 export class NavbarComponent {
   readonly navItems = [
     { path: '/cards', label: 'Cards' },
-    { path: '/portfolio', label: 'Portfolio' },
+    { path: '/wallet', label: 'Wallet' },
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/sub-tracker', label: 'SUB Tracker' },
     { path: '/account-tracker', label: 'Account Tracker' },

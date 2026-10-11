@@ -30,7 +30,7 @@ export class AccountTrackerComponent {
   readonly ownedCards = computed(() => this.userCardsService.cards().filter(c => c.userData.status === CardStatus.ACTIVE));
 
   getDisplayName(userCard: UserCard, cardName: string): string {
-    return getCardDisplayName(userCard, cardName, this.ownedCards());
+    return getCardDisplayName(userCard, cardName);
   }
 
   getDisplayNumber(userCard: UserCard): number | undefined {

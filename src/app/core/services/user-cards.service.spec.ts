@@ -41,7 +41,7 @@ describe('UserCardsService', () => {
   });
 
   it('removes a wishlist-only card when it is un-wishlisted', () => {
-    const card = service.addCard('citi-custom-cash', true);
+    const card = service.addCard('citi-custom-cash', { isWishlist: true });
     service.toggleWishlist(card.id);
     expect(service.getById(card.id)).toBeUndefined();
   });
@@ -52,5 +52,63 @@ describe('UserCardsService', () => {
 
     service.patchUserData(card.id, { accountStartDate: '2025-01-01' });
     expect(service.hasUserData(service.getById(card.id)!)).toBe(true);
+  });
+
+  it('moves a wishlist card into the wallet with the given details', () => {
+    const card = service.addCard('citi-custom-cash', { isWishlist: true });
+    service.moveToWallet(card.id, { status: CardStatus.ACTIVE, userData: { accountStartDate: '2026-01-15' } });
+
+    const moved = service.getById(card.id)!;
+    expect(moved.isWishlist).toBe(false);
+    expect(moved.userData.status).toBe(CardStatus.ACTIVE);
+    expect(moved.userData.accountStartDate).toBe('2026-01-15');
+    expect(moved.userData.activeData).toEqual({ selectedCategories: {} });
+  });
+
+  describe('product changes', () => {
+    it('adds a linked card that keeps the original open date', () => {
+      const original = service.addCard('capital-one-savor-one-rewards', { userData: { accountStartDate: '2023-03-10' } });
+      service.setStatus(original.id, CardStatus.PRODUCT_CHANGED);
+      service.productChange(original.id, 'capital-one-quicksilver-rewards');
+
+      const linked = service.getProductChangedTo(original.id)!;
+      expect(linked.cardId).toBe('capital-one-quicksilver-rewards');
+      expect(linked.userData.accountStartDate).toBe('2023-03-10');
+      expect(linked.userData.productChangedFromId).toBe(original.id);
+      expect(service.getById(original.id)!.userData.productChangedData?.productChangedToCardId).toBe(
+        'capital-one-quicksilver-rewards'
+      );
+    });
+
+    it('retargets the linked card instead of adding another', () => {
+      const original = service.addCard('capital-one-savor-one-rewards');
+      service.productChange(original.id, 'capital-one-quicksilver-rewards');
+      const linked = service.getProductChangedTo(original.id)!;
+      service.patchUserData(linked.id, { autoTopSpendCategory: 'dining' });
+
+      service.productChange(original.id, 'capital-one-venture-x-rewards');
+
+      expect(service.cards()).toHaveLength(2);
+      expect(service.getById(linked.id)!.cardId).toBe('capital-one-venture-x-rewards');
+      expect(service.getById(linked.id)!.userData.autoTopSpendCategory).toBeUndefined();
+    });
+
+    it('removes an untouched linked card when the product change is cleared', () => {
+      const original = service.addCard('capital-one-savor-one-rewards', { userData: { accountStartDate: '2023-03-10' } });
+      service.productChange(original.id, 'capital-one-quicksilver-rewards');
+
+      expect(service.clearProductChange(original.id)).toBe(true);
+      expect(service.cards()).toHaveLength(1);
+    });
+
+    it('keeps a linked card the user has edited', () => {
+      const original = service.addCard('capital-one-savor-one-rewards');
+      service.productChange(original.id, 'capital-one-quicksilver-rewards');
+      const linked = service.getProductChangedTo(original.id)!;
+      service.patchUserData(linked.id, { customLabel: 'Daily driver' });
+
+      expect(service.clearProductChange(original.id)).toBe(false);
+      expect(service.getById(linked.id)).toBeDefined();
+    });
   });
 });

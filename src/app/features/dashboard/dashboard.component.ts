@@ -1,18 +1,19 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { CategoryRankingsTableComponent } from './components/category-rankings-table/category-rankings-table.component';
+import { ModalComponent } from '../../shared/modal/modal.component';
 import { CardRankingService } from '../../core/services/card-ranking.service';
 import { UserCardsService } from '../../core/services/user-cards.service';
 import { CppSettingsService } from '../../core/services/cpp-settings.service';
 import { RewardsProgram } from '../../core/models/card.model';
 import { CardStatus } from '../../core/models/card.model';
-import { DEFAULT_CPP_VALUATIONS } from '../../core/data/cpp-valuations';
 import { CARD_MAP } from '../../core/data/cards';
+import { ALL_CATEGORIES } from '../../core/data/category.registry';
 import { StorageService } from '../../core/services/storage.service';
 import type { DashboardSettings } from '../../core/models/app-state.model';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CategoryRankingsTableComponent],
+  imports: [CategoryRankingsTableComponent, ModalComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -24,6 +25,7 @@ export class DashboardComponent {
 
   private readonly settings = computed(() => this.storage.state().dashboardSettings);
 
+  readonly numCardOptions = [1, 3, 5] as const;
   readonly numCards = computed(() => this.settings().numCards);
   readonly includeWishlisted = computed(() => this.settings().includeWishlisted);
   readonly excludeForeignFee = computed(() => this.settings().excludeForeignFee);
@@ -36,51 +38,47 @@ export class DashboardComponent {
     this.storage.update('dashboardSettings', settings => ({ ...settings, ...patch }));
   }
 
-  readonly userCardIds = computed(() => {
+  /** Active cards first, then wishlist cards, so owned cards win ties in rankings */
+  readonly candidateCards = computed(() => {
     const userCards = this.userCardsService.cards();
-    
-    // Only include active cards in the dashboard
-    let cardIds = userCards.filter(c => c.userData.status === CardStatus.ACTIVE).map(c => c.cardId);
-    
-    if (this.includeWishlisted()) {
-      const wishlistIds = userCards.filter(c => c.isWishlist).map(c => c.cardId);
-      cardIds = [...new Set([...cardIds, ...wishlistIds])];
-    }
-    
-    if (this.excludeForeignFee()) {
-      cardIds = cardIds.filter(cardId => {
-        const card = CARD_MAP.get(cardId);
-        return card && !card.hasForeignTransactionFee;
-      });
-    }
-    
-    if (!this.includeDuplicates()) {
-      cardIds = [...new Set(cardIds)];
-    }
-    
-    return cardIds;
+    const candidates = [
+      ...userCards.filter(c => c.userData.status === CardStatus.ACTIVE),
+      ...(this.includeWishlisted() ? userCards.filter(c => c.isWishlist) : [])
+    ];
+    return this.excludeForeignFee()
+      ? candidates.filter(c => !CARD_MAP.get(c.cardId)?.hasForeignTransactionFee)
+      : candidates;
   });
 
-  readonly hasTravelPartnerAccess = computed(() => {
-    const cardIds = this.userCardIds();
-    return cardIds.some(cardId => {
-      const card = CARD_MAP.get(cardId);
-      return card?.hasTravelPartnerAccess;
-    });
-  });
+  readonly hasTravelPartnerAccess = computed(() =>
+    this.candidateCards().some(c => CARD_MAP.get(c.cardId)?.hasTravelPartnerAccess)
+  );
 
   readonly hasDuplicates = computed(() => {
-    const userCards = this.userCardsService.cards();
-    const activeCardIds = userCards.filter(c => c.userData.status === CardStatus.ACTIVE).map(c => c.cardId);
-    return new Set(activeCardIds).size < activeCardIds.length;
+    const cardIds = this.candidateCards().map(c => c.cardId);
+    return new Set(cardIds).size < cardIds.length;
   });
 
+  private readonly rankingOptions = computed(() => ({
+    applyCpp: this.travelRedemption(),
+    includeDuplicates: this.includeDuplicates()
+  }));
+
   readonly rankings = computed(() => {
-    const cardIds = this.userCardIds();
-    const userCards = this.userCardsService.cards();
-    const applyCpp = this.travelRedemption();
-    if (cardIds.length === 0) return null;
-    return this.cardRankingService.getAllCategoryRankings(cardIds, userCards, this.numCards(), applyCpp);
+    const candidates = this.candidateCards();
+    if (candidates.length === 0) return null;
+    return this.cardRankingService.rankAllCategories(candidates, { ...this.rankingOptions(), limit: this.numCards() });
+  });
+
+  readonly categoryOptions = ALL_CATEGORIES;
+  readonly lookupCategoryId = signal('');
+
+  /** Every candidate card ranked for the category picked in "Which card for…?" */
+  readonly lookupRankings = computed(() => {
+    const categoryId = this.lookupCategoryId();
+    if (!categoryId) return null;
+    const rankings = this.cardRankingService.rankCategory(categoryId, this.candidateCards(), this.rankingOptions());
+    return new Map([[categoryId, rankings]]);
   });
 
   readonly rewardsPrograms = computed(() => {
@@ -124,10 +122,6 @@ export class DashboardComponent {
 
   getCppValue(program: RewardsProgram): number {
     return this.cppSettingsService.getCppValuation(program);
-  }
-
-  getDefaultCpp(program: RewardsProgram): number {
-    return DEFAULT_CPP_VALUATIONS[program];
   }
 
   isCustomCpp(program: RewardsProgram): boolean {

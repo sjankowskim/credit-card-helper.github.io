@@ -1,0 +1,78 @@
+<div class="card-list">
+  @for (item of items(); track item.userCard?.id ?? item.card.id) {
+    <article
+      class="card-item"
+      tabindex="0"
+      role="button"
+      [attr.aria-label]="'Open ' + getDisplayName(item)"
+      (click)="open.emit(item)"
+      (keydown.enter)="onEnter($event, item)"
+    >
+      <div class="card-actions">
+        @if (mode() === 'wallet') {
+          <button class="action-button" (click)="fire($event, remove, item)" aria-label="Remove from wallet" title="Remove from wallet">
+            ✕
+          </button>
+        } @else {
+          <button class="btn btn-small" (click)="fire($event, add, item)" title="Add to wallet">+ Add</button>
+          <button
+            class="action-button star"
+            [class.active]="isStarred(item)"
+            (click)="fire($event, toggleWishlist, item)"
+            [attr.aria-label]="isStarred(item) ? 'Remove from wishlist' : 'Add to wishlist'"
+            [title]="isStarred(item) ? 'Remove from wishlist' : 'Add to wishlist'"
+          >
+            ★
+          </button>
+        }
+      </div>
+
+      @if (item.card.imageUrl) {
+        <img [src]="item.card.imageUrl" [alt]="item.card.name" class="card-image" />
+      }
+
+      <div>
+        <h3 class="card-name">
+          {{ getDisplayName(item) }}
+          @if (getDisplayNumber(item); as number) {
+            <span class="instance-number">#{{ number }}</span>
+          }
+        </h3>
+        @if (getOriginalName(item); as original) {
+          <div class="original-name">{{ original }}</div>
+        }
+        <div class="card-issuer">{{ item.card.issuer }}</div>
+      </div>
+
+      <div class="badges">
+        @if (getStatusBadge(item); as badge) {
+          <span class="badge" [class]="badge.class">{{ badge.label }}</span>
+        }
+        @if (mode() === 'catalog') {
+          @if (ownedCardIds().has(item.card.id)) {
+            <span class="badge badge-success">Owned</span>
+          }
+          @if (wishlistedCardIds().has(item.card.id)) {
+            <span class="badge badge-warning">Wishlisted</span>
+          }
+        }
+        @if (item.card.isBusiness) {
+          <span class="badge">Business</span>
+        }
+      </div>
+
+      @for (line of item.lines ?? []; track $index) {
+        <p class="line">{{ line }}</p>
+      }
+
+      <div class="card-details">
+        <span class="chip">{{ item.card.network }}</span>
+        <span class="chip">{{ item.card.rewardsCurrency }}</span>
+      </div>
+    </article>
+  } @empty {
+    <div class="empty-state">
+      <p>{{ emptyMessage() }}</p>
+    </div>
+  }
+</div>

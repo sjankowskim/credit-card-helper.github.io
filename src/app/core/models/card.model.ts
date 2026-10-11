@@ -230,7 +230,7 @@ export interface UserCard {
   userData: {
     /**
      * Current status of the card (active, closed, or product-changed)
-     * Only applicable for portfolio cards (not wishlist cards)
+     * Only applicable for wallet cards (not wishlist cards)
      */
     status?: CardStatus;
     /** Custom nickname for this card instance (e.g., "Grocery Card", "P2 (Wife's)") */
@@ -245,6 +245,11 @@ export interface UserCard {
     isAuthorizedUser?: boolean;
     /** Annual fee the user actually pays, when it differs from the catalog (e.g., a retention offer) */
     annualFeeOverride?: number;
+    /**
+     * Set when this instance was created by product-changing another instance (UserCard.id).
+     * A product change keeps the original account, so it doesn't count as a new account for 5/24.
+     */
+    productChangedFromId?: string;
     /**
      * Selected category for AUTO_TOP_SPEND cards.
      * Only applicable for cards with AUTO_TOP_SPEND behavior.
@@ -275,6 +280,9 @@ export interface UserCard {
        * }
        */
       selectedCategories?: Record<string, CategoryId[]>;
+
+      /** IDs of ROTATING tiers the user has activated for their quarter */
+      activatedTierIds?: string[];
     };
     
     /** Status-specific data for closed cards */

@@ -1,0 +1,77 @@
+<app-modal [title]="'Add ' + card().name" (closed)="closed.emit()">
+  <form id="add-card-form" class="add-form" (submit)="submit($event)">
+    <div class="row">
+      <label class="form-field">
+        <span>Opened</span>
+        <input class="input" type="date" [max]="maxDate" [value]="openDate()" (input)="openDate.set($any($event.target).value)" />
+      </label>
+      <label class="form-field">
+        <span>Status</span>
+        <select class="input" [value]="status()" (change)="setStatus($any($event.target).value)">
+          <option value="active">Active</option>
+          <option value="closed">Closed</option>
+        </select>
+      </label>
+    </div>
+
+    @if (status() === 'closed') {
+      <label class="form-field">
+        <span>Closed</span>
+        <input
+          class="input"
+          type="date"
+          [min]="openDate()"
+          [max]="maxDate"
+          [value]="closedDate()"
+          (input)="closedDate.set($any($event.target).value)"
+        />
+      </label>
+    }
+
+    <label class="form-field">
+      <span>Nickname (optional)</span>
+      <input
+        class="input"
+        type="text"
+        placeholder="e.g. Grocery card, P2's card"
+        [value]="label()"
+        (input)="label.set($any($event.target).value)"
+      />
+    </label>
+
+    <fieldset class="sub">
+      <label class="checkbox">
+        <input type="checkbox" [checked]="trackSub()" (change)="setTrackSub($any($event.target).checked)" />
+        <span>Track a sign-up bonus</span>
+      </label>
+      @if (trackSub()) {
+        @if (card().defaultSignUpBonus) {
+          <p class="hint">Prefilled from the current public offer. Change it if yours was different.</p>
+        }
+        <div class="row three">
+          <label class="form-field">
+            <span>Bonus ({{ subCurrency() }})</span>
+            <input class="input" type="number" min="0" [value]="subAmount()" (input)="editSub('amount', $any($event.target).value)" />
+          </label>
+          <label class="form-field">
+            <span>Spend required ($)</span>
+            <input class="input" type="number" min="0" step="100" [value]="subSpend()" (input)="editSub('spendRequired', $any($event.target).value)" />
+          </label>
+          <label class="form-field">
+            <span>Within (months)</span>
+            <input class="input" type="number" min="1" [value]="subWindow()" (input)="editSub('windowMonths', $any($event.target).value)" />
+          </label>
+        </div>
+      }
+    </fieldset>
+
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+  </form>
+
+  <div modal-actions class="modal-actions">
+    <button type="button" class="btn" (click)="closed.emit()">Cancel</button>
+    <button type="submit" form="add-card-form" class="btn btn-primary" [disabled]="!!error()">Add to wallet</button>
+  </div>
+</app-modal>

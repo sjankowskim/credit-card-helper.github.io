@@ -1,0 +1,254 @@
+<app-modal [title]="title()" width="wide" (closed)="closed.emit()">
+  <div modal-title>
+    <h2>{{ title() }}</h2>
+    @if (userData().customLabel) {
+      <div class="subtitle">{{ card().name }}</div>
+    }
+  </div>
+
+  @if (userCard(); as userCard) {
+    <section>
+      <h3>{{ userCard.isWishlist ? 'Wishlist' : 'Your card' }}</h3>
+      <div class="rows">
+        @if (isOwned()) {
+          <div class="row">
+            <span class="label">Status</span>
+            <select class="input" [value]="status() ?? ''" (change)="onStatusChange($any($event.target).value)">
+              <option value="active">Active</option>
+              <option value="closed">Closed</option>
+              <option value="product-changed">Product changed</option>
+            </select>
+          </div>
+        }
+        <div class="row">
+          <span class="label">Nickname</span>
+          <app-inline-edit-field [value]="userData().customLabel" placeholder="e.g. Grocery card" (saved)="setLabel($event)" />
+        </div>
+
+        @if (isOwned()) {
+          <div class="row">
+            <span class="label">Opened</span>
+            <app-inline-edit-field type="date" [value]="userData().accountStartDate" (saved)="setOpenDate($event)" />
+          </div>
+          @if (productChangedFrom(); as from) {
+            <div class="row">
+              <span class="label">Product changed from</span>
+              <span class="value">{{ from }} <span class="muted">(same account, not a new one for 5/24)</span></span>
+            </div>
+          }
+
+          @switch (status()) {
+            @case (CardStatus.ACTIVE) {
+              <div class="row">
+                <span class="label">Annual fee</span>
+                <app-inline-edit-field
+                  type="currency"
+                  [min]="0"
+                  [value]="userData().annualFeeOverride"
+                  [emptyLabel]="formatCurrency(card().annualFee) + ' (standard)'"
+                  (saved)="setAnnualFeeOverride($event)"
+                />
+              </div>
+              @if (nextAnnualFeeDate()) {
+                <div class="row">
+                  <span class="label">Next annual fee</span>
+                  <span class="value">{{ nextAnnualFeeDate() }}</span>
+                </div>
+              }
+              <div class="row">
+                <span class="label">Payment due (day of month)</span>
+                <app-inline-edit-field
+                  type="number"
+                  [min]="1"
+                  [max]="31"
+                  [value]="userData().activeData?.paymentDueDate"
+                  (saved)="setActiveField('paymentDueDate', $event)"
+                />
+              </div>
+              <div class="row">
+                <span class="label">Credit limit</span>
+                <app-inline-edit-field
+                  type="currency"
+                  [min]="0"
+                  [value]="userData().activeData?.creditLimit"
+                  (saved)="setActiveField('creditLimit', $event)"
+                />
+              </div>
+              <div class="row">
+                <span class="label">Churn card</span>
+                <button class="btn btn-small" (click)="toggle('isChurnCard')">{{ userData().isChurnCard ? 'Yes' : 'No' }}</button>
+              </div>
+              @if (userData().isChurnCard) {
+                <div class="row">
+                  <span class="label">Planned close</span>
+                  <app-inline-edit-field type="date" [value]="userData().plannedCloseDate" (saved)="setPlannedCloseDate($event)" />
+                </div>
+              }
+            }
+            @case (CardStatus.CLOSED) {
+              <div class="row">
+                <span class="label">Closed</span>
+                <app-inline-edit-field type="date" [value]="userData().closedData?.closedDate" (saved)="setClosedDate($event)" />
+              </div>
+            }
+            @case (CardStatus.PRODUCT_CHANGED) {
+              <div class="row">
+                <span class="label">Changed on</span>
+                <app-inline-edit-field
+                  type="date"
+                  [value]="userData().productChangedData?.productChangeDate"
+                  (saved)="setProductChangeDate($event)"
+                />
+              </div>
+              <div class="row">
+                <span class="label">Changed to</span>
+                <select class="input" [value]="productChangedTo()?.id ?? ''" (change)="onProductChangeSelect($any($event.target).value)">
+                  <option value="">Choose a {{ card().issuer }} card</option>
+                  @for (option of productChangeOptions(); track option.id) {
+                    <option [value]="option.id">{{ option.name }}</option>
+                  }
+                </select>
+              </div>
+            }
+          }
+
+          @if (userData().signUpBonus; as sub) {
+            <div class="row">
+              <span class="label">Sign-up bonus</span>
+              <span class="value">
+                {{ sub.amount.toLocaleString() }} {{ sub.currency }} after {{ formatCurrency(sub.spendRequired) }} in
+                {{ sub.windowMonths }} mo
+              </span>
+            </div>
+          }
+          <div class="row">
+            <span class="label">Hit sign-up bonus</span>
+            <button class="btn btn-small" (click)="toggle('hitSub')">{{ userData().hitSub ? 'Yes' : 'No' }}</button>
+          </div>
+        }
+      </div>
+    </section>
+
+    @if (status() === CardStatus.ACTIVE && hasCategoryChoices()) {
+      <section>
+        <h3>Bonus categories</h3>
+
+        @if (autoTopSpendTier(); as tier) {
+          <div class="choice">
+            <div class="choice-header">
+              <span>{{ tier.name }} · {{ formatTierRate(tier) }}</span>
+              <span class="muted">{{ describeBehavior(tier) }}</span>
+            </div>
+            <select class="input" [value]="userData().autoTopSpendCategory ?? ''" (change)="onAutoTopSpendChange($any($event.target).value)">
+              <option value="">Pick your top category</option>
+              @for (categoryId of tier.eligibleCategories; track categoryId) {
+                <option [value]="categoryId">{{ getCategoryName(categoryId) }}</option>
+              }
+            </select>
+            @if (!userData().autoTopSpendCategory) {
+              <p class="warning">⚠️ The dashboard uses the base rate until you pick a category.</p>
+            }
+          </div>
+        }
+
+        @for (tier of userChoiceTiers(); track tier.id) {
+          <div class="choice">
+            <div class="choice-header">
+              <span>{{ tier.name }} · {{ formatTierRate(tier) }}</span>
+              <span class="muted">{{ getSelectedCategories(tier).length }} / {{ getMaxSelections(tier) }} chosen</span>
+            </div>
+            <div class="checkboxes">
+              @for (categoryId of tier.eligibleCategories; track categoryId) {
+                @let checked = getSelectedCategories(tier).includes(categoryId);
+                <label class="checkbox">
+                  <input
+                    type="checkbox"
+                    [checked]="checked"
+                    [disabled]="!checked && getSelectedCategories(tier).length >= getMaxSelections(tier)"
+                    (change)="toggleChoice(tier, categoryId, $any($event.target).checked)"
+                  />
+                  {{ getCategoryName(categoryId) }}
+                </label>
+              }
+            </div>
+          </div>
+        }
+
+        @for (tier of rotatingTiers(); track tier.id) {
+          <div class="choice">
+            <div class="choice-header">
+              <span>{{ tier.name }} · {{ formatTierRate(tier) }}</span>
+              <span class="muted">{{ describeBehavior(tier) }}</span>
+            </div>
+            <label class="checkbox">
+              <input type="checkbox" [checked]="isActivated(tier)" (change)="toggleActivated(tier)" />
+              Activated
+            </label>
+          </div>
+        }
+      </section>
+    }
+  }
+
+  <section>
+    <h3>Card details</h3>
+    <div class="rows">
+      <div class="row"><span class="label">Issuer</span><span class="value">{{ card().issuer }}</span></div>
+      <div class="row"><span class="label">Rewards program</span><span class="value">{{ card().rewardsProgram }}</span></div>
+      <div class="row"><span class="label">Network</span><span class="value">{{ card().network }}</span></div>
+      <div class="row"><span class="label">Type</span><span class="value">{{ card().isBusiness ? 'Business' : 'Personal' }}</span></div>
+      <div class="row">
+        <span class="label">Annual fee</span>
+        <span class="value">{{ card().annualFee ? formatCurrency(card().annualFee) : 'None' }}</span>
+      </div>
+      <div class="row">
+        <span class="label">Foreign transaction fee</span>
+        <span class="value">{{ card().hasForeignTransactionFee ? 'Yes' : 'No' }}</span>
+      </div>
+      @if (card().defaultSignUpBonus; as sub) {
+        <div class="row">
+          <span class="label">Current offer</span>
+          <span class="value">
+            {{ sub.amount.toLocaleString() }} {{ sub.currency }} after {{ formatCurrency(sub.spendRequired) }} in {{ sub.windowMonths }} mo
+          </span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section>
+    <h3>Earning rates</h3>
+    <ul class="tiers">
+      @for (tier of card().rewardTiers; track tier.id) {
+        <li class="tier">
+          <div class="tier-header">
+            <span class="tier-name">{{ tier.name }}</span>
+            <span class="tier-rate">{{ formatTierRate(tier) }}</span>
+          </div>
+          <div class="tags">
+            @for (categoryId of tier.eligibleCategories; track categoryId) {
+              <span class="badge">{{ getCategoryName(categoryId) }}</span>
+            }
+          </div>
+          @if (describeBehavior(tier) || tier.spendingCap) {
+            <div class="muted">
+              {{ describeBehavior(tier) }}{{ describeBehavior(tier) && tier.spendingCap ? ' · ' : '' }}{{ formatSpendingCap(tier) }}
+            </div>
+          }
+        </li>
+      }
+      <li class="tier">
+        <div class="tier-header">
+          <span class="tier-name">Everything else</span>
+          <span class="tier-rate">{{ card().baseRewardRate }}{{ earnUnit() }}</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  @if (!userCard()) {
+    <div modal-actions class="modal-actions">
+      <button class="btn btn-primary" (click)="add.emit()">+ Add to wallet</button>
+    </div>
+  }
+</app-modal>

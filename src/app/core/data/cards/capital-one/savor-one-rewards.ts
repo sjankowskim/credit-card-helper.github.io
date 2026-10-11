@@ -17,10 +17,10 @@ export const SAVOR_ONE_REWARDS: Card = {
   rewardTiers: [
     {
       id: 'savor-one-bonus',
-      name: 'Grocery, Dining & Entertainment',
+      name: 'Grocery, Dining, Entertainment & Streaming',
       rewardRate: 3.0,
       behavior: { type: 'AUTOMATIC' },
-      eligibleCategories: ['grocery-stores', 'dining', 'entertainment']
+      eligibleCategories: ['grocery-stores', 'dining', 'entertainment', 'streaming']
     }
   ]
 };

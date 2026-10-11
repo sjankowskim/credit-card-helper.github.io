@@ -1,26 +1,45 @@
-<table class="rankings-table">
-  <thead>
-    <tr>
-      <th>Category</th>
-      @for (i of [0, 1, 2, 3, 4].slice(0, numColumns()); track i) {
-        <th>Card {{ i + 1 }}</th>
-      }
-    </tr>
-  </thead>
-  <tbody>
-    @for (entry of entries(); track entry.categoryId) {
+<div class="table-scroll">
+  <table class="rankings-table">
+    <thead>
       <tr>
-        <td class="category-cell">{{ getCategoryName(entry.categoryId) }}</td>
-        @for (ranking of entry.rankings; track ranking.card.id) {
-          <td class="card-cell" [class.warning]="ranking.hasAutoTopSpendWarning">
-            <div class="card-name">{{ ranking.card.name }}</div>
-            <div class="reward-rate">{{ ranking.rewardRate }}x</div>
-            @if (ranking.hasAutoTopSpendWarning) {
-              <div class="warning-icon" title="This card requires you to select a category. Go to Portfolio to configure.">⚠️</div>
-            }
-          </td>
+        <th>Category</th>
+        @for (i of columns(); track i) {
+          <th>{{ columns().length === 1 ? 'Best Card' : 'Card ' + (i + 1) }}</th>
         }
       </tr>
-    }
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      @for (entry of entries(); track entry.categoryId) {
+        <tr>
+          <td class="category-cell">
+            {{ entry.label }}
+            @if (entry.note) {
+              <span class="category-note">{{ entry.note }}</span>
+            }
+          </td>
+          @for (i of columns(); track i) {
+            @if (entry.rankings[i]; as ranking) {
+              <td class="card-cell" [class.warning]="ranking.warning">
+                <div class="card-name">{{ getDisplayName(ranking) }}</div>
+                <div class="reward-rate">
+                  {{ formatRate(ranking.rewardRate, ranking.unit) }}
+                  @if (formatSpendingCap(ranking.tier); as cap) {
+                    <span class="cap">{{ cap }}</span>
+                  }
+                </div>
+                @if (ranking.userCard.isWishlist) {
+                  <span class="badge badge-warning">Wishlist</span>
+                }
+                @if (ranking.warning) {
+                  <div class="warning-icon" [title]="ranking.warning">⚠️</div>
+                }
+              </td>
+            } @else {
+              <td class="card-cell empty"></td>
+            }
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

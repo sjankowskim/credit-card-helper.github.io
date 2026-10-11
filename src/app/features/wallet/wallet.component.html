@@ -1,0 +1,65 @@
+<div class="page-container">
+  <h1>Wallet</h1>
+  <p>Your cards and wishlist</p>
+
+  @if (hasAnyCards()) {
+    <div class="toolbar">
+      <app-search-bar (searchChange)="searchQuery.set($event)" />
+      <span class="summary">{{ summary() }}</span>
+    </div>
+
+    @for (group of ownedGroups(); track group.title) {
+      <section class="wallet-section">
+        <h2>{{ group.title }} <span class="count">{{ group.items.length }}</span></h2>
+        <app-card-list
+          mode="wallet"
+          [items]="group.items"
+          [contextCards]="ownedCards()"
+          (open)="selected.set($event)"
+          (remove)="onRemove($event)"
+        />
+      </section>
+    }
+
+    @if (wishlistItems().length > 0) {
+      <section class="wallet-section">
+        <h2>Wishlist <span class="count">{{ wishlistItems().length }}</span></h2>
+        <app-card-list
+          mode="wishlist"
+          [items]="wishlistItems()"
+          [contextCards]="wishlistCards()"
+          (open)="selected.set($event)"
+          (add)="adding.set($event)"
+          (toggleWishlist)="onUnwishlist($event)"
+        />
+      </section>
+    }
+
+    @if (!hasResults()) {
+      <div class="empty">No cards match “{{ searchQuery() }}”.</div>
+    }
+  } @else {
+    <div class="empty">No cards yet. Add some from the Cards page.</div>
+  }
+
+  @if (selected(); as item) {
+    <app-card-detail [card]="item.card" [userCardId]="item.userCard?.id ?? null" (closed)="selected.set(null)" />
+  }
+
+  @if (adding(); as item) {
+    <app-add-card-dialog [card]="item.card" (added)="onAdded($event)" (closed)="adding.set(null)" />
+  }
+
+  @if (removing(); as item) {
+    <app-modal title="Remove card?" (closed)="removing.set(null)">
+      <p>
+        This deletes everything you've saved for <strong>{{ item.card.name }}</strong>, including its open date,
+        bonus category picks, and sign-up bonus. This can't be undone.
+      </p>
+      <div modal-actions class="modal-actions">
+        <button class="btn" (click)="removing.set(null)">Cancel</button>
+        <button class="btn btn-danger" (click)="remove(item)">Remove card</button>
+      </div>
+    </app-modal>
+  }
+</div>
