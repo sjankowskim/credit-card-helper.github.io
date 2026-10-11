@@ -138,7 +138,7 @@ export class CardDetailComponent {
     }));
   }
 
-  toggle(field: 'hitSub' | 'isChurnCard'): void {
+  toggle(field: 'hitSub' | 'isChurnCard' | 'isAuthorizedUser'): void {
     this.patch(d => ({ [field]: !d[field] }));
   }
 

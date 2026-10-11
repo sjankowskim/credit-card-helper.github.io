@@ -30,6 +30,10 @@
             <span class="label">Opened</span>
             <app-inline-edit-field type="date" [value]="userData().accountStartDate" (saved)="setOpenDate($event)" />
           </div>
+          <div class="row">
+            <span class="label">Authorized user</span>
+            <button class="btn btn-small" (click)="toggle('isAuthorizedUser')">{{ userData().isAuthorizedUser ? 'Yes' : 'No' }}</button>
+          </div>
           @if (productChangedFrom(); as from) {
             <div class="row">
               <span class="label">Product changed from</span>

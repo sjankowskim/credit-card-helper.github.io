@@ -1,0 +1,113 @@
+<div class="page-container">
+  <h1>New Accounts</h1>
+  <p>Every account you've opened and where you stand with each issuer's application rules</p>
+
+  <section class="stats">
+    @for (stat of recentCounts(); track stat.label) {
+      <div class="stat">
+        <span class="value">{{ stat.own }}</span>
+        <span class="label">{{ stat.label }}</span>
+        <span class="muted">{{ stat.authorizedUser > 0 ? '+ ' + stat.authorizedUser + ' AU' : 'No AU cards' }}</span>
+      </div>
+    }
+  </section>
+
+  @if (missingDates().length > 0) {
+    <section class="missing">
+      <h2>⚠️ Missing open dates</h2>
+      <p class="muted">These cards aren't counted anywhere until they have an open date. Click one to add it.</p>
+      <div class="missing-list">
+        @for (userCard of missingDates(); track userCard.id) {
+          <button class="btn btn-small" (click)="open(userCard)">{{ getName(userCard) }}</button>
+        }
+      </div>
+    </section>
+  }
+
+  <section>
+    <h2>Issuer rules</h2>
+    <ng-template #ruleGroups let-groups>
+      <div class="rules">
+        @for (group of groups; track group.issuer) {
+          <div class="issuer">
+            <h3>{{ group.issuer }}</h3>
+            @for (item of group.rules; track item.rule.id) {
+              <div class="rule">
+                <div>
+                  <div class="rule-name">{{ item.rule.name }}</div>
+                  <div class="muted">{{ item.rule.description }}</div>
+                  <div class="muted">{{ describeCount(item.status, item.rule) }}</div>
+                  <div class="au-note" [class.counts]="countsAuthorizedUsers(item.rule)">
+                    {{ countsAuthorizedUsers(item.rule) ? 'Authorized-user cards count' : "Authorized-user cards don't count" }}
+                  </div>
+                </div>
+                @if (item.status.canApply) {
+                  <span class="badge badge-success">Can apply</span>
+                } @else {
+                  <span class="badge badge-danger">Wait until {{ formatDay(item.status.eligibleOn) }}</span>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </ng-template>
+
+    <ng-container *ngTemplateOutlet="ruleGroups; context: { $implicit: featuredRules() }" />
+    @if (moreRules().length > 0) {
+      <details class="more-rules">
+        <summary>More issuer rules ({{ moreIssuerNames() }})</summary>
+        <ng-container *ngTemplateOutlet="ruleGroups; context: { $implicit: moreRules() }" />
+      </details>
+    }
+    <p class="muted footnote">
+      Issuer rules are community data points, not published policy.
+    </p>
+  </section>
+
+  <section>
+    <h2>Timeline</h2>
+    @if (applications().length > 0) {
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Opened</th>
+              <th>Card</th>
+              <th>Issuer</th>
+              <th>Age</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (app of applications(); track app.userCard.id) {
+              <tr>
+                <td class="nowrap">{{ formatDay(app.date) }}</td>
+                <td>
+                  <button class="link" (click)="open(app.userCard)">{{ getName(app.userCard) }}</button>
+                  @if (app.userCard.userData.isAuthorizedUser) {
+                    <span class="badge">AU</span>
+                  }
+                  @if (app.userCard.userData.status === CardStatus.CLOSED) {
+                    <span class="badge">Closed</span>
+                  }
+                  @if (app.card.isBusiness) {
+                    <span class="badge">Business</span>
+                  }
+                </td>
+                <td>{{ app.card.issuer }}</td>
+                <td class="nowrap">{{ getAge(app) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="muted footnote">Product changes keep the original account, so they aren't listed. Closed cards still count.</p>
+    } @else {
+      <div class="empty">No accounts with open dates yet.</div>
+    }
+  </section>
+
+  @if (selected(); as item) {
+    <app-card-detail [card]="item.card" [userCardId]="item.userCard.id" (closed)="selected.set(null)" />
+  }
+</div>
