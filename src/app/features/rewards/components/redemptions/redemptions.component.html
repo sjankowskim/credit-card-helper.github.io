@@ -1,0 +1,118 @@
+@if (programCpps().length > 0) {
+  <section>
+    <h2 class="section-title">Your average CPP</h2>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Program</th>
+            <th class="num">Points redeemed</th>
+            <th class="num">Value</th>
+            <th class="num">Realized CPP</th>
+            <th class="num">Your setting</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (summary of programCpps(); track summary.program) {
+            <tr>
+              <td>{{ summary.program }}</td>
+              <td class="num">{{ summary.points.toLocaleString('en-US') }}</td>
+              <td class="num">{{ formatCurrency(summary.cashValue) }}</td>
+              <td class="num strong">{{ formatCpp(summary.cpp) }}</td>
+              <td class="num">{{ formatCpp(currentCpp(summary.program)) }}</td>
+              <td class="num">
+                <button class="btn btn-small" (click)="useAsCpp(summary)">Use as my CPP</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="muted note">Your CPP setting values points on the Dashboard and in your balances.</p>
+  </section>
+}
+
+<section>
+  <h2 class="section-title">Log a redemption</h2>
+  @if (programs().length > 0) {
+    <form class="add-form" (submit)="add($event)">
+      <label class="form-field">
+        <span>Program</span>
+        <select class="input" [value]="draftProgram()" (change)="draftProgram.set($any($event.target).value)">
+          <option value="">Choose a program</option>
+          @for (program of programs(); track program.id) {
+            <option [value]="program.id">{{ program.name }}</option>
+          }
+        </select>
+      </label>
+      <label class="form-field">
+        <span>Date</span>
+        <input class="input" type="date" [value]="draftDate()" (input)="draftDate.set($any($event.target).value)" />
+      </label>
+      <label class="form-field">
+        <span>Points used</span>
+        <input class="input" type="number" min="0" [value]="draftPoints()" (input)="draftPoints.set($any($event.target).value)" />
+      </label>
+      <label class="form-field">
+        <span>Cash value ($)</span>
+        <input class="input" type="number" min="0" step="any" [value]="draftValue()" (input)="draftValue.set($any($event.target).value)" />
+      </label>
+      <label class="form-field description-field">
+        <span>What for</span>
+        <input
+          class="input"
+          type="text"
+          placeholder="e.g. 2 economy tickets to Tokyo via Turkish"
+          [value]="draftDescription()"
+          (input)="draftDescription.set($any($event.target).value)"
+        />
+      </label>
+      <button class="btn btn-primary" type="submit" [disabled]="!canAdd()">
+        Add{{ draftCpp() !== null ? ' · ' + formatCpp(draftCpp()!) : '' }}
+      </button>
+    </form>
+    <p class="muted note">Cash value is what you'd have paid in cash for the same thing (flight, hotel, statement credit).</p>
+  } @else {
+    <div class="empty-state">Redemptions are for points programs. Add a points-earning card to your Wallet first.</div>
+  }
+</section>
+
+<section>
+  <h2 class="section-title">History</h2>
+  @if (redemptions().length > 0) {
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Redemption</th>
+            <th class="num">Points</th>
+            <th class="num">Value</th>
+            <th class="num">CPP</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (redemption of redemptions(); track redemption.id) {
+            <tr>
+              <td class="nowrap">{{ formatDate(redemption.date) }}</td>
+              <td>
+                {{ redemption.description || 'Redemption' }}
+                <div class="muted">{{ redemption.program }}</div>
+              </td>
+              <td class="num">{{ redemption.points.toLocaleString('en-US') }}</td>
+              <td class="num">{{ formatCurrency(redemption.cashValue) }}</td>
+              <td class="num strong">{{ formatCpp(getCpp(redemption)) }}</td>
+              <td class="num">
+                <button class="btn btn-small" (click)="remove(redemption)" aria-label="Delete redemption">✕</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="empty-state">No redemptions logged yet.</div>
+  }
+</section>

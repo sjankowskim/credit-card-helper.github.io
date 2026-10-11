@@ -1,4 +1,5 @@
 import type { RewardsProgram, UserCard } from './card.model';
+import { createDefaultRewardsState, type RewardsState } from './rewards.model';
 
 export interface DashboardSettings {
   numCards: 1 | 3 | 5;
@@ -18,9 +19,10 @@ export interface AppState {
   userCards: UserCard[];
   cppValuations: Partial<Record<RewardsProgram, number>>;
   dashboardSettings: DashboardSettings;
+  rewards: RewardsState;
 }
 
-export const CURRENT_SCHEMA_VERSION = 3;
+export const CURRENT_SCHEMA_VERSION = 4;
 
 export const DEFAULT_DASHBOARD_SETTINGS: DashboardSettings = {
   numCards: 3,
@@ -35,6 +37,7 @@ export function createDefaultAppState(): AppState {
     schemaVersion: CURRENT_SCHEMA_VERSION,
     userCards: [],
     cppValuations: {},
-    dashboardSettings: { ...DEFAULT_DASHBOARD_SETTINGS }
+    dashboardSettings: { ...DEFAULT_DASHBOARD_SETTINGS },
+    rewards: createDefaultRewardsState()
   };
 }

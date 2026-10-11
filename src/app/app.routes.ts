@@ -5,6 +5,7 @@ import { SubTrackerComponent } from './features/sub-tracker/sub-tracker.componen
 import { NewAccountsComponent } from './features/new-accounts/new-accounts.component';
 import { CardsComponent } from './features/cards/cards.component';
 import { SettingsComponent } from './features/settings/settings.component';
+import { RewardsComponent } from './features/rewards/rewards.component';
 
 export const routes: Routes = [
   { path: 'wallet', component: WalletComponent },
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'cards', component: CardsComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'sub-tracker', component: SubTrackerComponent },
+  { path: 'rewards', component: RewardsComponent },
   { path: 'new-accounts', component: NewAccountsComponent },
   { path: 'account-tracker', redirectTo: '/new-accounts' },
   { path: 'settings', component: SettingsComponent },

@@ -44,6 +44,8 @@ export class InlineEditFieldComponent {
         return formatDate(String(value));
       case 'currency':
         return formatCurrency(Number(value));
+      case 'number':
+        return Number(value).toLocaleString('en-US');
       default:
         return String(value);
     }

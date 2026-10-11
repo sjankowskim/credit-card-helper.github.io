@@ -1,0 +1,129 @@
+<div class="year-picker">
+  <label class="form-field">
+    <span>Year</span>
+    <select class="input" [value]="year()" (change)="year.set(+$any($event.target).value)">
+      @for (y of years(); track y) {
+        <option [value]="y">{{ y }}</option>
+      }
+    </select>
+  </label>
+</div>
+
+<section>
+  <h2 class="section-title">Card value in {{ year() }}</h2>
+  @if (cardValues().length > 0) {
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Card</th>
+            <th class="num">Earned</th>
+            <th class="num">Annual fee</th>
+            <th class="num">Net</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (value of cardValues(); track value.userCard.id) {
+            <tr>
+              <td>{{ value.name }}</td>
+              <td class="num">{{ formatCurrency(value.earnedValue) }}</td>
+              <td class="num">{{ value.annualFee ? '−' + formatCurrency(value.annualFee) : '—' }}</td>
+              <td class="num net" [class.positive]="value.net >= 0" [class.negative]="value.net < 0">
+                {{ formatCurrency(value.net) }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="muted note">Points are valued at your CPP settings. A negative net means the card cost more than it earned this year.</p>
+  } @else {
+    <div class="empty-state">No active cards yet.</div>
+  }
+</section>
+
+<section>
+  <h2 class="section-title">Log rewards</h2>
+  @if (cardOptions().length > 0) {
+    <form class="add-form" (submit)="add($event)">
+      <label class="form-field card-field">
+        <span>Card</span>
+        <select class="input" [value]="draftCardId()" (change)="draftCardId.set($any($event.target).value)">
+          <option value="">Choose a card</option>
+          @for (option of cardOptions(); track option.id) {
+            <option [value]="option.id">{{ option.name }}</option>
+          }
+        </select>
+      </label>
+      <label class="form-field">
+        <span>Date</span>
+        <input class="input" type="date" [value]="draftDate()" (input)="draftDate.set($any($event.target).value)" />
+      </label>
+      <label class="form-field">
+        <span>Amount{{ draftUnit() ? ' (' + draftUnit() + ')' : '' }}</span>
+        <input class="input" type="number" min="0" step="any" [value]="draftAmount()" (input)="draftAmount.set($any($event.target).value)" />
+      </label>
+      <label class="form-field">
+        <span>Source</span>
+        <select class="input" [value]="draftSource()" (change)="draftSource.set($any($event.target).value)">
+          @for (source of sources; track source) {
+            <option [value]="source">{{ sourceLabels[source] }}</option>
+          }
+        </select>
+      </label>
+      <label class="form-field note-field">
+        <span>Note (optional)</span>
+        <input class="input" type="text" placeholder="e.g. September statement" [value]="draftNote()" (input)="draftNote.set($any($event.target).value)" />
+      </label>
+      <button class="btn btn-primary" type="submit" [disabled]="!canAdd()">Add</button>
+    </form>
+    <p class="muted note">Tip: log what each statement earned. Sign-up bonuses are added automatically when you mark them earned.</p>
+  } @else {
+    <div class="empty-state">Add cards to your Wallet to log rewards.</div>
+  }
+</section>
+
+<section>
+  <h2 class="section-title">Earned in {{ year() }}</h2>
+  @if (rows().length > 0) {
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Card</th>
+            <th>Source</th>
+            <th class="num">Amount</th>
+            <th class="num">Value</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.entryId ?? 'sub-' + row.userCard.id) {
+            <tr>
+              <td class="nowrap">{{ formatDate(row.date) }}</td>
+              <td>
+                {{ getName(row) }}
+                @if (row.note && row.source !== 'sub') {
+                  <div class="muted">{{ row.note }}</div>
+                }
+              </td>
+              <td>{{ sourceLabels[row.source] }}</td>
+              <td class="num">{{ formatAmount(row.amount, row.card) }}</td>
+              <td class="num">{{ formatCurrency(row.value) }}</td>
+              <td class="num">
+                @if (row.entryId) {
+                  <button class="btn btn-small" (click)="remove(row)" aria-label="Delete entry">✕</button>
+                } @else {
+                  <span class="muted" title="Edit sign-up bonuses in the card's details">From card</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="empty-state">Nothing logged for {{ year() }} yet.</div>
+  }
+</section>

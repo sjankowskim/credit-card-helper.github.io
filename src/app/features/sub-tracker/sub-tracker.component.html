@@ -2,30 +2,30 @@
   <h1>SUB Tracker</h1>
   <p>Sign-up bonus progress, deadlines, and what you've earned</p>
 
-  <section class="stats">
-    <div class="stat">
-      <span class="value">{{ stats().active }}</span>
-      <span class="label">In progress</span>
+  <section class="stat-tiles">
+    <div class="stat-tile">
+      <span class="stat-value">{{ stats().active }}</span>
+      <span class="stat-label">In progress</span>
     </div>
-    <div class="stat">
-      <span class="value">{{ formatCurrency(stats().spendRemaining) }}</span>
-      <span class="label">Spend remaining</span>
+    <div class="stat-tile">
+      <span class="stat-value">{{ formatCurrency(stats().spendRemaining) }}</span>
+      <span class="stat-label">Spend remaining</span>
     </div>
-    <div class="stat">
-      <span class="value">{{ formatCurrency(stats().earnedValue) }}</span>
-      <span class="label">Earned this year</span>
+    <div class="stat-tile">
+      <span class="stat-value">{{ formatCurrency(stats().earnedValue) }}</span>
+      <span class="stat-label">Earned this year</span>
       <span class="muted">{{ stats().earnedCount }} {{ stats().earnedCount === 1 ? 'bonus' : 'bonuses' }}</span>
     </div>
   </section>
 
   <section>
-    <h2>In progress</h2>
+    <h2 class="section-title">In progress</h2>
     @for (sub of active(); track sub.userCard.id) {
       @let met = sub.remaining === 0;
       <article class="sub" [class.behind]="sub.behindPace" [class.met]="met">
         <header>
           <div>
-            <button class="link name" (click)="open(sub)">{{ getName(sub.userCard, sub.card) }}</button>
+            <button class="link-button name" (click)="open(sub)">{{ getName(sub.userCard, sub.card) }}</button>
             <div class="muted">{{ describeBonus(sub) }}</div>
           </div>
           @if (met) {
@@ -84,7 +84,7 @@
         </div>
       </article>
     } @empty {
-      <div class="empty">
+      <div class="empty-state">
         No bonuses in progress. Track one when you add a card, or from a card's details in your Wallet.
       </div>
     }
@@ -92,9 +92,9 @@
 
   @if (history().length > 0) {
     <section>
-      <h2>History</h2>
+      <h2 class="section-title">History</h2>
       <div class="table-scroll">
-        <table>
+        <table class="data-table">
           <thead>
             <tr>
               <th>Card</th>
@@ -106,7 +106,7 @@
           <tbody>
             @for (sub of history(); track sub.userCard.id) {
               <tr>
-                <td><button class="link" (click)="open(sub)">{{ getName(sub.userCard, sub.card) }}</button></td>
+                <td><button class="link-button" (click)="open(sub)">{{ getName(sub.userCard, sub.card) }}</button></td>
                 <td>{{ describeBonus(sub) }}</td>
                 <td>
                   @if (sub.state === 'earned') {
@@ -117,7 +117,7 @@
                     <span class="muted">deadline {{ formatDay(sub.deadline) }}</span>
                   }
                 </td>
-                <td class="right">
+                <td class="num">
                   @if (sub.state === 'earned') {
                     <button class="btn btn-small" (click)="undoEarned(sub)">Undo</button>
                   } @else {

@@ -13,6 +13,7 @@ export class NavbarComponent {
     { path: '/wallet', label: 'Wallet' },
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/sub-tracker', label: 'SUB Tracker' },
+    { path: '/rewards', label: 'Rewards' },
     { path: '/new-accounts', label: 'New Accounts' },
     { path: '/settings', label: 'Settings' }
   ];

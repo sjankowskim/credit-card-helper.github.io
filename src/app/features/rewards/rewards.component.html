@@ -1,0 +1,44 @@
+<div class="page-container">
+  <h1>Rewards</h1>
+  <p>Balances, what each card earns you, and what you get when you redeem</p>
+
+  <section class="stat-tiles summary">
+    <div class="stat-tile">
+      <span class="stat-value">{{ formatWhole(totalBalance()) }}</span>
+      <span class="stat-label">Balance value</span>
+      <span class="muted">At your CPP valuations</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-value">{{ formatWhole(earnedThisYear()) }}</span>
+      <span class="stat-label">Earned in {{ year }}</span>
+      <span class="muted">Including sign-up bonuses</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-value" [class.positive]="netThisYear() >= 0" [class.negative]="netThisYear() < 0">
+        {{ formatWhole(netThisYear()) }}
+      </span>
+      <span class="stat-label">Net of annual fees</span>
+      <span class="muted">Earned minus fees on active cards</span>
+    </div>
+  </section>
+
+  <nav class="tabs" role="tablist">
+    @for (t of tabs; track t.id) {
+      <button role="tab" class="tab" [class.active]="tab() === t.id" [attr.aria-selected]="tab() === t.id" (click)="tab.set(t.id)">
+        {{ t.label }}
+      </button>
+    }
+  </nav>
+
+  @switch (tab()) {
+    @case ('balances') {
+      <app-rewards-balances />
+    }
+    @case ('earned') {
+      <app-rewards-earned />
+    }
+    @case ('redemptions') {
+      <app-rewards-redemptions />
+    }
+  }
+</div>

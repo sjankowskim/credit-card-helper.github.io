@@ -1,0 +1,42 @@
+@if (pools().length > 0) {
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Rewards</th>
+          <th class="num">Balance</th>
+          <th class="num">Value</th>
+          <th class="num">Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (pool of pools(); track pool.key) {
+          <tr>
+            <td>
+              <div class="pool-name">{{ pool.label }}</div>
+              @if (!pool.isCash) {
+                <div class="muted">{{ pool.cardNames.join(', ') || 'No active cards' }}</div>
+              }
+            </td>
+            <td class="num">
+              <app-inline-edit-field
+                [type]="pool.isCash ? 'currency' : 'number'"
+                [min]="0"
+                [value]="pool.balance?.balance"
+                emptyLabel="Add balance"
+                (saved)="setBalance(pool, $event)"
+              />
+            </td>
+            <td class="num">{{ pool.balance ? formatCurrency(pool.value) : '' }}</td>
+            <td class="num muted">{{ formatDate(pool.balance?.asOf) }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <p class="muted note">
+    Points are valued at your CPP settings (Dashboard → CPP Settings). Cards in the same points program share one balance.
+  </p>
+} @else {
+  <div class="empty-state">Add active cards to your Wallet to track their balances.</div>
+}

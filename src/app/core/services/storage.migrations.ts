@@ -4,6 +4,7 @@ import {
   DEFAULT_DASHBOARD_SETTINGS,
   createDefaultAppState
 } from '../models/app-state.model';
+import { createDefaultRewardsState } from '../models/rewards.model';
 import { CARD_MAP } from '../data/cards';
 import { toIsoDate, today } from '../utils/date.utils';
 
@@ -35,6 +36,13 @@ const MIGRATIONS: Record<number, (state: RawState) => RawState> = {
     ...state,
     schemaVersion: 3,
     userCards: (state['userCards'] as RawUserCard[]).map(migrateHitSub)
+  }),
+
+  // v3 -> v4: rewards balances, earned log, and redemptions
+  3: (state) => ({
+    ...state,
+    schemaVersion: 4,
+    rewards: createDefaultRewardsState()
   })
 };
 
