@@ -24,38 +24,40 @@
 }
 
 .card-footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
   margin-top: auto;
 }
 
-.card-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  margin-left: auto;
+.add-button {
+  width: 100%;
 }
 
-.action-button {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--surface);
+.title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.star {
+  flex-shrink: 0;
+  margin-top: -0.125rem;
+  padding: 0 0.125rem;
+  font-size: 1.375rem;
+  line-height: 1;
   color: var(--text-tertiary);
-  font-size: 1.125rem;
 
   &:hover {
-    background: var(--surface-hover);
-    color: var(--text-secondary);
+    color: var(--warning);
   }
 
-  &.star.active {
-    background: var(--warning);
-    color: #ffffff;
+  &.active {
+    color: var(--warning);
   }
+}
+
+.card-meta {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
 }
 
 .card-image {
@@ -64,6 +66,34 @@
   object-fit: contain;
   border-radius: 8px;
   background: var(--surface);
+}
+
+.design-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: -0.25rem;
+}
+
+.design-button {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1;
+
+  &:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+  }
+}
+
+.design-count {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
 }
 
 .card-name {
@@ -105,20 +135,6 @@
   color: var(--text-secondary);
 }
 
-.card-details {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.chip {
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  background: var(--surface);
-  font-size: 0.8125rem;
-  color: var(--text-tertiary);
-}
-
 .empty-state {
   grid-column: 1 / -1;
   padding: 3rem;
@@ -126,4 +142,36 @@
   color: var(--text-tertiary);
   border: 1px dashed var(--border);
   border-radius: 12px;
+}
+
+.card-list.compact {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+
+  .card-item {
+    gap: 0.5rem;
+    padding: 0.875rem;
+  }
+
+  .card-image {
+    height: 96px;
+  }
+
+  .card-name {
+    font-size: 0.9375rem;
+  }
+
+  .line {
+    font-size: 0.8125rem;
+  }
+
+  .design-switcher,
+  .card-meta {
+    display: none;
+  }
+
+  .add-button {
+    padding: 0.3125rem 0.625rem;
+    font-size: 0.8125rem;
+  }
 }

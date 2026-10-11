@@ -29,8 +29,19 @@ const seenVarNames = new Map();
 const seenCardIds = new Map();
 /**
  * Card artwork mirrors the card files: cards/chase/freedom.ts -> public/images/cards/chase/freedom.png.
- * Entries are [card id, image URL] for the cards that have one.
+ * Alternate designs add a number: freedom-2.png, freedom-3.png. The plain file is the default design.
+ * imagesByCardPath maps 'chase/freedom' to its image URLs, default first.
  */
+const imagesByCardPath = new Map();
+for (const image of getFiles(imagesDir, '.png')) {
+  const relativeImage = path.relative(imagesDir, image).replace(/\\/g, '/').replace(/\.png$/, '');
+  const [, base, variant] = /^(.*?)(?:-(\d+))?$/.exec(relativeImage);
+  const images = imagesByCardPath.get(base) ?? [];
+  images.push({ order: variant ? Number(variant) : 1, url: `/images/cards/${relativeImage}.png` });
+  imagesByCardPath.set(base, images);
+}
+
+/** [card id, image URLs] for the cards that have artwork */
 const cardImages = [];
 
 function fail(message) {
@@ -65,8 +76,9 @@ allFiles.forEach((filePath) => {
   }
   seenCardIds.set(cardId, relativePath);
 
-  if (fs.existsSync(path.join(imagesDir, `${relativePath}.png`))) {
-    cardImages.push([cardId, `/images/cards/${relativePath}.png`]);
+  const images = imagesByCardPath.get(relativePath);
+  if (images) {
+    cardImages.push([cardId, images.sort((a, b) => a.order - b.order).map((image) => image.url)]);
   } else {
     console.warn(`\x1b[33m[Card Indexer]\x1b[0m No image for ${relativePath}.ts; add public/images/cards/${relativePath}.png`);
   }
@@ -91,18 +103,19 @@ export const CARD_MAP = new Map<string, Card>(
   ALL_CARDS.map(card => [card.id, card])
 );
 
-/** Image URL by card id; artwork lives at the card file's path under public/images/cards */
-export const CARD_IMAGE_URLS = new Map<string, string>([
-${cardImages.map(([id, url]) => `  ['${id}', '${url}'],`).join('\n')}
+/** Image URLs by card id, default design first; artwork lives at the card file's path under public/images/cards */
+export const CARD_IMAGE_URLS = new Map<string, string[]>([
+${cardImages.map(([id, urls]) => `  ['${id}', [${urls.map((url) => `'${url}'`).join(', ')}]],`).join('\n')}
 ]);
 `;
 
 // Images that no card file points to (e.g. left behind after renaming a card file)
-const expectedImages = new Set(seenVarNames.values());
-for (const image of getFiles(imagesDir, '.png')) {
-  const relativeImage = path.relative(imagesDir, image).replace(/\\/g, '/').replace(/\.png$/, '');
-  if (!expectedImages.has(relativeImage)) {
-    console.warn(`\x1b[33m[Card Indexer]\x1b[0m public/images/cards/${relativeImage}.png doesn't match any card file`);
+const cardPaths = new Set(seenVarNames.values());
+for (const [base, images] of imagesByCardPath) {
+  if (!cardPaths.has(base)) {
+    for (const image of images) {
+      console.warn(`\x1b[33m[Card Indexer]\x1b[0m public${image.url} doesn't match any card file`);
+    }
   }
 }
 

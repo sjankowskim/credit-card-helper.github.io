@@ -1,5 +1,5 @@
 import { CARD_IMAGE_URLS } from '../data/cards';
-import type { Card, RewardTier, UserCard } from '../models/card.model';
+import type { Card, RewardTier, SignUpBonus, UserCard } from '../models/card.model';
 import type { RateUnit } from '../services/card-ranking.service';
 import { addMonths, parseLocalDate, today } from './date.utils';
 
@@ -84,7 +84,24 @@ export function getNextAnniversary(accountStartDate: string | undefined, referen
   return anniversary;
 }
 
-/** Artwork mirrors the card's data file (cards/chase/freedom.ts -> images/cards/chase/freedom.png) */
-export function getCardImageUrl(card: Card): string | undefined {
-  return CARD_IMAGE_URLS.get(card.id);
+/**
+ * The card's artwork, default design first. Images mirror the card's data file
+ * (cards/chase/freedom.ts -> images/cards/chase/freedom.png, freedom-2.png, ...).
+ */
+export function getCardImageUrls(card: Card): readonly string[] {
+  return CARD_IMAGE_URLS.get(card.id) ?? [];
+}
+
+/**
+ * The card's highest earn rate that applies to a whole category (portal- or merchant-only
+ * rates are left out), e.g. 4 for the Amex Gold. Falls back to the base rate.
+ */
+export function getBestRate(card: Card): number {
+  return Math.max(card.baseRewardRate, ...card.rewardTiers.filter(t => !t.onlyWhen).map(t => t.rewardRate));
+}
+
+/** '60,000 Ultimate Rewards after $4,000 in 3 mo' or '$200 after $500 in 3 mo' */
+export function formatSignUpBonus(bonus: SignUpBonus): string {
+  const amount = bonus.currency === 'Cashback' ? formatCurrency(bonus.amount) : `${bonus.amount.toLocaleString('en-US')} ${bonus.currency}`;
+  return `${amount} after ${formatCurrency(bonus.spendRequired)} in ${bonus.windowMonths} mo`;
 }

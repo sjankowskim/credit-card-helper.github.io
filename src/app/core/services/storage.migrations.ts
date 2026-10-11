@@ -1,6 +1,7 @@
 import {
   type AppState,
   CURRENT_SCHEMA_VERSION,
+  DEFAULT_CATALOG_SETTINGS,
   DEFAULT_DASHBOARD_SETTINGS,
   createDefaultAppState
 } from '../models/app-state.model';
@@ -52,6 +53,13 @@ const MIGRATIONS: Record<number, (state: RawState) => RawState> = {
     schemaVersion: 5,
     benefits: createDefaultBenefitsState(),
     referrals: []
+  }),
+
+  // v5 -> v6: catalog view, sort, and grouping
+  5: (state) => ({
+    ...state,
+    schemaVersion: 6,
+    catalogSettings: { ...DEFAULT_CATALOG_SETTINGS }
   })
 };
 

@@ -1,9 +1,9 @@
 import type { Card } from '../../../models/card.model';
 
 // Amex welcome offers vary by applicant, so no default sign-up bonus is listed.
-export const AMEX_GOLD: Card = {
+export const GOLD: Card = {
   id: 'amex-gold',
-  name: 'American Express Gold Card',
+  name: 'Gold',
   issuer: 'American Express',
   rewardsProgram: 'Amex Membership Rewards',
   rewardsCurrency: 'Membership Rewards',

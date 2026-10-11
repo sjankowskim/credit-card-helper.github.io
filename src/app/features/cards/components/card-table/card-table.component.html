@@ -1,0 +1,81 @@
+@if (items().length > 0) {
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th><button class="sort" (click)="sortBy('name')">Card {{ sortIndicator('name') }}</button></th>
+          <th><button class="sort" (click)="sortBy('issuer')">Issuer {{ sortIndicator('issuer') }}</button></th>
+          <th class="num"><button class="sort" (click)="sortBy('fee')">Annual fee {{ sortIndicator('fee') }}</button></th>
+          <th class="num">Base</th>
+          <th class="num"><button class="sort" (click)="sortBy('best-rate')">Best rate {{ sortIndicator('best-rate') }}</button></th>
+          <th>Rewards</th>
+          <th>Current offer</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of items(); track item.card.id) {
+          <tr class="row" (click)="open.emit(item)">
+            <td>
+              <div class="card-cell">
+                @if (getThumbnail(item.card); as thumbnail) {
+                  <img [src]="thumbnail" alt="" class="thumbnail" />
+                } @else {
+                  <span class="thumbnail placeholder"></span>
+                }
+                <div>
+                  <div class="card-name">{{ item.card.name }}</div>
+                  <div class="badges">
+                    @if (ownedCardIds().has(item.card.id)) {
+                      <span class="badge badge-success">Owned</span>
+                    }
+                    @if (wishlistedCardIds().has(item.card.id)) {
+                      <span class="badge badge-warning">Wishlisted</span>
+                    }
+                    @if (item.card.isBusiness) {
+                      <span class="badge">Business</span>
+                    }
+                    @if (item.card.discontinued) {
+                      <span class="badge">No longer offered</span>
+                    }
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="nowrap">{{ item.card.issuer }}</td>
+            <td class="num">{{ item.card.annualFee ? formatCurrency(item.card.annualFee) : '$0' }}</td>
+            <td class="num">{{ formatRate(item.card.baseRewardRate, item.card) }}</td>
+            <td class="num strong">{{ formatRate(getBestRate(item.card), item.card) }}</td>
+            <td>
+              {{ item.card.rewardsCurrency }}
+              <div class="muted">{{ item.card.network }}</div>
+            </td>
+            <td class="offer">
+              @if (item.card.defaultSignUpBonus; as bonus) {
+                {{ formatSignUpBonus(bonus) }}
+              } @else {
+                <span class="muted">—</span>
+              }
+            </td>
+            <td class="num">
+              <div class="actions">
+                <button class="btn btn-small" (click)="fire($event, add, item)" title="Add to wallet">+ Add</button>
+                <button
+                  class="star"
+                  [class.active]="isStarred(item)"
+                  (click)="fire($event, toggleWishlist, item)"
+                  [attr.aria-label]="isStarred(item) ? 'Remove from wishlist' : 'Add to wishlist'"
+                  [title]="isStarred(item) ? 'Remove from wishlist' : 'Add to wishlist'"
+                >
+                  ★
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  <div class="empty-state">{{ emptyMessage() }}</div>
+}

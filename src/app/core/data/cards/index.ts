@@ -4,9 +4,31 @@
 // ============================================================================
 import { Card } from '../../models/card.model';
 
-import { AMEX_GOLD } from './american-express/amex-gold';
-import { AMEX_PLATINUM } from './american-express/amex-platinum';
+import { BLUE_BUSINESS_CASH } from './american-express/blue-business-cash';
+import { BLUE_BUSINESS_PLUS } from './american-express/blue-business-plus';
+import { BLUE_CASH_EVERYDAY } from './american-express/blue-cash-everyday';
 import { BLUE_CASH_PREFERRED } from './american-express/blue-cash-preferred';
+import { BUSINESS_CASH_UNLIMITED } from './american-express/business-cash-unlimited';
+import { BUSINESS_GOLD } from './american-express/business-gold';
+import { BUSINESS_GREEN_REWARDS } from './american-express/business-green-rewards';
+import { BUSINESS_PLATINUM } from './american-express/business-platinum';
+import { DELTA_SKYMILES_BLUE } from './american-express/delta-skymiles-blue';
+import { DELTA_SKYMILES_GOLD } from './american-express/delta-skymiles-gold';
+import { DELTA_SKYMILES_PLATINUM } from './american-express/delta-skymiles-platinum';
+import { DELTA_SKYMILES_RESERVE_BUSINESS } from './american-express/delta-skymiles-reserve-business';
+import { DELTA_SKYMILES_RESERVE } from './american-express/delta-skymiles-reserve';
+import { GOLD_DELTA_SKYMILES_BUSINESS } from './american-express/gold-delta-skymiles-business';
+import { GOLD } from './american-express/gold';
+import { GREEN } from './american-express/green';
+import { HILTON_HONORS_ASPIRE } from './american-express/hilton-honors-aspire';
+import { HILTON_HONORS_BUSINESS } from './american-express/hilton-honors-business';
+import { HILTON_HONORS_SURPASS } from './american-express/hilton-honors-surpass';
+import { HILTON_HONORS } from './american-express/hilton-honors';
+import { MARRIOTT_BONVOY_BEVY } from './american-express/marriott-bonvoy-bevy';
+import { MARRIOTT_BONVOY_BRILLIANT } from './american-express/marriott-bonvoy-brilliant';
+import { MARRIOTT_BONVOY_BUSINESS } from './american-express/marriott-bonvoy-business';
+import { PLATINUM_DELTA_SKYMILES_BUSINESS } from './american-express/platinum-delta-skymiles-business';
+import { PLATINUM } from './american-express/platinum';
 import { CUSTOMIZED_CASH_REWARDS } from './bank-of-america/customized-cash-rewards';
 import { PREMIUM_REWARDS } from './bank-of-america/premium-rewards';
 import { AADVANTAGE_AVIATOR_RED } from './barclays/aadvantage-aviator-red';
@@ -35,9 +57,31 @@ import { AUTOGRAPH } from './wells-fargo/autograph';
 import { BILT_MASTERCARD } from './wells-fargo/bilt-mastercard';
 
 export const ALL_CARDS: Card[] = [
-  AMEX_GOLD,
-  AMEX_PLATINUM,
+  BLUE_BUSINESS_CASH,
+  BLUE_BUSINESS_PLUS,
+  BLUE_CASH_EVERYDAY,
   BLUE_CASH_PREFERRED,
+  BUSINESS_CASH_UNLIMITED,
+  BUSINESS_GOLD,
+  BUSINESS_GREEN_REWARDS,
+  BUSINESS_PLATINUM,
+  DELTA_SKYMILES_BLUE,
+  DELTA_SKYMILES_GOLD,
+  DELTA_SKYMILES_PLATINUM,
+  DELTA_SKYMILES_RESERVE_BUSINESS,
+  DELTA_SKYMILES_RESERVE,
+  GOLD_DELTA_SKYMILES_BUSINESS,
+  GOLD,
+  GREEN,
+  HILTON_HONORS_ASPIRE,
+  HILTON_HONORS_BUSINESS,
+  HILTON_HONORS_SURPASS,
+  HILTON_HONORS,
+  MARRIOTT_BONVOY_BEVY,
+  MARRIOTT_BONVOY_BRILLIANT,
+  MARRIOTT_BONVOY_BUSINESS,
+  PLATINUM_DELTA_SKYMILES_BUSINESS,
+  PLATINUM,
   CUSTOMIZED_CASH_REWARDS,
   PREMIUM_REWARDS,
   AADVANTAGE_AVIATOR_RED,
@@ -70,20 +114,47 @@ export const CARD_MAP = new Map<string, Card>(
   ALL_CARDS.map(card => [card.id, card])
 );
 
-/** Image URL by card id; artwork lives at the card file's path under public/images/cards */
-export const CARD_IMAGE_URLS = new Map<string, string>([
-  ['barclays-aadvantage-aviator-red', '/images/cards/barclays/aadvantage-aviator-red.png'],
-  ['capital-one-quicksilver-rewards', '/images/cards/capital-one/quicksilver-rewards.png'],
-  ['capital-one-savor-one-rewards', '/images/cards/capital-one/savor-one-rewards.png'],
-  ['capital-one-venture-x-rewards', '/images/cards/capital-one/venture-x-rewards.png'],
-  ['cardless-bilt-palladium', '/images/cards/cardless/bilt-palladium.png'],
-  ['chase-freedom-flex', '/images/cards/chase/freedom-flex.png'],
-  ['chase-freedom-unlimited', '/images/cards/chase/freedom-unlimited.png'],
-  ['chase-freedom', '/images/cards/chase/freedom.png'],
-  ['chase-ink-business-cash', '/images/cards/chase/ink-business-cash.png'],
-  ['chase-ink-business-preferred', '/images/cards/chase/ink-business-preferred.png'],
-  ['citi-aadvantage-platinum-select', '/images/cards/citi/aadvantage-platinum-select.png'],
-  ['citi-custom-cash', '/images/cards/citi/citi-custom-cash.png'],
-  ['us-bank-cash-plus', '/images/cards/us-bank/cash-plus.png'],
-  ['wells-fargo-bilt-mastercard', '/images/cards/wells-fargo/bilt-mastercard.png'],
+/** Image URLs by card id, default design first; artwork lives at the card file's path under public/images/cards */
+export const CARD_IMAGE_URLS = new Map<string, string[]>([
+  ['amex-blue-business-cash', ['/images/cards/american-express/blue-business-cash.png']],
+  ['amex-blue-business-plus', ['/images/cards/american-express/blue-business-plus.png']],
+  ['amex-blue-cash-everyday', ['/images/cards/american-express/blue-cash-everyday.png']],
+  ['amex-blue-cash-preferred', ['/images/cards/american-express/blue-cash-preferred.png']],
+  ['amex-graphite-business-cash-unlimited', ['/images/cards/american-express/business-cash-unlimited.png']],
+  ['amex-business-gold', ['/images/cards/american-express/business-gold.png', '/images/cards/american-express/business-gold-2.png', '/images/cards/american-express/business-gold-3.png']],
+  ['amex-business-green-rewards', ['/images/cards/american-express/business-green-rewards.png']],
+  ['amex-business-platinum', ['/images/cards/american-express/business-platinum.png']],
+  ['amex-delta-skymiles-blue', ['/images/cards/american-express/delta-skymiles-blue.png']],
+  ['amex-delta-skymiles-gold', ['/images/cards/american-express/delta-skymiles-gold.png']],
+  ['amex-delta-skymiles-platinum', ['/images/cards/american-express/delta-skymiles-platinum.png']],
+  ['amex-delta-skymiles-reserve-business', ['/images/cards/american-express/delta-skymiles-reserve-business.png']],
+  ['amex-delta-skymiles-reserve', ['/images/cards/american-express/delta-skymiles-reserve.png']],
+  ['amex-delta-skymiles-gold-business', ['/images/cards/american-express/gold-delta-skymiles-business.png']],
+  ['amex-gold', ['/images/cards/american-express/gold.png']],
+  ['amex-green', ['/images/cards/american-express/green.png']],
+  ['amex-hilton-honors-aspire', ['/images/cards/american-express/hilton-honors-aspire.png']],
+  ['amex-hilton-honors-business', ['/images/cards/american-express/hilton-honors-business.png']],
+  ['amex-hilton-honors-surpass', ['/images/cards/american-express/hilton-honors-surpass.png']],
+  ['amex-hilton-honors', ['/images/cards/american-express/hilton-honors.png']],
+  ['amex-marriott-bonvoy-bevy', ['/images/cards/american-express/marriott-bonvoy-bevy.png']],
+  ['amex-marriott-bonvoy-brilliant', ['/images/cards/american-express/marriott-bonvoy-brilliant.png']],
+  ['amex-marriott-bonvoy-business', ['/images/cards/american-express/marriott-bonvoy-business.png']],
+  ['amex-delta-skymiles-platinum-business', ['/images/cards/american-express/platinum-delta-skymiles-business.png']],
+  ['amex-platinum', ['/images/cards/american-express/platinum.png']],
+  ['barclays-aadvantage-aviator-red', ['/images/cards/barclays/aadvantage-aviator-red.png']],
+  ['capital-one-quicksilver-rewards', ['/images/cards/capital-one/quicksilver-rewards.png']],
+  ['capital-one-savor-one-rewards', ['/images/cards/capital-one/savor-one-rewards.png']],
+  ['capital-one-venture-x-rewards', ['/images/cards/capital-one/venture-x-rewards.png']],
+  ['cardless-bilt-blue', ['/images/cards/cardless/bilt-blue.png']],
+  ['cardless-bilt-obsidian', ['/images/cards/cardless/bilt-obsidian.png']],
+  ['cardless-bilt-palladium', ['/images/cards/cardless/bilt-palladium.png']],
+  ['chase-freedom-flex', ['/images/cards/chase/freedom-flex.png']],
+  ['chase-freedom-unlimited', ['/images/cards/chase/freedom-unlimited.png']],
+  ['chase-freedom', ['/images/cards/chase/freedom.png']],
+  ['chase-ink-business-cash', ['/images/cards/chase/ink-business-cash.png']],
+  ['chase-ink-business-preferred', ['/images/cards/chase/ink-business-preferred.png']],
+  ['citi-aadvantage-platinum-select', ['/images/cards/citi/aadvantage-platinum-select.png']],
+  ['citi-custom-cash', ['/images/cards/citi/citi-custom-cash.png']],
+  ['us-bank-cash-plus', ['/images/cards/us-bank/cash-plus.png']],
+  ['wells-fargo-bilt-mastercard', ['/images/cards/wells-fargo/bilt-mastercard.png']],
 ]);

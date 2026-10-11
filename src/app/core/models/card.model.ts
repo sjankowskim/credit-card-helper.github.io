@@ -61,7 +61,10 @@ export type RewardsProgram =
   | 'U.S. Bank Rewards'
   | 'Amex Cash Back'
   | 'Bank of America Rewards'
-  | 'Discover Cashback Bonus';
+  | 'Discover Cashback Bonus'
+  | 'Delta SkyMiles'
+  | 'Hilton Honors'
+  | 'Marriott Bonvoy';
 
 // ============================================================================
 // 4. REWARD TIER DEFINITION
@@ -222,6 +225,9 @@ export interface Card {
   /** When these terms were last checked against the issuer (ISO date) */
   termsCheckedOn?: string;
 
+  /** Card-wide caveats shown with the details, e.g. a cap on the base rate */
+  note?: string;
+
   /**
    * Card-specific custom settings.
    * Allows for card-specific configuration options (e.g., BILT reward type selection).
@@ -258,6 +264,8 @@ export interface UserCard {
     status?: CardStatus;
     /** Custom nickname for this card instance (e.g., "Grocery Card", "P2 (Wife's)") */
     customLabel?: string;
+    /** Which card design this instance shows, as an index into its images (0 = default) */
+    cardDesign?: number;
     /** Date when the user opened this card account (ISO string format) */
     accountStartDate?: string;
     /** Sign-up bonus being worked on for this card instance */

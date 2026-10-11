@@ -3,11 +3,14 @@ import { SearchBarComponent } from '../wallet/components/search-bar/search-bar.c
 import { CardListComponent, type CardListItem } from '../wallet/components/card-list/card-list.component';
 import { CardDetailComponent } from '../wallet/components/card-detail/card-detail.component';
 import { AddCardDialogComponent } from '../wallet/components/add-card-dialog/add-card-dialog.component';
+import { CardTableComponent } from './components/card-table/card-table.component';
+import { StorageService } from '../../core/services/storage.service';
+import type { CatalogSettings, CatalogSort, CatalogView } from '../../core/models/app-state.model';
 import { ALL_CARDS } from '../../core/data/cards';
 import { UserCardsService, type WalletEntry } from '../../core/services/user-cards.service';
 import { ToastService } from '../../core/services/toast.service';
 import type { Card } from '../../core/models/card.model';
-import { formatCurrency } from '../../core/utils/card-display.utils';
+import { formatCurrency, getBestRate } from '../../core/utils/card-display.utils';
 
 export interface CardFilters {
   issuer: string;
@@ -20,13 +23,33 @@ const NO_FILTERS: CardFilters = { issuer: '', network: '', fee: '', type: '' };
 
 @Component({
   selector: 'app-cards',
-  imports: [SearchBarComponent, CardListComponent, CardDetailComponent, AddCardDialogComponent],
+  imports: [SearchBarComponent, CardListComponent, CardTableComponent, CardDetailComponent, AddCardDialogComponent],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.scss'
 })
 export class CardsComponent {
   private readonly userCardsService = inject(UserCardsService);
   private readonly toastService = inject(ToastService);
+  private readonly storage = inject(StorageService);
+
+  readonly views: { id: CatalogView; label: string }[] = [
+    { id: 'grid', label: 'Grid' },
+    { id: 'compact', label: 'Compact' },
+    { id: 'table', label: 'Table' }
+  ];
+  readonly sorts: { id: CatalogSort; label: string }[] = [
+    { id: 'name', label: 'Name' },
+    { id: 'issuer', label: 'Issuer' },
+    { id: 'fee-asc', label: 'Annual fee: low to high' },
+    { id: 'fee-desc', label: 'Annual fee: high to low' },
+    { id: 'best-rate', label: 'Best earn rate' }
+  ];
+
+  readonly settings = computed(() => this.storage.state().catalogSettings);
+
+  updateSettings(patch: Partial<CatalogSettings>): void {
+    this.storage.update('catalogSettings', settings => ({ ...settings, ...patch }));
+  }
 
   readonly searchQuery = signal('');
   readonly filters = signal<CardFilters>(NO_FILTERS);
@@ -57,10 +80,26 @@ export class CardsComponent {
       if (fee === 'paid' && card.annualFee === 0) return false;
       if (type && card.isBusiness !== (type === 'business')) return false;
       return true;
-    }).map(card => ({
-      card,
-      lines: [card.annualFee > 0 ? `${formatCurrency(card.annualFee)} annual fee` : 'No annual fee']
-    }));
+    })
+      .sort(compareCards(this.settings().sort))
+      .map(card => ({
+        card,
+        lines: [card.annualFee > 0 ? `${formatCurrency(card.annualFee)} annual fee` : 'No annual fee']
+      }));
+  });
+
+  /** One unnamed group, or one per issuer in alphabetical order */
+  readonly groups = computed<{ title: string; items: CardListItem[] }[]>(() => {
+    const items = this.items();
+    // An empty result stays one group so the empty message still shows
+    if (!this.settings().groupByIssuer || items.length === 0) return [{ title: '', items }];
+    const byIssuer = new Map<string, CardListItem[]>();
+    for (const item of items) {
+      byIssuer.set(item.card.issuer, [...(byIssuer.get(item.card.issuer) ?? []), item]);
+    }
+    return [...byIssuer.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([title, groupItems]) => ({ title, items: groupItems }));
   });
 
   setFilter<K extends keyof CardFilters>(key: K, value: CardFilters[K]): void {
@@ -101,5 +140,21 @@ export class CardsComponent {
     }
     this.toastService.success(`Added ${card.name} to your wallet`);
     this.adding.set(null);
+  }
+}
+
+function compareCards(sort: CatalogSort): (a: Card, b: Card) => number {
+  const byName = (a: Card, b: Card) => a.name.localeCompare(b.name);
+  switch (sort) {
+    case 'name':
+      return byName;
+    case 'issuer':
+      return (a, b) => a.issuer.localeCompare(b.issuer) || byName(a, b);
+    case 'fee-asc':
+      return (a, b) => a.annualFee - b.annualFee || byName(a, b);
+    case 'fee-desc':
+      return (a, b) => b.annualFee - a.annualFee || byName(a, b);
+    case 'best-rate':
+      return (a, b) => getBestRate(b) - getBestRate(a) || byName(a, b);
   }
 }

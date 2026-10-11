@@ -132,6 +132,11 @@ export class WalletComponent {
     this.toastService.info(`Removed ${item.card.name} from your wishlist`);
   }
 
+  onRemoveFromDetail(item: CardListItem): void {
+    this.selected.set(null);
+    this.onRemove(item);
+  }
+
   onRemove(item: CardListItem): void {
     if (item.userCard && this.userCardsService.hasUserData(item.userCard)) {
       this.removing.set(item);
@@ -143,7 +148,7 @@ export class WalletComponent {
   remove(item: CardListItem): void {
     if (!item.userCard) return;
     this.userCardsService.remove(item.userCard.id);
-    this.toastService.info(`Removed ${item.card.name} from your wallet`);
+    this.toastService.info(`Removed ${item.card.name} from your ${item.userCard.isWishlist ? 'wishlist' : 'wallet'}`);
     this.removing.set(null);
   }
 }

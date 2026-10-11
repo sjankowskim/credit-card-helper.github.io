@@ -10,6 +10,15 @@ export interface DashboardSettings {
   travelRedemption: boolean;
 }
 
+export type CatalogView = 'grid' | 'compact' | 'table';
+export type CatalogSort = 'name' | 'issuer' | 'fee-asc' | 'fee-desc' | 'best-rate';
+
+export interface CatalogSettings {
+  view: CatalogView;
+  sort: CatalogSort;
+  groupByIssuer: boolean;
+}
+
 /**
  * Everything the app persists, stored under a single localStorage key.
  * Bump CURRENT_SCHEMA_VERSION and add a step in storage.migrations.ts
@@ -20,12 +29,13 @@ export interface AppState {
   userCards: UserCard[];
   cppValuations: Partial<Record<RewardsProgram, number>>;
   dashboardSettings: DashboardSettings;
+  catalogSettings: CatalogSettings;
   rewards: RewardsState;
   benefits: BenefitsState;
   referrals: Referral[];
 }
 
-export const CURRENT_SCHEMA_VERSION = 5;
+export const CURRENT_SCHEMA_VERSION = 6;
 
 export const DEFAULT_DASHBOARD_SETTINGS: DashboardSettings = {
   numCards: 3,
@@ -35,12 +45,19 @@ export const DEFAULT_DASHBOARD_SETTINGS: DashboardSettings = {
   travelRedemption: false
 };
 
+export const DEFAULT_CATALOG_SETTINGS: CatalogSettings = {
+  view: 'grid',
+  sort: 'name',
+  groupByIssuer: false
+};
+
 export function createDefaultAppState(): AppState {
   return {
     schemaVersion: CURRENT_SCHEMA_VERSION,
     userCards: [],
     cppValuations: {},
     dashboardSettings: { ...DEFAULT_DASHBOARD_SETTINGS },
+    catalogSettings: { ...DEFAULT_CATALOG_SETTINGS },
     rewards: createDefaultRewardsState(),
     benefits: createDefaultBenefitsState(),
     referrals: []

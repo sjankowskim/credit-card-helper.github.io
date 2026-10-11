@@ -1,4 +1,4 @@
-<div class="card-list">
+<div class="card-list" [class.compact]="compact()">
   @for (item of items(); track item.userCard?.id ?? item.card.id) {
     <article
       class="card-item"
@@ -8,34 +8,53 @@
       (click)="open.emit(item)"
       (keydown.enter)="onEnter($event, item)"
     >
-      @if (getImageUrl(item); as imageUrl) {
-        <img [src]="imageUrl" [alt]="item.card.name" class="card-image" />
+      @let images = getImages(item);
+      @if (images.length > 0) {
+        @let design = getDesignIndex(item);
+        <img [src]="images[design]" [alt]="item.card.name" class="card-image" />
+        @if (images.length > 1) {
+          <div class="design-switcher">
+            <button class="design-button" (click)="cycleDesign($event, item, -1)" aria-label="Previous card design">‹</button>
+            <span class="design-count">Design {{ design + 1 }} of {{ images.length }}</span>
+            <button class="design-button" (click)="cycleDesign($event, item, 1)" aria-label="Next card design">›</button>
+          </div>
+        }
       }
 
       <div>
-        <h3 class="card-name">
-          {{ getDisplayName(item) }}
-          @if (getDisplayNumber(item); as number) {
-            <span class="instance-number">#{{ number }}</span>
+        <div class="title-row">
+          <h3 class="card-name">
+            {{ getDisplayName(item) }}
+            @if (getDisplayNumber(item); as number) {
+              <span class="instance-number">#{{ number }}</span>
+            }
+          </h3>
+          @if (mode() !== 'wallet') {
+            <button
+              class="star"
+              [class.active]="isStarred(item)"
+              (click)="fire($event, toggleWishlist, item)"
+              [attr.aria-label]="isStarred(item) ? 'Remove from wishlist' : 'Add to wishlist'"
+              [attr.aria-pressed]="isStarred(item)"
+              [title]="isStarred(item) ? 'Remove from wishlist' : 'Add to wishlist'"
+            >
+              {{ isStarred(item) ? '★' : '☆' }}
+            </button>
           }
-        </h3>
+        </div>
         @if (getOriginalName(item); as original) {
           <div class="original-name">{{ original }}</div>
         }
         <div class="card-issuer">{{ item.card.issuer }}</div>
+        <div class="card-meta">{{ item.card.network }} · {{ item.card.rewardsCurrency }}</div>
       </div>
 
       <div class="badges">
         @if (getStatusBadge(item); as badge) {
           <span class="badge" [class]="badge.class">{{ badge.label }}</span>
         }
-        @if (mode() === 'catalog') {
-          @if (ownedCardIds().has(item.card.id)) {
-            <span class="badge badge-success">Owned</span>
-          }
-          @if (wishlistedCardIds().has(item.card.id)) {
-            <span class="badge badge-warning">Wishlisted</span>
-          }
+        @if (mode() === 'catalog' && ownedCardIds().has(item.card.id)) {
+          <span class="badge badge-success">Owned</span>
         }
         @if (item.card.isBusiness) {
           <span class="badge">Business</span>
@@ -49,30 +68,11 @@
         <p class="line">{{ line }}</p>
       }
 
-      <div class="card-footer">
-        <div class="card-details">
-          <span class="chip">{{ item.card.network }}</span>
-          <span class="chip">{{ item.card.rewardsCurrency }}</span>
+      @if (mode() !== 'wallet') {
+        <div class="card-footer">
+          <button class="btn add-button" (click)="fire($event, add, item)">+ Add to wallet</button>
         </div>
-        <div class="card-actions">
-          @if (mode() === 'wallet') {
-            <button class="action-button" (click)="fire($event, remove, item)" aria-label="Remove from wallet" title="Remove from wallet">
-              ✕
-            </button>
-          } @else {
-            <button class="btn btn-small" (click)="fire($event, add, item)" title="Add to wallet">+ Add</button>
-            <button
-              class="action-button star"
-              [class.active]="isStarred(item)"
-              (click)="fire($event, toggleWishlist, item)"
-              [attr.aria-label]="isStarred(item) ? 'Remove from wishlist' : 'Add to wishlist'"
-              [title]="isStarred(item) ? 'Remove from wishlist' : 'Add to wishlist'"
-            >
-              ★
-            </button>
-          }
-        </div>
-      </div>
+      }
     </article>
   } @empty {
     <div class="empty-state">

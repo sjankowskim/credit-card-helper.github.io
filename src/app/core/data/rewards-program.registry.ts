@@ -80,5 +80,23 @@ export const REWARDS_PROGRAM_REGISTRY: Record<RewardsProgram, RewardsProgramMeta
     name: 'Discover Cashback Bonus',
     allowsTransfers: false,
     hasTravelPartners: false
+  },
+  'Delta SkyMiles': {
+    id: 'Delta SkyMiles',
+    name: 'Delta SkyMiles',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'Hilton Honors': {
+    id: 'Hilton Honors',
+    name: 'Hilton Honors',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'Marriott Bonvoy': {
+    id: 'Marriott Bonvoy',
+    name: 'Marriott Bonvoy',
+    allowsTransfers: false,
+    hasTravelPartners: true
   }
 };

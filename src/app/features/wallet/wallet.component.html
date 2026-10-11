@@ -16,7 +16,6 @@
           [items]="group.items"
           [contextCards]="ownedCards()"
           (open)="selected.set($event)"
-          (remove)="onRemove($event)"
         />
       </section>
     }
@@ -43,7 +42,13 @@
   }
 
   @if (selected(); as item) {
-    <app-card-detail [card]="item.card" [userCardId]="item.userCard?.id ?? null" (closed)="selected.set(null)" />
+    <app-card-detail
+      [card]="item.card"
+      [userCardId]="item.userCard?.id ?? null"
+      [allowRemove]="true"
+      (closed)="selected.set(null)"
+      (remove)="onRemoveFromDetail(item)"
+    />
   }
 
   @if (adding(); as item) {

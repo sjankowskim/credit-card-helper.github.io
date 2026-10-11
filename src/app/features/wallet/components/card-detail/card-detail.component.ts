@@ -40,6 +40,9 @@ export class CardDetailComponent {
   readonly closed = output<void>();
   /** Catalog view only: the user asked to add this card */
   readonly add = output<void>();
+  /** Shows "Remove from wallet" for the user's card; the parent confirms and removes it */
+  readonly allowRemove = input(false);
+  readonly remove = output<void>();
 
   readonly CardStatus = CardStatus;
   readonly formatDate = formatDate;
@@ -75,8 +78,16 @@ export class CardDetailComponent {
 
   // ---- Bonus category choices (active cards) ----
 
-  readonly autoTopSpendTier = computed(() => this.card().rewardTiers.find(t => t.behavior.type === 'AUTO_TOP_SPEND'));
-  readonly userChoiceTiers = computed(() => this.card().rewardTiers.filter(t => t.behavior.type === 'USER_CHOICE'));
+  /** A top-spend tier that picks one category (Custom Cash) gets a dropdown */
+  readonly autoTopSpendTier = computed(() =>
+    this.card().rewardTiers.find(t => t.behavior.type === 'AUTO_TOP_SPEND' && t.behavior.maxCategories === 1)
+  );
+  /** Pick-your-categories tiers, plus top-spend tiers covering several categories (Business Gold), get checkboxes */
+  readonly userChoiceTiers = computed(() =>
+    this.card().rewardTiers.filter(
+      t => t.behavior.type === 'USER_CHOICE' || (t.behavior.type === 'AUTO_TOP_SPEND' && t.behavior.maxCategories > 1)
+    )
+  );
   readonly rotatingTiers = computed(() => this.card().rewardTiers.filter(t => t.behavior.type === 'ROTATING'));
 
   readonly hasCategoryChoices = computed(
@@ -203,7 +214,14 @@ export class CardDetailComponent {
   }
 
   getMaxSelections(tier: RewardTier): number {
-    return tier.behavior.type === 'USER_CHOICE' ? tier.behavior.maxSelections : 0;
+    switch (tier.behavior.type) {
+      case 'USER_CHOICE':
+        return tier.behavior.maxSelections;
+      case 'AUTO_TOP_SPEND':
+        return tier.behavior.maxCategories;
+      default:
+        return 0;
+    }
   }
 
   toggleChoice(tier: RewardTier, categoryId: CategoryId, checked: boolean): void {

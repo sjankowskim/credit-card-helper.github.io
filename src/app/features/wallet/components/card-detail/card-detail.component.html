@@ -181,6 +181,9 @@
               <span>{{ tier.name }} · {{ formatTierRate(tier) }}</span>
               <span class="muted">{{ getSelectedCategories(tier).length }} / {{ getMaxSelections(tier) }} chosen</span>
             </div>
+            @if (tier.behavior.type === 'AUTO_TOP_SPEND') {
+              <p class="muted">The card applies this to your top {{ getMaxSelections(tier) }} each billing cycle. Pick the ones you expect to spend the most in.</p>
+            }
             <div class="checkboxes">
               @for (categoryId of tier.eligibleCategories; track categoryId) {
                 @let checked = getSelectedCategories(tier).includes(categoryId);
@@ -218,6 +221,9 @@
     <h3>Card details</h3>
     @if (card().discontinued) {
       <p class="discontinued">No longer offered to new applicants. Existing cards keep working.</p>
+    }
+    @if (card().note) {
+      <p class="muted card-note">{{ card().note }}</p>
     }
     <div class="rows">
       <div class="row"><span class="label">Issuer</span><span class="value">{{ card().issuer }}</span></div>
@@ -288,6 +294,10 @@
   @if (!userCard()) {
     <div modal-actions class="modal-actions">
       <button class="btn btn-primary" (click)="add.emit()">+ Add to wallet</button>
+    </div>
+  } @else if (allowRemove()) {
+    <div modal-actions class="modal-actions">
+      <button class="btn btn-danger" (click)="remove.emit()">{{ userCard()!.isWishlist ? 'Remove from wishlist' : 'Remove from wallet' }}</button>
     </div>
   }
 </app-modal>

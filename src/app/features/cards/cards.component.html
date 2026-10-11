@@ -32,16 +32,60 @@
     }
   </div>
 
-  <app-card-list
-    mode="catalog"
-    [items]="items()"
-    [ownedCardIds]="ownedCardIds()"
-    [wishlistedCardIds]="wishlistedCardIds()"
-    emptyMessage="No cards match your search and filters"
-    (open)="selected.set($event.card)"
-    (add)="startAdding($event.card)"
-    (toggleWishlist)="onToggleWishlist($event)"
-  />
+  <div class="view-bar">
+    <span class="muted">{{ items().length }} {{ items().length === 1 ? 'card' : 'cards' }}</span>
+    <div class="view-options">
+      <label class="group-toggle">
+        <input type="checkbox" [checked]="settings().groupByIssuer" (change)="updateSettings({ groupByIssuer: $any($event.target).checked })" />
+        Group by issuer
+      </label>
+      <select class="input" aria-label="Sort by" [value]="settings().sort" (change)="updateSettings({ sort: $any($event.target).value })">
+        @for (sort of sorts; track sort.id) {
+          <option [value]="sort.id">Sort: {{ sort.label }}</option>
+        }
+      </select>
+      <div class="segmented" role="group" aria-label="View">
+        @for (view of views; track view.id) {
+          <button [class.active]="settings().view === view.id" [attr.aria-pressed]="settings().view === view.id" (click)="updateSettings({ view: view.id })">
+            {{ view.label }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  @for (group of groups(); track group.title) {
+    <section class="catalog-group">
+      @if (group.title) {
+        <h2 class="section-title">{{ group.title }} <span class="count">{{ group.items.length }}</span></h2>
+      }
+      @if (settings().view === 'table') {
+        <app-card-table
+          [items]="group.items"
+          [sort]="settings().sort"
+          [ownedCardIds]="ownedCardIds()"
+          [wishlistedCardIds]="wishlistedCardIds()"
+          emptyMessage="No cards match your search and filters"
+          (sortChange)="updateSettings({ sort: $event })"
+          (open)="selected.set($event.card)"
+          (add)="startAdding($event.card)"
+          (toggleWishlist)="onToggleWishlist($event)"
+        />
+      } @else {
+        <app-card-list
+          mode="catalog"
+          [compact]="settings().view === 'compact'"
+          [items]="group.items"
+          [ownedCardIds]="ownedCardIds()"
+          [wishlistedCardIds]="wishlistedCardIds()"
+          emptyMessage="No cards match your search and filters"
+          (open)="selected.set($event.card)"
+          (add)="startAdding($event.card)"
+          (toggleWishlist)="onToggleWishlist($event)"
+        />
+      }
+    </section>
+  }
 
   @if (selected(); as card) {
     <app-card-detail [card]="card" (closed)="selected.set(null)" (add)="startAdding(card)" />

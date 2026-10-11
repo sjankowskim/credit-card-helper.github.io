@@ -78,9 +78,15 @@ function getTierStatus(tier: RewardTier, userCard: UserCard | null, lineage: str
     }
 
     case 'AUTO_TOP_SPEND': {
-      const selected = userData?.autoTopSpendCategory;
-      if (!selected) return 'NEEDS_SELECTION';
-      return lineage.includes(selected) ? 'ACTIVE' : 'INACTIVE';
+      // Single-category tiers use autoTopSpendCategory; multi-category ones store picks like USER_CHOICE
+      const selected: string[] =
+        tier.behavior.maxCategories > 1
+          ? userData?.activeData?.selectedCategories?.[tier.id] ?? []
+          : userData?.autoTopSpendCategory
+            ? [userData.autoTopSpendCategory]
+            : [];
+      if (selected.length === 0) return 'NEEDS_SELECTION';
+      return selected.some(c => lineage.includes(c)) ? 'ACTIVE' : 'INACTIVE';
     }
 
     case 'ROTATING': {
