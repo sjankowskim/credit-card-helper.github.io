@@ -1,13 +1,10 @@
-export const CategoryGroup = {
-  FOOD_AND_DRINK: 'food-and-drink',
-  TRAVEL_AND_TRANSIT: 'travel-and-transit',
-  SHOPPING_AND_RETAIL: 'shopping-and-retail',
-  BILLS_AND_UTILITIES: 'bills-and-utilities',
-  ENTERTAINMENT_AND_LEISURE: 'entertainment-and-leisure',
-  EVERYDAY: 'everyday'
-} as const;
-
-export type CategoryGroup = typeof CategoryGroup[keyof typeof CategoryGroup];
+export type CategoryGroup =
+  | 'food-and-drink'
+  | 'travel-and-transit'
+  | 'shopping-and-retail'
+  | 'bills-and-utilities'
+  | 'entertainment-and-leisure'
+  | 'everyday';
 
 export interface CategoryMetadata {
   id: string;

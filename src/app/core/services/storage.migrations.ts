@@ -5,6 +5,7 @@ import {
   createDefaultAppState
 } from '../models/app-state.model';
 import { createDefaultRewardsState } from '../models/rewards.model';
+import { createDefaultBenefitsState } from '../models/benefits.model';
 import { CARD_MAP } from '../data/cards';
 import { toIsoDate, today } from '../utils/date.utils';
 
@@ -43,6 +44,14 @@ const MIGRATIONS: Record<number, (state: RawState) => RawState> = {
     ...state,
     schemaVersion: 4,
     rewards: createDefaultRewardsState()
+  }),
+
+  // v4 -> v5: benefit credits, retention offers, and referrals
+  4: (state) => ({
+    ...state,
+    schemaVersion: 5,
+    benefits: createDefaultBenefitsState(),
+    referrals: []
   })
 };
 

@@ -1,3 +1,8 @@
+// Convention: catalog values (issuers, programs, networks, periods, ...) are string
+// literal union types, so data files under core/data use plain strings like
+// issuer: 'Capital One' and the compiler still rejects typos. Constant objects
+// (e.g. CardStatus) are only for values app code refers to by name.
+
 // ============================================================================
 // 1. TIER BEHAVIOR DISCRIMINATED UNIONS
 // ============================================================================
@@ -30,32 +35,26 @@ export type TierBehavior =
 // ============================================================================
 // 2. CARD ISSUERS
 // ============================================================================
-export const CardIssuer = {
-  CAPITAL_ONE: 'Capital One',
-  CHASE: 'Chase',
-  AMERICAN_EXPRESS: 'American Express',
-  CITI: 'Citi',
-  BANK_OF_AMERICA: 'Bank of America',
-  WELLS_FARGO: 'Wells Fargo',
-  US_BANK: 'US Bank',
-  DISCOVER: 'Discover'
-} as const;
-
-export type CardIssuer = typeof CardIssuer[keyof typeof CardIssuer];
+export type CardIssuer =
+  | 'Capital One'
+  | 'Chase'
+  | 'American Express'
+  | 'Citi'
+  | 'Bank of America'
+  | 'Wells Fargo'
+  | 'US Bank'
+  | 'Discover';
 
 // ============================================================================
 // 3. REWARDS PROGRAMS
 // ============================================================================
-export const RewardsProgram = {
-  CAPITAL_ONE_REWARDS: 'Capital One Rewards',
-  CHASE_ULTIMATE_REWARDS: 'Chase Ultimate Rewards',
-  AMEX_MEMBERSHIP_REWARDS: 'Amex Membership Rewards',
-  CITI_THANKYOU: 'Citi ThankYou',
-  WELLS_FARGO_REWARDS: 'Wells Fargo Rewards',
-  BILT: 'BILT'
-} as const;
-
-export type RewardsProgram = typeof RewardsProgram[keyof typeof RewardsProgram];
+export type RewardsProgram =
+  | 'Capital One Rewards'
+  | 'Chase Ultimate Rewards'
+  | 'Amex Membership Rewards'
+  | 'Citi ThankYou'
+  | 'Wells Fargo Rewards'
+  | 'BILT';
 
 // ============================================================================
 // 4. REWARD TIER DEFINITION
@@ -119,11 +118,14 @@ export interface Benefit {
   /** Dollar value available each period */
   amount: number;
 
-  /** How often the benefit resets */
-  period: 'MONTHLY' | 'QUARTERLY' | 'SEMIANNUAL' | 'ANNUAL';
+  /** How often the benefit resets; ONE_TIME is for user-added targeted offers */
+  period: 'MONTHLY' | 'QUARTERLY' | 'SEMIANNUAL' | 'ANNUAL' | 'ONE_TIME';
 
   /** Whether periods follow the calendar or the account anniversary */
   resetBasis: 'CALENDAR' | 'CARDMEMBER_YEAR';
+
+  /** ONE_TIME only: last day to use it (ISO date) */
+  expiresOn?: string;
 
   note?: string;
 }
@@ -142,13 +144,11 @@ export type CardStatus = typeof CardStatus[keyof typeof CardStatus];
 // ============================================================================
 // 7. STATIC CARD BLUEPRINT
 // ============================================================================
-export const CardNetwork = {
-  VISA: 'VISA',
-  MASTERCARD: 'MASTERCARD',
-  AMEX: 'AMEX',
-  DISCOVER: 'DISCOVER'
-} as const;
-export type CardNetwork = typeof CardNetwork[keyof typeof CardNetwork];
+export type CardNetwork =
+  | 'VISA'
+  | 'MASTERCARD'
+  | 'AMEX'
+  | 'DISCOVER';
 
 export interface Card {
   /** Permanent string slug for the card (e.g., 'us-bank-cash-plus') */
@@ -195,6 +195,9 @@ export interface Card {
 
   /** Recurring statement credits and other dollar-value perks */
   benefits?: Benefit[];
+
+  /** Most referral bonus the issuer pays per calendar year, in the card's rewards currency */
+  referralCapPerYear?: number;
 
   /** Optional link or path to card artwork asset */
   imageUrl?: string;

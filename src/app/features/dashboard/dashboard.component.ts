@@ -4,7 +4,8 @@ import { ModalComponent } from '../../shared/modal/modal.component';
 import { CardRankingService } from '../../core/services/card-ranking.service';
 import { UserCardsService } from '../../core/services/user-cards.service';
 import { CppSettingsService } from '../../core/services/cpp-settings.service';
-import { RewardsProgram } from '../../core/models/card.model';
+import type { RewardsProgram } from '../../core/models/card.model';
+import { REWARDS_PROGRAM_REGISTRY } from '../../core/data/rewards-program.registry';
 import { CardStatus } from '../../core/models/card.model';
 import { CARD_MAP } from '../../core/data/cards';
 import { ALL_CATEGORIES } from '../../core/data/category.registry';
@@ -81,9 +82,7 @@ export class DashboardComponent {
     return new Map([[categoryId, rankings]]);
   });
 
-  readonly rewardsPrograms = computed(() => {
-    return Object.values(RewardsProgram) as RewardsProgram[];
-  });
+  readonly rewardsPrograms = Object.keys(REWARDS_PROGRAM_REGISTRY) as RewardsProgram[];
 
   setNumCards(n: 1 | 3 | 5): void {
     this.updateSettings({ numCards: n });

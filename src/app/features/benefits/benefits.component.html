@@ -1,0 +1,21 @@
+<div class="page-container">
+  <h1>Benefits & Bonuses</h1>
+  <p>Statement credits, retention offers, and referral bonuses</p>
+
+  <nav class="tabs" role="tablist">
+    @for (t of tabs; track t.id) {
+      <button role="tab" class="tab" [class.active]="tab() === t.id" [attr.aria-selected]="tab() === t.id" (click)="tab.set(t.id)">
+        {{ t.label }}
+      </button>
+    }
+  </nav>
+
+  @switch (tab()) {
+    @case ('credits') {
+      <app-benefits-credits />
+    }
+    @case ('referrals') {
+      <app-benefits-referrals />
+    }
+  }
+</div>

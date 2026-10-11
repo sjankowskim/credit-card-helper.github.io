@@ -1,4 +1,4 @@
-import { CategoryMetadata, CategoryGroup } from '../models/category.model';
+import type { CategoryMetadata } from '../models/category.model';
 
 /**
  * Spending categories. A card tier on a parent category also covers its children
@@ -8,120 +8,120 @@ export const CATEGORY_REGISTRY = {
   'dining': {
     id: 'dining',
     name: 'Dining',
-    group: CategoryGroup.FOOD_AND_DRINK
+    group: 'food-and-drink'
   },
   'fast-food': {
     id: 'fast-food',
     name: 'Fast Food',
-    group: CategoryGroup.FOOD_AND_DRINK,
+    group: 'food-and-drink',
     parentId: 'dining'
   },
   'grocery-stores': {
     id: 'grocery-stores',
     name: 'Grocery Stores',
-    group: CategoryGroup.FOOD_AND_DRINK,
+    group: 'food-and-drink',
     note: 'Usually excludes superstores and warehouse clubs'
   },
   'travel': {
     id: 'travel',
     name: 'Travel',
-    group: CategoryGroup.TRAVEL_AND_TRANSIT
+    group: 'travel-and-transit'
   },
   'airfare': {
     id: 'airfare',
     name: 'Airfare',
-    group: CategoryGroup.TRAVEL_AND_TRANSIT,
+    group: 'travel-and-transit',
     parentId: 'travel'
   },
   'hotels': {
     id: 'hotels',
     name: 'Hotels',
-    group: CategoryGroup.TRAVEL_AND_TRANSIT,
+    group: 'travel-and-transit',
     parentId: 'travel'
   },
   'car-rentals': {
     id: 'car-rentals',
     name: 'Car Rentals',
-    group: CategoryGroup.TRAVEL_AND_TRANSIT,
+    group: 'travel-and-transit',
     parentId: 'travel'
   },
   'transit': {
     id: 'transit',
     name: 'Transit',
-    group: CategoryGroup.TRAVEL_AND_TRANSIT,
+    group: 'travel-and-transit',
     note: 'Trains, buses, tolls, parking'
   },
   'rideshare': {
     id: 'rideshare',
     name: 'Rideshare',
-    group: CategoryGroup.TRAVEL_AND_TRANSIT,
+    group: 'travel-and-transit',
     parentId: 'transit'
   },
   'gas-stations': {
     id: 'gas-stations',
     name: 'Gas Stations',
-    group: CategoryGroup.TRAVEL_AND_TRANSIT
+    group: 'travel-and-transit'
   },
   'ev-charging': {
     id: 'ev-charging',
     name: 'EV Charging',
-    group: CategoryGroup.TRAVEL_AND_TRANSIT
+    group: 'travel-and-transit'
   },
   'entertainment': {
     id: 'entertainment',
     name: 'Entertainment',
-    group: CategoryGroup.ENTERTAINMENT_AND_LEISURE
+    group: 'entertainment-and-leisure'
   },
   'live-entertainment': {
     id: 'live-entertainment',
     name: 'Live Entertainment',
-    group: CategoryGroup.ENTERTAINMENT_AND_LEISURE,
+    group: 'entertainment-and-leisure',
     parentId: 'entertainment'
   },
   'streaming': {
     id: 'streaming',
     name: 'Streaming Services',
-    group: CategoryGroup.ENTERTAINMENT_AND_LEISURE
+    group: 'entertainment-and-leisure'
   },
   'fitness': {
     id: 'fitness',
     name: 'Fitness Clubs',
-    group: CategoryGroup.ENTERTAINMENT_AND_LEISURE
+    group: 'entertainment-and-leisure'
   },
   'online-retail': {
     id: 'online-retail',
     name: 'Online Shopping',
-    group: CategoryGroup.SHOPPING_AND_RETAIL
+    group: 'shopping-and-retail'
   },
   'drugstores': {
     id: 'drugstores',
     name: 'Drugstores',
-    group: CategoryGroup.SHOPPING_AND_RETAIL
+    group: 'shopping-and-retail'
   },
   'home-improvement': {
     id: 'home-improvement',
     name: 'Home Improvement',
-    group: CategoryGroup.SHOPPING_AND_RETAIL
+    group: 'shopping-and-retail'
   },
   'utilities': {
     id: 'utilities',
     name: 'Utilities',
-    group: CategoryGroup.BILLS_AND_UTILITIES
+    group: 'bills-and-utilities'
   },
   'phone': {
     id: 'phone',
     name: 'Cell Phone',
-    group: CategoryGroup.BILLS_AND_UTILITIES
+    group: 'bills-and-utilities'
   },
   'internet-cable': {
     id: 'internet-cable',
     name: 'Internet & Cable',
-    group: CategoryGroup.BILLS_AND_UTILITIES
+    group: 'bills-and-utilities'
   },
   'rent': {
     id: 'rent',
     name: 'Rent',
-    group: CategoryGroup.BILLS_AND_UTILITIES
+    group: 'bills-and-utilities'
   }
 } as const satisfies Record<string, CategoryMetadata>;
 

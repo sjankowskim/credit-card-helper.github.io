@@ -1,14 +1,14 @@
-import { CardIssuer, CardNetwork, RewardsProgram, type Card, type RewardTier, type UserCard } from '../models/card.model';
+import type { Card, RewardTier, UserCard } from '../models/card.model';
 import { getQuarter, getRewardRate } from './reward-rate.utils';
 
 function card(rewardTiers: RewardTier[]): Card {
   return {
     id: 'test-card',
     name: 'Test Card',
-    issuer: CardIssuer.CHASE,
-    rewardsProgram: RewardsProgram.CHASE_ULTIMATE_REWARDS,
+    issuer: 'Chase',
+    rewardsProgram: 'Chase Ultimate Rewards',
     rewardsCurrency: 'Cashback',
-    network: CardNetwork.VISA,
+    network: 'VISA',
     hasForeignTransactionFee: false,
     hasTravelPartnerAccess: false,
     affectsChase524: true,

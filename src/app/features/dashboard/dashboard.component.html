@@ -79,7 +79,7 @@
         own a travel partner card in the same program.
       </p>
       <div class="cpp-list">
-        @for (program of rewardsPrograms(); track program) {
+        @for (program of rewardsPrograms; track program) {
           <div class="cpp-item">
             <label class="cpp-label" [for]="'cpp-' + $index">{{ program }}</label>
             <div class="cpp-input-group">

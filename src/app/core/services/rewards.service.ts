@@ -2,6 +2,7 @@ import { Injectable, computed, inject } from '@angular/core';
 import { StorageService } from './storage.service';
 import { UserCardsService } from './user-cards.service';
 import { CppSettingsService } from './cpp-settings.service';
+import { BenefitsService } from './benefits.service';
 import { CARD_MAP } from '../data/cards';
 import { REWARDS_PROGRAM_REGISTRY } from '../data/rewards-program.registry';
 import { CardStatus, type Card, type RewardsProgram, type UserCard } from '../models/card.model';
@@ -23,10 +24,17 @@ export interface RewardsPool {
   value: number;
 }
 
-/** An earned-log entry or an earned sign-up bonus, for display */
+/**
+ * Something earned on a card, for display: an earned-log entry, or a record kept
+ * elsewhere (sign-up bonus on the card, posted referral, accepted retention offer)
+ */
 export interface EarnedRow {
-  /** Log entry id; undefined for sign-up bonuses, which are edited on the card */
+  /** Log entry id; undefined for rows that come from elsewhere and are edited there */
   entryId?: string;
+  /** Where a row without an entryId is edited */
+  origin: 'log' | 'card' | 'benefits';
+  /** True when `amount` is in dollars rather than the card's rewards currency */
+  isCash: boolean;
   userCard: UserCard;
   card: Card;
   date: string;
@@ -41,6 +49,8 @@ export interface CardValue {
   card: Card;
   name: string;
   earnedValue: number;
+  /** Dollars of statement credits used */
+  creditsValue: number;
   annualFee: number;
   net: number;
 }
@@ -60,6 +70,7 @@ export class RewardsService {
   private readonly storage = inject(StorageService);
   private readonly userCardsService = inject(UserCardsService);
   private readonly cppSettingsService = inject(CppSettingsService);
+  private readonly benefitsService = inject(BenefitsService);
 
   private readonly rewards = computed(() => this.storage.state().rewards);
   readonly redemptions = computed(() => [...this.rewards().redemptions].sort((a, b) => b.date.localeCompare(a.date)));
@@ -143,7 +154,39 @@ export class RewardsService {
 
     const logged = this.rewards().earned.flatMap(entry => {
       const o = owned.get(entry.userCardId);
-      return o ? [{ entryId: entry.id, ...o, ...pick(entry), value: this.valueOf(entry.amount, o.card) }] : [];
+      return o
+        ? [{ entryId: entry.id, origin: 'log' as const, isCash: false, ...o, ...pick(entry), value: this.valueOf(entry.amount, o.card) }]
+        : [];
+    });
+
+    const referrals = this.benefitsService.referrals().flatMap(referral => {
+      const o = owned.get(referral.userCardId);
+      if (!o || referral.status !== 'posted' || !referral.postedDate) return [];
+      return [{
+        ...o,
+        origin: 'benefits' as const,
+        isCash: false,
+        date: referral.postedDate,
+        amount: referral.bonusAmount,
+        source: 'referral' as const,
+        note: referral.referredWho ? `Referred ${referral.referredWho}` : 'Referral bonus',
+        value: this.valueOf(referral.bonusAmount, o.card)
+      }];
+    });
+
+    const retention = this.benefitsService.retentionOffers().flatMap(offer => {
+      const o = owned.get(offer.userCardId);
+      if (!o || !offer.accepted) return [];
+      return [{
+        ...o,
+        origin: 'benefits' as const,
+        isCash: true,
+        date: offer.date,
+        amount: offer.value,
+        source: 'retention' as const,
+        note: offer.description,
+        value: offer.value
+      }];
     });
 
     const bonuses = this.ownedCards().flatMap(({ userCard, card }) => {
@@ -153,6 +196,8 @@ export class RewardsService {
       return [{
         userCard,
         card,
+        origin: 'card' as const,
+        isCash: false,
         date: bonus.earnedDate,
         amount: bonus.amount,
         source: 'sub' as const,
@@ -161,7 +206,7 @@ export class RewardsService {
       }];
     });
 
-    return [...logged, ...bonuses].sort((a, b) => b.date.localeCompare(a.date));
+    return [...logged, ...bonuses, ...referrals, ...retention].sort((a, b) => b.date.localeCompare(a.date));
   });
 
   addEarned(entry: Omit<EarnedEntry, 'id'>): void {
@@ -175,7 +220,7 @@ export class RewardsService {
     this.storage.update('rewards', rewards => ({ ...rewards, earned: rewards.earned.filter(e => e.id !== id) }));
   }
 
-  /** Earned value minus annual fee for each card that was active or earned anything in `year` */
+  /** Earned value plus credits used, minus annual fee, for each card active or earning in `year` */
   getCardValues(year: number): CardValue[] {
     const earnedByCard = new Map<string, number>();
     for (const row of this.earnedRows()) {
@@ -185,11 +230,18 @@ export class RewardsService {
     }
 
     return this.ownedCards()
-      .filter(({ userCard }) => userCard.userData.status === CardStatus.ACTIVE || earnedByCard.has(userCard.id))
+      .filter(
+        ({ userCard }) =>
+          userCard.userData.status === CardStatus.ACTIVE ||
+          earnedByCard.has(userCard.id) ||
+          this.benefitsService.capturedIn(userCard.id, year) > 0
+      )
       .map(({ userCard, card }) => {
         const earnedValue = earnedByCard.get(userCard.id) ?? 0;
+        const creditsValue = this.benefitsService.capturedIn(userCard.id, year);
         const annualFee = userCard.userData.status === CardStatus.ACTIVE ? getAnnualFee(userCard, card) : 0;
-        return { userCard, card, name: this.getName(userCard), earnedValue, annualFee, net: earnedValue - annualFee };
+        const net = earnedValue + creditsValue - annualFee;
+        return { userCard, card, name: this.getName(userCard), earnedValue, creditsValue, annualFee, net };
       })
       .sort((a, b) => b.net - a.net);
   }

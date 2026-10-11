@@ -296,3 +296,30 @@ button {
 .negative {
   color: var(--danger);
 }
+
+// Page-level tabs
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin: 2rem 0 1.5rem;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 0.75rem 1rem;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  &.active {
+    border-bottom-color: var(--primary);
+    color: var(--primary);
+  }
+}

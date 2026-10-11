@@ -3,7 +3,7 @@ import { RewardsService, type EarnedRow } from '../../../../core/services/reward
 import { UserCardsService } from '../../../../core/services/user-cards.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { CARD_MAP } from '../../../../core/data/cards';
-import { CardStatus, type Card } from '../../../../core/models/card.model';
+import { CardStatus } from '../../../../core/models/card.model';
 import type { EarnedSource } from '../../../../core/models/rewards.model';
 import { formatCurrency } from '../../../../core/utils/card-display.utils';
 import { formatDate, parseLocalDate, toIsoDate, today } from '../../../../core/utils/date.utils';
@@ -29,8 +29,8 @@ export class EarnedComponent {
   readonly formatCurrency = formatCurrency;
   readonly formatDate = formatDate;
   readonly sourceLabels = SOURCE_LABELS;
-  /** Sign-up bonuses come from the card, so they aren't offered here */
-  readonly sources: EarnedSource[] = ['spend', 'retention', 'referral', 'other'];
+  /** Sign-up bonuses, referrals, and retention offers are recorded on their own pages */
+  readonly sources: EarnedSource[] = ['spend', 'other'];
 
   readonly year = signal(today().getFullYear());
   readonly years = computed(() => {
@@ -93,9 +93,14 @@ export class EarnedComponent {
     return this.rewardsService.getName(row.userCard);
   }
 
-  formatAmount(amount: number, card: Card): string {
-    return card.rewardsCurrency === 'Cashback'
-      ? formatCurrency(amount)
-      : `${amount.toLocaleString('en-US')} ${card.rewardsCurrency}`;
+  formatAmount(row: EarnedRow): string {
+    return row.isCash || row.card.rewardsCurrency === 'Cashback'
+      ? formatCurrency(row.amount)
+      : `${row.amount.toLocaleString('en-US')} ${row.card.rewardsCurrency}`;
+  }
+
+  /** Where to edit a row that isn't a log entry */
+  describeOrigin(row: EarnedRow): string {
+    return row.origin === 'card' ? 'From card' : 'From Benefits';
   }
 }

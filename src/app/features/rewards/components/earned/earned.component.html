@@ -18,6 +18,7 @@
           <tr>
             <th>Card</th>
             <th class="num">Earned</th>
+            <th class="num">Credits used</th>
             <th class="num">Annual fee</th>
             <th class="num">Net</th>
           </tr>
@@ -27,6 +28,7 @@
             <tr>
               <td>{{ value.name }}</td>
               <td class="num">{{ formatCurrency(value.earnedValue) }}</td>
+              <td class="num">{{ value.creditsValue ? formatCurrency(value.creditsValue) : '—' }}</td>
               <td class="num">{{ value.annualFee ? '−' + formatCurrency(value.annualFee) : '—' }}</td>
               <td class="num net" [class.positive]="value.net >= 0" [class.negative]="value.net < 0">
                 {{ formatCurrency(value.net) }}
@@ -36,7 +38,7 @@
         </tbody>
       </table>
     </div>
-    <p class="muted note">Points are valued at your CPP settings. A negative net means the card cost more than it earned this year.</p>
+    <p class="muted note">Points are valued at your CPP settings. Net = earned + statement credits used − annual fee. Negative means the card cost more than it gave you.</p>
   } @else {
     <div class="empty-state">No active cards yet.</div>
   }
@@ -77,7 +79,7 @@
       </label>
       <button class="btn btn-primary" type="submit" [disabled]="!canAdd()">Add</button>
     </form>
-    <p class="muted note">Tip: log what each statement earned. Sign-up bonuses are added automatically when you mark them earned.</p>
+    <p class="muted note">Tip: log what each statement earned. Sign-up bonuses, posted referrals, and accepted retention offers are added automatically.</p>
   } @else {
     <div class="empty-state">Add cards to your Wallet to log rewards.</div>
   }
@@ -99,7 +101,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (row of rows(); track row.entryId ?? 'sub-' + row.userCard.id) {
+          @for (row of rows(); track $index) {
             <tr>
               <td class="nowrap">{{ formatDate(row.date) }}</td>
               <td>
@@ -109,13 +111,13 @@
                 }
               </td>
               <td>{{ sourceLabels[row.source] }}</td>
-              <td class="num">{{ formatAmount(row.amount, row.card) }}</td>
+              <td class="num">{{ formatAmount(row) }}</td>
               <td class="num">{{ formatCurrency(row.value) }}</td>
               <td class="num">
                 @if (row.entryId) {
                   <button class="btn btn-small" (click)="remove(row)" aria-label="Delete entry">✕</button>
                 } @else {
-                  <span class="muted" title="Edit sign-up bonuses in the card's details">From card</span>
+                  <span class="muted">{{ describeOrigin(row) }}</span>
                 }
               </td>
             </tr>

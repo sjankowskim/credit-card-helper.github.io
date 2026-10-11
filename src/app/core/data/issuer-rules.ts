@@ -1,4 +1,4 @@
-import { CardIssuer } from '../models/card.model';
+import type { CardIssuer } from '../models/card.model';
 
 /**
  * Issuer application rules: you can be approved while you have fewer than `max`
@@ -22,16 +22,16 @@ export interface VelocityRule {
 
 /** Issuers whose rules are shown up front; the rest go under "More issuer rules" */
 export const FEATURED_ISSUERS: readonly CardIssuer[] = [
-  CardIssuer.CHASE,
-  CardIssuer.AMERICAN_EXPRESS,
-  CardIssuer.CITI,
-  CardIssuer.CAPITAL_ONE
+  'Chase',
+  'American Express',
+  'Citi',
+  'Capital One'
 ];
 
 export const VELOCITY_RULES: readonly VelocityRule[] = [
   {
     id: 'chase-5-24',
-    issuer: CardIssuer.CHASE,
+    issuer: 'Chase',
     name: '5/24',
     description: 'Fewer than 5 new personal cards from any issuer in 24 months',
     max: 5,
@@ -40,7 +40,7 @@ export const VELOCITY_RULES: readonly VelocityRule[] = [
   },
   {
     id: 'chase-2-30',
-    issuer: CardIssuer.CHASE,
+    issuer: 'Chase',
     name: '2/30',
     description: 'At most 2 Chase cards in 30 days',
     max: 2,
@@ -48,7 +48,7 @@ export const VELOCITY_RULES: readonly VelocityRule[] = [
   },
   {
     id: 'amex-1-5',
-    issuer: CardIssuer.AMERICAN_EXPRESS,
+    issuer: 'American Express',
     name: '1/5',
     description: 'At most 1 Amex credit card every 5 days',
     max: 1,
@@ -56,7 +56,7 @@ export const VELOCITY_RULES: readonly VelocityRule[] = [
   },
   {
     id: 'amex-2-90',
-    issuer: CardIssuer.AMERICAN_EXPRESS,
+    issuer: 'American Express',
     name: '2/90',
     description: 'At most 2 Amex credit cards in 90 days',
     max: 2,
@@ -64,7 +64,7 @@ export const VELOCITY_RULES: readonly VelocityRule[] = [
   },
   {
     id: 'citi-1-8',
-    issuer: CardIssuer.CITI,
+    issuer: 'Citi',
     name: '1/8',
     description: 'At most 1 Citi card every 8 days',
     max: 1,
@@ -72,7 +72,7 @@ export const VELOCITY_RULES: readonly VelocityRule[] = [
   },
   {
     id: 'citi-2-65',
-    issuer: CardIssuer.CITI,
+    issuer: 'Citi',
     name: '2/65',
     description: 'At most 2 Citi cards in 65 days',
     max: 2,
@@ -80,7 +80,7 @@ export const VELOCITY_RULES: readonly VelocityRule[] = [
   },
   {
     id: 'capital-one-1-6',
-    issuer: CardIssuer.CAPITAL_ONE,
+    issuer: 'Capital One',
     name: '1/6mo',
     description: 'At most 1 Capital One card every 6 months',
     max: 1,
@@ -88,7 +88,7 @@ export const VELOCITY_RULES: readonly VelocityRule[] = [
   },
   {
     id: 'boa-2-2',
-    issuer: CardIssuer.BANK_OF_AMERICA,
+    issuer: 'Bank of America',
     name: '2/3/4 (2 mo)',
     description: 'At most 2 Bank of America cards in 2 months',
     max: 2,
@@ -96,7 +96,7 @@ export const VELOCITY_RULES: readonly VelocityRule[] = [
   },
   {
     id: 'boa-3-12',
-    issuer: CardIssuer.BANK_OF_AMERICA,
+    issuer: 'Bank of America',
     name: '2/3/4 (12 mo)',
     description: 'At most 3 Bank of America cards in 12 months',
     max: 3,
@@ -104,7 +104,7 @@ export const VELOCITY_RULES: readonly VelocityRule[] = [
   },
   {
     id: 'boa-4-24',
-    issuer: CardIssuer.BANK_OF_AMERICA,
+    issuer: 'Bank of America',
     name: '2/3/4 (24 mo)',
     description: 'At most 4 Bank of America cards in 24 months',
     max: 4,

@@ -3,7 +3,7 @@
  * Defines which rewards programs allow point transfers between cards
  * This enables cards like Savor One to transfer points to Venture X for travel redemption
  */
-import { RewardsProgram } from '../models/card.model';
+import type { RewardsProgram } from '../models/card.model';
 
 export interface RewardsProgramMetadata {
   id: RewardsProgram;
@@ -15,38 +15,38 @@ export interface RewardsProgramMetadata {
 }
 
 export const REWARDS_PROGRAM_REGISTRY: Record<RewardsProgram, RewardsProgramMetadata> = {
-  [RewardsProgram.CAPITAL_ONE_REWARDS]: {
-    id: RewardsProgram.CAPITAL_ONE_REWARDS,
+  'Capital One Rewards': {
+    id: 'Capital One Rewards',
     name: 'Capital One Rewards',
     allowsTransfers: true,
     hasTravelPartners: true
   },
-  [RewardsProgram.CHASE_ULTIMATE_REWARDS]: {
-    id: RewardsProgram.CHASE_ULTIMATE_REWARDS,
+  'Chase Ultimate Rewards': {
+    id: 'Chase Ultimate Rewards',
     name: 'Chase Ultimate Rewards',
     allowsTransfers: true,
     hasTravelPartners: true
   },
-  [RewardsProgram.AMEX_MEMBERSHIP_REWARDS]: {
-    id: RewardsProgram.AMEX_MEMBERSHIP_REWARDS,
+  'Amex Membership Rewards': {
+    id: 'Amex Membership Rewards',
     name: 'Amex Membership Rewards',
     allowsTransfers: true,
     hasTravelPartners: true
   },
-  [RewardsProgram.CITI_THANKYOU]: {
-    id: RewardsProgram.CITI_THANKYOU,
+  'Citi ThankYou': {
+    id: 'Citi ThankYou',
     name: 'Citi ThankYou',
     allowsTransfers: true,
     hasTravelPartners: true
   },
-  [RewardsProgram.WELLS_FARGO_REWARDS]: {
-    id: RewardsProgram.WELLS_FARGO_REWARDS,
+  'Wells Fargo Rewards': {
+    id: 'Wells Fargo Rewards',
     name: 'Wells Fargo Rewards',
     allowsTransfers: true,
     hasTravelPartners: true
   },
-  [RewardsProgram.BILT]: {
-    id: RewardsProgram.BILT,
+  'BILT': {
+    id: 'BILT',
     name: 'BILT',
     allowsTransfers: true,
     hasTravelPartners: true

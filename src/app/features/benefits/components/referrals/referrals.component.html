@@ -1,0 +1,124 @@
+<section class="stat-tiles">
+  <div class="stat-tile">
+    <span class="stat-value">{{ formatCurrency(stats().postedValue) }}</span>
+    <span class="stat-label">Posted in {{ year }}</span>
+    <span class="muted">{{ stats().postedCount }} {{ stats().postedCount === 1 ? 'referral' : 'referrals' }}, at your CPP</span>
+  </div>
+  <div class="stat-tile">
+    <span class="stat-value">{{ stats().pending }}</span>
+    <span class="stat-label">Pending</span>
+  </div>
+</section>
+
+@if (cardTotals().length > 0) {
+  <section>
+    <h2 class="section-title">{{ year }} totals by card</h2>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Card</th>
+            <th class="num">Posted</th>
+            <th class="num">Yearly cap</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (total of cardTotals(); track total.userCardId) {
+            <tr>
+              <td>{{ total.name }}</td>
+              <td class="num">{{ formatBonus(total.total, total.card) }}</td>
+              <td class="num">
+                @if (total.cap) {
+                  <span [class.negative]="total.total >= total.cap">{{ formatBonus(total.cap, total.card) }}</span>
+                } @else {
+                  <span class="muted">Not on file</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+}
+
+<section>
+  <h2 class="section-title">Log a referral</h2>
+  @if (cardOptions().length > 0) {
+    <form class="add-form" (submit)="add($event)">
+      <label class="form-field">
+        <span>Your card</span>
+        <select class="input" [value]="draftCardId()" (change)="draftCardId.set($any($event.target).value)">
+          <option value="">Choose a card</option>
+          @for (option of cardOptions(); track option.id) {
+            <option [value]="option.id">{{ option.name }}</option>
+          }
+        </select>
+      </label>
+      <label class="form-field">
+        <span>Date</span>
+        <input class="input" type="date" [value]="draftDate()" (input)="draftDate.set($any($event.target).value)" />
+      </label>
+      <label class="form-field">
+        <span>Who (optional)</span>
+        <input class="input" type="text" placeholder="e.g. Alex" [value]="draftWho()" (input)="draftWho.set($any($event.target).value)" />
+      </label>
+      <label class="form-field">
+        <span>Bonus{{ draftUnit() ? ' (' + draftUnit() + ')' : '' }}</span>
+        <input class="input" type="number" min="0" step="any" [value]="draftAmount()" (input)="draftAmount.set($any($event.target).value)" />
+      </label>
+      <button class="btn btn-primary" type="submit" [disabled]="!canAdd()">Add</button>
+    </form>
+  } @else {
+    <div class="empty-state">Add active cards to your Wallet to log referrals.</div>
+  }
+</section>
+
+<section>
+  <h2 class="section-title">All referrals</h2>
+  @if (referrals().length > 0) {
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Card</th>
+            <th>Referred</th>
+            <th class="num">Bonus</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (referral of referrals(); track referral.id) {
+            <tr>
+              <td class="nowrap">{{ formatDate(referral.date) }}</td>
+              <td>{{ getCardName(referral) }}</td>
+              <td>{{ referral.referredWho || '—' }}</td>
+              <td class="num">{{ formatBonus(referral.bonusAmount, getCard(referral)) }}</td>
+              <td>
+                @if (referral.status === 'posted') {
+                  <span class="badge badge-success">Posted</span>
+                  <span class="muted">{{ formatDate(referral.postedDate) }}</span>
+                } @else {
+                  <span class="badge badge-warning">Pending</span>
+                }
+              </td>
+              <td class="num">
+                @if (referral.status === 'pending') {
+                  <button class="btn btn-small" (click)="setPosted(referral, true)">Mark posted</button>
+                } @else {
+                  <button class="btn btn-small" (click)="setPosted(referral, false)">Undo</button>
+                }
+                <button class="btn btn-small" (click)="remove(referral)" aria-label="Delete referral">✕</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="muted note">Posted referrals count toward the card's value on the Rewards page.</p>
+  } @else {
+    <div class="empty-state">No referrals logged yet.</div>
+  }
+</section>

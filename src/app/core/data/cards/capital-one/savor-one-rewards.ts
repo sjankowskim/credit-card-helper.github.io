@@ -1,12 +1,12 @@
-import { Card, CardNetwork, CardIssuer, RewardsProgram } from '../../../models/card.model';
+import type { Card } from '../../../models/card.model';
 
 export const SAVOR_ONE_REWARDS: Card = {
   id: 'capital-one-savor-one-rewards',
   name: 'Capital One Savor One Rewards',
-  issuer: CardIssuer.CAPITAL_ONE,
-  rewardsProgram: RewardsProgram.CAPITAL_ONE_REWARDS,
+  issuer: 'Capital One',
+  rewardsProgram: 'Capital One Rewards',
   rewardsCurrency: 'Cashback',
-  network: CardNetwork.MASTERCARD,
+  network: 'MASTERCARD',
   hasForeignTransactionFee: false,
   hasTravelPartnerAccess: false,
   affectsChase524: true,

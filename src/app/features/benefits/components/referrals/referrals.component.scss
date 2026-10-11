@@ -1,0 +1,18 @@
+section + section {
+  margin-top: 2rem;
+}
+
+.note {
+  margin-top: 0.75rem;
+}
+
+.add-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  align-items: end;
+  gap: 0.75rem;
+}
+
+.data-table .num .btn + .btn {
+  margin-left: 0.375rem;
+}

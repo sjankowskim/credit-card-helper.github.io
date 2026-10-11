@@ -1,0 +1,112 @@
+section + section {
+  margin-top: 2rem;
+}
+
+.note {
+  margin-top: 0.75rem;
+}
+
+.warn {
+  color: #b45309;
+}
+
+.expiring {
+  padding: 1.25rem;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.08);
+
+  .section-title {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.expiring-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.25rem 0;
+}
+
+.card-group {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  & + & {
+    margin-top: 1rem;
+  }
+
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    padding-bottom: 0.5rem;
+
+    h3 {
+      font-size: 1.0625rem;
+      font-weight: 600;
+    }
+  }
+}
+
+.credit {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding: 0.875rem 0;
+  border-top: 1px solid var(--border);
+
+  &.done .credit-name {
+    color: var(--text-tertiary);
+  }
+}
+
+.credit-name {
+  font-weight: 600;
+
+  .badge {
+    margin-left: 0.375rem;
+  }
+}
+
+.credit-usage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.375rem;
+}
+
+.used-row,
+.used-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.add-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  align-items: end;
+  gap: 0.75rem;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.offers {
+  margin-top: 1rem;
+}
+
+.data-table .num .btn + .btn {
+  margin-left: 0.375rem;
+}

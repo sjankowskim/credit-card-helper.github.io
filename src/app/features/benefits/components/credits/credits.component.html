@@ -1,0 +1,206 @@
+<section class="stat-tiles">
+  <div class="stat-tile">
+    <span class="stat-value">{{ formatCurrency(stats().captured) }}</span>
+    <span class="stat-label">Captured in {{ year }}</span>
+  </div>
+  <div class="stat-tile">
+    <span class="stat-value">{{ formatCurrency(stats().available) }}</span>
+    <span class="stat-label">Available this period</span>
+  </div>
+  <div class="stat-tile">
+    <span class="stat-value" [class.negative]="stats().expiring > 0">{{ formatCurrency(stats().expiring) }}</span>
+    <span class="stat-label">Expiring within {{ EXPIRING_DAYS }} days</span>
+  </div>
+</section>
+
+@if (expiringSoon().length > 0) {
+  <section class="expiring">
+    <h2 class="section-title">⏳ Expiring soon</h2>
+    @for (credit of expiringSoon(); track credit.userCard.id + credit.benefit.id) {
+      <div class="expiring-row">
+        <span><strong>{{ formatCurrency(credit.remaining) }}</strong> {{ credit.benefit.name }} · {{ getName(credit) }}</span>
+        <span class="muted">{{ credit.period.daysLeft }} {{ credit.period.daysLeft === 1 ? 'day' : 'days' }} left</span>
+      </div>
+    }
+  </section>
+}
+
+<section>
+  <h2 class="section-title">Credits by card</h2>
+  @for (group of cardGroups(); track group.userCard.id) {
+    <article class="card-group">
+      <header>
+        <h3>{{ group.name }}</h3>
+        <span class="muted">
+          Captured {{ formatCurrency(group.captured) }} in {{ year }}
+          @if (group.annualFee) {
+            of a {{ formatCurrency(group.annualFee) }} annual fee
+          }
+        </span>
+      </header>
+      @for (credit of group.credits; track credit.benefit.id) {
+        <div class="credit" [class.done]="credit.remaining === 0">
+          <div class="credit-info">
+            <div class="credit-name">
+              {{ credit.benefit.name }}
+              @if (credit.isCustom) {
+                <span class="badge">Added by you</span>
+              }
+            </div>
+            <div class="muted">{{ formatCurrency(credit.benefit.amount) }} per {{ getPeriodLabel(credit.benefit) }}</div>
+            <div class="muted">{{ describeWindow(credit) }}</div>
+            @if (credit.period.approximate) {
+              <div class="muted warn">Using calendar periods; add the card's open date for anniversary timing.</div>
+            }
+            @if (credit.benefit.note) {
+              <div class="muted">{{ credit.benefit.note }}</div>
+            }
+          </div>
+          <div class="credit-usage">
+            <div class="used-row">
+              <span class="muted">Used</span>
+              <app-inline-edit-field
+                type="currency"
+                [min]="0"
+                [max]="credit.benefit.amount"
+                [value]="credit.used || undefined"
+                emptyLabel="$0"
+                (saved)="setUsed(credit, $event)"
+              />
+            </div>
+            <div class="used-actions">
+              @if (credit.remaining > 0) {
+                <span class="muted">{{ formatCurrency(credit.remaining) }} left</span>
+                <button class="btn btn-small" (click)="useAll(credit)">Used it all</button>
+              } @else {
+                <span class="badge badge-success">Fully used</span>
+              }
+              @if (credit.isCustom) {
+                <button class="btn btn-small" (click)="removeCustom(credit)" aria-label="Delete credit">✕</button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </article>
+  } @empty {
+    <div class="empty-state">None of your active cards list credits yet. Add a targeted offer or one-off credit below.</div>
+  }
+</section>
+
+<section>
+  <h2 class="section-title">Add a credit</h2>
+  @if (cardOptions().length > 0) {
+    <form class="add-form" (submit)="addCredit($event)">
+      <label class="form-field">
+        <span>Card</span>
+        <select class="input" [value]="creditCardId()" (change)="creditCardId.set($any($event.target).value)">
+          <option value="">Choose a card</option>
+          @for (option of cardOptions(); track option.id) {
+            <option [value]="option.id">{{ option.name }}</option>
+          }
+        </select>
+      </label>
+      <label class="form-field">
+        <span>Name</span>
+        <input class="input" type="text" placeholder="e.g. Amex Offer: $50 at Hilton" [value]="creditName()" (input)="creditName.set($any($event.target).value)" />
+      </label>
+      <label class="form-field">
+        <span>Amount ($)</span>
+        <input class="input" type="number" min="0" step="any" [value]="creditAmount()" (input)="creditAmount.set($any($event.target).value)" />
+      </label>
+      <label class="form-field">
+        <span>How often</span>
+        <select class="input" [value]="creditPeriod()" (change)="creditPeriod.set($any($event.target).value)">
+          <option value="ONE_TIME">One time</option>
+          <option value="MONTHLY">Monthly</option>
+          <option value="QUARTERLY">Quarterly</option>
+          <option value="SEMIANNUAL">Twice a year</option>
+          <option value="ANNUAL">Yearly</option>
+        </select>
+      </label>
+      @if (creditPeriod() === 'ONE_TIME') {
+        <label class="form-field">
+          <span>Expires (optional)</span>
+          <input class="input" type="date" [value]="creditExpires()" (input)="creditExpires.set($any($event.target).value)" />
+        </label>
+      } @else {
+        <label class="form-field">
+          <span>Resets</span>
+          <select class="input" [value]="creditResetBasis()" (change)="creditResetBasis.set($any($event.target).value)">
+            <option value="CALENDAR">On the calendar</option>
+            <option value="CARDMEMBER_YEAR">On the card anniversary</option>
+          </select>
+        </label>
+      }
+      <button class="btn btn-primary" type="submit" [disabled]="!canAddCredit()">Add credit</button>
+    </form>
+  } @else {
+    <div class="empty-state">Add active cards to your Wallet to track their credits.</div>
+  }
+</section>
+
+<section>
+  <h2 class="section-title">Retention offers</h2>
+  @if (cardOptions().length > 0) {
+    <form class="add-form" (submit)="addOffer($event)">
+      <label class="form-field">
+        <span>Card</span>
+        <select class="input" [value]="offerCardId()" (change)="offerCardId.set($any($event.target).value)">
+          <option value="">Choose a card</option>
+          @for (option of cardOptions(); track option.id) {
+            <option [value]="option.id">{{ option.name }}</option>
+          }
+        </select>
+      </label>
+      <label class="form-field">
+        <span>Date</span>
+        <input class="input" type="date" [value]="offerDate()" (input)="offerDate.set($any($event.target).value)" />
+      </label>
+      <label class="form-field">
+        <span>Offer</span>
+        <input class="input" type="text" placeholder="e.g. 20,000 points after $2,000 spend" [value]="offerDescription()" (input)="offerDescription.set($any($event.target).value)" />
+      </label>
+      <label class="form-field">
+        <span>Worth ($)</span>
+        <input class="input" type="number" min="0" step="any" [value]="offerValue()" (input)="offerValue.set($any($event.target).value)" />
+      </label>
+      <label class="checkbox">
+        <input type="checkbox" [checked]="offerAccepted()" (change)="offerAccepted.set($any($event.target).checked)" />
+        Accepted
+      </label>
+      <button class="btn btn-primary" type="submit" [disabled]="!canAddOffer()">Log offer</button>
+    </form>
+  }
+
+  @if (retentionOffers().length > 0) {
+    <div class="table-scroll offers">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Card</th>
+            <th>Offer</th>
+            <th class="num">Worth</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (offer of retentionOffers(); track offer.id) {
+            <tr>
+              <td class="nowrap">{{ formatDate(offer.date) }}</td>
+              <td>{{ getOfferCardName(offer) }}</td>
+              <td>{{ offer.description }}</td>
+              <td class="num">{{ formatCurrency(offer.value) }}</td>
+              <td class="num">
+                <button class="btn btn-small" (click)="toggleAccepted(offer)">{{ offer.accepted ? 'Accepted' : 'Declined' }}</button>
+                <button class="btn btn-small" (click)="removeOffer(offer)" aria-label="Delete offer">✕</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="muted note">Accepted offers count toward the card's value on the Rewards page.</p>
+  }
+</section>

@@ -1,12 +1,12 @@
-import { Card, CardNetwork, CardIssuer, RewardsProgram } from '../../../models/card.model';
+import type { Card } from '../../../models/card.model';
 
 export const CITI_CUSTOM_CASH: Card = {
   id: 'citi-custom-cash',
   name: 'Citi Custom Cash',
-  issuer: CardIssuer.CITI,
-  rewardsProgram: RewardsProgram.CITI_THANKYOU,
+  issuer: 'Citi',
+  rewardsProgram: 'Citi ThankYou',
   rewardsCurrency: 'Cashback',
-  network: CardNetwork.MASTERCARD,
+  network: 'MASTERCARD',
   hasForeignTransactionFee: true,
   hasTravelPartnerAccess: false,
   affectsChase524: true,

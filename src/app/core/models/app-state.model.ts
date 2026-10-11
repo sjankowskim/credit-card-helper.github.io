@@ -1,5 +1,6 @@
 import type { RewardsProgram, UserCard } from './card.model';
 import { createDefaultRewardsState, type RewardsState } from './rewards.model';
+import { createDefaultBenefitsState, type BenefitsState, type Referral } from './benefits.model';
 
 export interface DashboardSettings {
   numCards: 1 | 3 | 5;
@@ -20,9 +21,11 @@ export interface AppState {
   cppValuations: Partial<Record<RewardsProgram, number>>;
   dashboardSettings: DashboardSettings;
   rewards: RewardsState;
+  benefits: BenefitsState;
+  referrals: Referral[];
 }
 
-export const CURRENT_SCHEMA_VERSION = 4;
+export const CURRENT_SCHEMA_VERSION = 5;
 
 export const DEFAULT_DASHBOARD_SETTINGS: DashboardSettings = {
   numCards: 3,
@@ -38,6 +41,8 @@ export function createDefaultAppState(): AppState {
     userCards: [],
     cppValuations: {},
     dashboardSettings: { ...DEFAULT_DASHBOARD_SETTINGS },
-    rewards: createDefaultRewardsState()
+    rewards: createDefaultRewardsState(),
+    benefits: createDefaultBenefitsState(),
+    referrals: []
   };
 }

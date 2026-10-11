@@ -11,14 +11,14 @@
     <div class="stat-tile">
       <span class="stat-value">{{ formatWhole(earnedThisYear()) }}</span>
       <span class="stat-label">Earned in {{ year }}</span>
-      <span class="muted">Including sign-up bonuses</span>
+      <span class="muted">Incl. bonuses, referrals, retention</span>
     </div>
     <div class="stat-tile">
       <span class="stat-value" [class.positive]="netThisYear() >= 0" [class.negative]="netThisYear() < 0">
         {{ formatWhole(netThisYear()) }}
       </span>
       <span class="stat-label">Net of annual fees</span>
-      <span class="muted">Earned minus fees on active cards</span>
+      <span class="muted">Earned + credits used − fees</span>
     </div>
   </section>
 
