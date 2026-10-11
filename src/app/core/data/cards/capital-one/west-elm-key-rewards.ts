@@ -1,8 +1,8 @@
 import type { Card } from '../../../models/card.model';
 
-export const WILLIAMS_SONOMA_KEY_REWARDS_VISA: Card = {
-  id: 'capital-one-williams-sonoma-key-rewards-visa',
-  name: 'Williams Sonoma Key Rewards Visa',
+export const WEST_ELM_KEY_REWARDS: Card = {
+  id: 'capital-one-west-elm-key-rewards-visa',
+  name: 'West Elm Key Rewards Visa',
   issuer: 'Capital One',
   rewardsProgram: 'Store Rewards',
   rewardsCurrency: 'Cashback',
@@ -17,12 +17,12 @@ export const WILLIAMS_SONOMA_KEY_REWARDS_VISA: Card = {
   note: 'Capital One lists up to 5% back without naming categories, so only the brand rate is shown and 1% elsewhere is assumed. Rewards are store credit at Williams-Sonoma, Inc. brands.',
   rewardTiers: [
     {
-      id: 'williams-sonoma-key-rewards-visa-brands',
+      id: 'west-elm-key-rewards-visa-brands',
       name: 'Williams-Sonoma Brands',
       rewardRate: 5.0,
       behavior: { type: 'AUTOMATIC' },
       eligibleCategories: ['furniture-stores', 'home-improvement'],
-      onlyWhen: 'Williams-Sonoma, Inc. brands, including Williams Sonoma'
+      onlyWhen: 'Williams-Sonoma, Inc. brands, including West Elm'
     }
   ]
 };

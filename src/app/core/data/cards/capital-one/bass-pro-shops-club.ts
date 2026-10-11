@@ -1,6 +1,6 @@
 import type { Card } from '../../../models/card.model';
 
-export const BASS_PRO_SHOPS_CLUB_CARD: Card = {
+export const BASS_PRO_SHOPS_CLUB: Card = {
   id: 'capital-one-bass-pro-shops-club-card',
   name: 'Bass Pro Shops CLUB Card',
   issuer: 'Capital One',

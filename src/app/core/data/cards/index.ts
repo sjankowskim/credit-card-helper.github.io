@@ -32,40 +32,40 @@ import { PLATINUM } from './american-express/platinum';
 import { CUSTOMIZED_CASH_REWARDS } from './bank-of-america/customized-cash-rewards';
 import { PREMIUM_REWARDS } from './bank-of-america/premium-rewards';
 import { AADVANTAGE_AVIATOR_RED } from './barclays/aadvantage-aviator-red';
-import { BASS_PRO_SHOPS_CLUB_CARD } from './capital-one/bass-pro-shops-club-card';
-import { BJS_ONE_MASTERCARD } from './capital-one/bjs-one-mastercard';
-import { BJS_ONE_PLUS_MASTERCARD } from './capital-one/bjs-one-plus-mastercard';
-import { CABELAS_CLUB_CARD } from './capital-one/cabelas-club-card';
-import { CLUB_BUSINESS_CARD } from './capital-one/club-business-card';
-import { KEY_REWARDS_VISA } from './capital-one/key-rewards-visa';
-import { KOHLS_REWARDS_VISA } from './capital-one/kohls-rewards-visa';
+import { BASS_PRO_SHOPS_AND_CABELAS_CLUB_BUSINESS } from './capital-one/bass-pro-shops-and-cabelas-club-business';
+import { BASS_PRO_SHOPS_CLUB } from './capital-one/bass-pro-shops-club';
+import { BJS_ONE_PLUS } from './capital-one/bjs-one-plus';
+import { BJS_ONE } from './capital-one/bjs-one';
+import { CABELAS_CLUB } from './capital-one/cabelas-club';
+import { KEY_REWARDS } from './capital-one/key-rewards';
+import { KOHLS_REWARDS } from './capital-one/kohls-rewards';
 import { PLATINUM_MASTERCARD } from './capital-one/platinum-mastercard';
 import { PLATINUM_SECURED } from './capital-one/platinum-secured';
-import { POTTERY_BARN_KEY_REWARDS_VISA } from './capital-one/pottery-barn-key-rewards-visa';
+import { POTTERY_BARN_KEY_REWARDS } from './capital-one/pottery-barn-key-rewards';
 import { QUICKSILVER_ONE_REWARDS } from './capital-one/quicksilver-one-rewards';
 import { QUICKSILVER_REWARDS_GOOD_CREDIT } from './capital-one/quicksilver-rewards-good-credit';
 import { QUICKSILVER_REWARDS_STUDENTS } from './capital-one/quicksilver-rewards-students';
 import { QUICKSILVER_REWARDS } from './capital-one/quicksilver-rewards';
 import { QUICKSILVER_SECURED_REWARDS } from './capital-one/quicksilver-secured-rewards';
-import { REI_CO_OP_MASTERCARD } from './capital-one/rei-co-op-mastercard';
+import { REI_CO_OP } from './capital-one/rei-co-op';
 import { SAVOR_REWARDS_GOOD_CREDIT } from './capital-one/savor-rewards-good-credit';
 import { SAVOR_REWARDS_STUDENTS } from './capital-one/savor-rewards-students';
 import { SAVOR_REWARDS } from './capital-one/savor-rewards';
 import { SAVORONE_REWARDS } from './capital-one/savorone-rewards';
-import { SPARK_CASH_PLUS } from './capital-one/spark-cash-plus';
+import { SPARK_CASH_PLUS_BUSINESS } from './capital-one/spark-cash-plus-business';
 import { SPARK_CASH_SELECT } from './capital-one/spark-cash-select';
 import { SPARK_CASH } from './capital-one/spark-cash';
 import { SPARK_CLASSIC } from './capital-one/spark-classic';
 import { T_MOBILE_VISA } from './capital-one/t-mobile-visa';
 import { VENTURE_BUSINESS } from './capital-one/venture-business';
-import { VENTURE_ONE_BUSINESS } from './capital-one/venture-one-business';
-import { VENTURE_ONE_REWARDS_GOOD_CREDIT } from './capital-one/venture-one-rewards-good-credit';
-import { VENTURE_ONE_REWARDS } from './capital-one/venture-one-rewards';
 import { VENTURE_REWARDS } from './capital-one/venture-rewards';
 import { VENTURE_X_BUSINESS } from './capital-one/venture-x-business';
 import { VENTURE_X_REWARDS } from './capital-one/venture-x-rewards';
-import { WEST_ELM_KEY_REWARDS_VISA } from './capital-one/west-elm-key-rewards-visa';
-import { WILLIAMS_SONOMA_KEY_REWARDS_VISA } from './capital-one/williams-sonoma-key-rewards-visa';
+import { VENTUREONE_BUSINESS } from './capital-one/ventureone-business';
+import { VENTUREONE_REWARDS_GOOD_CREDIT } from './capital-one/ventureone-rewards-good-credit';
+import { VENTUREONE_REWARDS } from './capital-one/ventureone-rewards';
+import { WEST_ELM_KEY_REWARDS } from './capital-one/west-elm-key-rewards';
+import { WILLIAMS_SONOMA_KEY_REWARDS } from './capital-one/williams-sonoma-key-rewards';
 import { BILT_BLUE } from './cardless/bilt-blue';
 import { BILT_OBSIDIAN } from './cardless/bilt-obsidian';
 import { BILT_PALLADIUM } from './cardless/bilt-palladium';
@@ -116,40 +116,40 @@ export const ALL_CARDS: Card[] = [
   CUSTOMIZED_CASH_REWARDS,
   PREMIUM_REWARDS,
   AADVANTAGE_AVIATOR_RED,
-  BASS_PRO_SHOPS_CLUB_CARD,
-  BJS_ONE_MASTERCARD,
-  BJS_ONE_PLUS_MASTERCARD,
-  CABELAS_CLUB_CARD,
-  CLUB_BUSINESS_CARD,
-  KEY_REWARDS_VISA,
-  KOHLS_REWARDS_VISA,
+  BASS_PRO_SHOPS_AND_CABELAS_CLUB_BUSINESS,
+  BASS_PRO_SHOPS_CLUB,
+  BJS_ONE_PLUS,
+  BJS_ONE,
+  CABELAS_CLUB,
+  KEY_REWARDS,
+  KOHLS_REWARDS,
   PLATINUM_MASTERCARD,
   PLATINUM_SECURED,
-  POTTERY_BARN_KEY_REWARDS_VISA,
+  POTTERY_BARN_KEY_REWARDS,
   QUICKSILVER_ONE_REWARDS,
   QUICKSILVER_REWARDS_GOOD_CREDIT,
   QUICKSILVER_REWARDS_STUDENTS,
   QUICKSILVER_REWARDS,
   QUICKSILVER_SECURED_REWARDS,
-  REI_CO_OP_MASTERCARD,
+  REI_CO_OP,
   SAVOR_REWARDS_GOOD_CREDIT,
   SAVOR_REWARDS_STUDENTS,
   SAVOR_REWARDS,
   SAVORONE_REWARDS,
-  SPARK_CASH_PLUS,
+  SPARK_CASH_PLUS_BUSINESS,
   SPARK_CASH_SELECT,
   SPARK_CASH,
   SPARK_CLASSIC,
   T_MOBILE_VISA,
   VENTURE_BUSINESS,
-  VENTURE_ONE_BUSINESS,
-  VENTURE_ONE_REWARDS_GOOD_CREDIT,
-  VENTURE_ONE_REWARDS,
   VENTURE_REWARDS,
   VENTURE_X_BUSINESS,
   VENTURE_X_REWARDS,
-  WEST_ELM_KEY_REWARDS_VISA,
-  WILLIAMS_SONOMA_KEY_REWARDS_VISA,
+  VENTUREONE_BUSINESS,
+  VENTUREONE_REWARDS_GOOD_CREDIT,
+  VENTUREONE_REWARDS,
+  WEST_ELM_KEY_REWARDS,
+  WILLIAMS_SONOMA_KEY_REWARDS,
   BILT_BLUE,
   BILT_OBSIDIAN,
   BILT_PALLADIUM,
@@ -204,9 +204,32 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['amex-delta-skymiles-platinum-business', ['/images/cards/american-express/platinum-delta-skymiles-business.png']],
   ['amex-platinum', ['/images/cards/american-express/platinum.png']],
   ['barclays-aadvantage-aviator-red', ['/images/cards/barclays/aadvantage-aviator-red.png']],
+  ['capital-one-club-business-card', ['/images/cards/capital-one/bass-pro-shops-and-cabelas-club-business.png']],
+  ['capital-one-bass-pro-shops-club-card', ['/images/cards/capital-one/bass-pro-shops-club.png']],
+  ['capital-one-bjs-one-plus-mastercard', ['/images/cards/capital-one/bjs-one-plus.png']],
+  ['capital-one-bjs-one-mastercard', ['/images/cards/capital-one/bjs-one.png']],
+  ['capital-one-cabelas-club-card', ['/images/cards/capital-one/cabelas-club.png']],
+  ['capital-one-key-rewards-visa', ['/images/cards/capital-one/key-rewards.png']],
+  ['capital-one-kohls-rewards-visa', ['/images/cards/capital-one/kohls-rewards.png']],
+  ['capital-one-platinum', ['/images/cards/capital-one/platinum-mastercard.png']],
+  ['capital-one-pottery-barn-key-rewards-visa', ['/images/cards/capital-one/pottery-barn-key-rewards.png']],
+  ['capital-one-quicksilverone-rewards', ['/images/cards/capital-one/quicksilver-one-rewards.png']],
   ['capital-one-quicksilver-rewards', ['/images/cards/capital-one/quicksilver-rewards.png']],
+  ['capital-one-rei-co-op-mastercard', ['/images/cards/capital-one/rei-co-op.png']],
   ['capital-one-savor-one-rewards', ['/images/cards/capital-one/savor-rewards.png']],
+  ['capital-one-savorone-rewards', ['/images/cards/capital-one/savorone-rewards.png']],
+  ['capital-one-spark-cash-plus', ['/images/cards/capital-one/spark-cash-plus-business.png']],
+  ['capital-one-spark-cash', ['/images/cards/capital-one/spark-cash.png']],
+  ['capital-one-spark-classic', ['/images/cards/capital-one/spark-classic.png']],
+  ['capital-one-t-mobile-visa', ['/images/cards/capital-one/t-mobile-visa.png']],
+  ['capital-one-venture-business', ['/images/cards/capital-one/venture-business.png']],
+  ['capital-one-venture-rewards', ['/images/cards/capital-one/venture-rewards.png']],
+  ['capital-one-venture-x-business', ['/images/cards/capital-one/venture-x-business.png']],
   ['capital-one-venture-x-rewards', ['/images/cards/capital-one/venture-x-rewards.png']],
+  ['capital-one-ventureone-business', ['/images/cards/capital-one/ventureone-business.png']],
+  ['capital-one-ventureone-rewards', ['/images/cards/capital-one/ventureone-rewards.png']],
+  ['capital-one-west-elm-key-rewards-visa', ['/images/cards/capital-one/west-elm-key-rewards.png']],
+  ['capital-one-williams-sonoma-key-rewards-visa', ['/images/cards/capital-one/williams-sonoma-key-rewards.png']],
   ['cardless-bilt-blue', ['/images/cards/cardless/bilt-blue.png']],
   ['cardless-bilt-obsidian', ['/images/cards/cardless/bilt-obsidian.png']],
   ['cardless-bilt-palladium', ['/images/cards/cardless/bilt-palladium.png']],
@@ -217,6 +240,15 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['chase-ink-business-preferred', ['/images/cards/chase/ink-business-preferred.png']],
   ['citi-aadvantage-platinum-select', ['/images/cards/citi/aadvantage-platinum-select.png']],
   ['citi-custom-cash', ['/images/cards/citi/citi-custom-cash.png']],
+  ['discover-it-cash-back', ['/images/cards/discover/discover-it-cash-back.png']],
   ['us-bank-cash-plus', ['/images/cards/us-bank/cash-plus.png']],
   ['wells-fargo-bilt-mastercard', ['/images/cards/wells-fargo/bilt-mastercard.png']],
+  ['capital-one-platinum-secured', ['/images/cards/capital-one/platinum-mastercard.png']],
+  ['capital-one-quicksilver-rewards-good-credit', ['/images/cards/capital-one/quicksilver-rewards.png']],
+  ['capital-one-quicksilver-rewards-students', ['/images/cards/capital-one/quicksilver-rewards.png']],
+  ['capital-one-quicksilver-secured-rewards', ['/images/cards/capital-one/quicksilver-rewards.png']],
+  ['capital-one-savor-rewards-good-credit', ['/images/cards/capital-one/savor-rewards.png']],
+  ['capital-one-savor-rewards-students', ['/images/cards/capital-one/savor-rewards.png']],
+  ['capital-one-spark-cash-select', ['/images/cards/capital-one/spark-cash.png']],
+  ['capital-one-ventureone-rewards-good-credit', ['/images/cards/capital-one/ventureone-rewards.png']],
 ]);

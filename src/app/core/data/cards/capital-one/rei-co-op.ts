@@ -1,6 +1,6 @@
 import type { Card } from '../../../models/card.model';
 
-export const REI_CO_OP_MASTERCARD: Card = {
+export const REI_CO_OP: Card = {
   id: 'capital-one-rei-co-op-mastercard',
   name: 'REI Co-op Mastercard',
   issuer: 'Capital One',

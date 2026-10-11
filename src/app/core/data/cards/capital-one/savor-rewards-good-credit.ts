@@ -14,6 +14,7 @@ export const SAVOR_REWARDS_GOOD_CREDIT: Card = {
   isBusiness: false,
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
+  imageOf: 'capital-one-savor-one-rewards',
   rewardTiers: [
     {
       id: 'savor-good-credit-3pct',

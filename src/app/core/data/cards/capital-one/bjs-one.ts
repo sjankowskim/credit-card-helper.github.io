@@ -1,8 +1,8 @@
 import type { Card } from '../../../models/card.model';
 
-export const BJS_ONE_PLUS_MASTERCARD: Card = {
-  id: 'capital-one-bjs-one-plus-mastercard',
-  name: "BJ's One+ Mastercard",
+export const BJS_ONE: Card = {
+  id: 'capital-one-bjs-one-mastercard',
+  name: "BJ's One Mastercard",
   issuer: 'Capital One',
   rewardsProgram: 'Store Rewards',
   rewardsCurrency: 'Cashback',
@@ -12,17 +12,17 @@ export const BJS_ONE_PLUS_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
-  baseRewardRate: 2.0,
+  baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
-  note: "Rewards are store credit at BJ's. Also 15¢ off per gallon at BJ's Gas.",
+  note: "Rewards are store credit at BJ's. Also 10¢ off per gallon at BJ's Gas.",
   rewardTiers: [
     {
-      id: 'bjs-one-plus-bjs',
+      id: 'bjs-one-bjs',
       name: "BJ's",
-      rewardRate: 5.0,
+      rewardRate: 3.0,
       behavior: { type: 'AUTOMATIC' },
       eligibleCategories: ['grocery-stores'],
-      onlyWhen: "BJ's purchases"
+      onlyWhen: "Most BJ's purchases"
     }
   ]
 };

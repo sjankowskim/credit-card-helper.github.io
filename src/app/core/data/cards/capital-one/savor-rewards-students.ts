@@ -14,6 +14,7 @@ export const SAVOR_REWARDS_STUDENTS: Card = {
   isBusiness: false,
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
+  imageOf: 'capital-one-savor-one-rewards',
   defaultSignUpBonus: { amount: 50, currency: 'Cashback', spendRequired: 100, windowMonths: 3 },
   rewardTiers: [
     {

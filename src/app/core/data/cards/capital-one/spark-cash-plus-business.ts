@@ -1,6 +1,6 @@
 import type { Card } from '../../../models/card.model';
 
-export const SPARK_CASH_PLUS: Card = {
+export const SPARK_CASH_PLUS_BUSINESS: Card = {
   id: 'capital-one-spark-cash-plus',
   name: 'Capital One Spark 2% Cash Plus',
   issuer: 'Capital One',

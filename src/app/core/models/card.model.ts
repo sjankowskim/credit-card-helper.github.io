@@ -229,6 +229,9 @@ export interface Card {
   /** Card-wide caveats shown with the details, e.g. a cap on the base rate */
   note?: string;
 
+  /** Id of another card whose artwork this card reuses (e.g. a student version of the same design) */
+  imageOf?: string;
+
   /**
    * Card-specific custom settings.
    * Allows for card-specific configuration options (e.g., BILT reward type selection).

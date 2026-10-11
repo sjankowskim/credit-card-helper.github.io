@@ -1,6 +1,6 @@
 import type { Card } from '../../../models/card.model';
 
-export const KOHLS_REWARDS_VISA: Card = {
+export const KOHLS_REWARDS: Card = {
   id: 'capital-one-kohls-rewards-visa',
   name: "Kohl's Rewards Visa",
   issuer: 'Capital One',

@@ -1,6 +1,6 @@
 import type { Card } from '../../../models/card.model';
 
-export const POTTERY_BARN_KEY_REWARDS_VISA: Card = {
+export const POTTERY_BARN_KEY_REWARDS: Card = {
   id: 'capital-one-pottery-barn-key-rewards-visa',
   name: 'Pottery Barn Key Rewards Visa',
   issuer: 'Capital One',

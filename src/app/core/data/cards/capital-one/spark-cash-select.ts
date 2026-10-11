@@ -14,6 +14,7 @@ export const SPARK_CASH_SELECT: Card = {
   isBusiness: true,
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
+  imageOf: 'capital-one-spark-cash',
   defaultSignUpBonus: { amount: 750, currency: 'Cashback', spendRequired: 6000, windowMonths: 3 },
   rewardTiers: [
     {

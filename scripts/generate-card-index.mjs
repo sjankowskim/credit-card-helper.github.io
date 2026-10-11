@@ -43,6 +43,8 @@ for (const image of getFiles(imagesDir, '.png')) {
 
 /** [card id, image URLs] for the cards that have artwork */
 const cardImages = [];
+/** [card id, id of the card whose artwork it reuses, card file path] from `imageOf` */
+const borrowedImages = [];
 
 function fail(message) {
   console.error(`\x1b[31m[Card Indexer]\x1b[0m ${message}`);
@@ -77,15 +79,28 @@ allFiles.forEach((filePath) => {
   seenCardIds.set(cardId, relativePath);
 
   const images = imagesByCardPath.get(relativePath);
+  const imageOf = /^  imageOf: '([^']+)'/m.exec(source)?.[1];
+  if (imageOf) {
+    if (images) console.warn(`\x1b[33m[Card Indexer]\x1b[0m ${relativePath}.ts has its own image and imageOf; the imageOf is ignored`);
+    else borrowedImages.push([cardId, imageOf, relativePath]);
+  }
   if (images) {
     cardImages.push([cardId, images.sort((a, b) => a.order - b.order).map((image) => image.url)]);
-  } else {
+  } else if (!imageOf) {
     console.warn(`\x1b[33m[Card Indexer]\x1b[0m No image for ${relativePath}.ts; add public/images/cards/${relativePath}.png`);
   }
 
   imports.push(`import { ${varName} } from './${relativePath}';`);
   exports.push(`  ${varName},`);
 });
+
+// Cards that reuse another card's artwork
+const imagesById = new Map(cardImages);
+for (const [cardId, imageOf, relativePath] of borrowedImages) {
+  const images = imagesById.get(imageOf);
+  if (images) cardImages.push([cardId, images]);
+  else console.warn(`\x1b[33m[Card Indexer]\x1b[0m ${relativePath}.ts uses the image of '${imageOf}', which has none`);
+}
 
 const content = `// ============================================================================
 // AUTO-GENERATED BARREL EXPORT - DO NOT EDIT DIRECTLY

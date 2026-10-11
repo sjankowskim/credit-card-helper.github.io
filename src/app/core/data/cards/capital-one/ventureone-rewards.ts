@@ -1,8 +1,8 @@
 import type { Card } from '../../../models/card.model';
 
-export const VENTURE_ONE_REWARDS_GOOD_CREDIT: Card = {
-  id: 'capital-one-ventureone-rewards-good-credit',
-  name: 'Capital One VentureOne Rewards for Good Credit',
+export const VENTUREONE_REWARDS: Card = {
+  id: 'capital-one-ventureone-rewards',
+  name: 'Capital One VentureOne Rewards',
   issuer: 'Capital One',
   rewardsProgram: 'Capital One Rewards',
   rewardsCurrency: 'Capital One Miles',
@@ -14,9 +14,10 @@ export const VENTURE_ONE_REWARDS_GOOD_CREDIT: Card = {
   isBusiness: false,
   baseRewardRate: 1.25,
   termsCheckedOn: '2026-10-11',
+  defaultSignUpBonus: { amount: 20000, currency: 'Capital One Miles', spendRequired: 500, windowMonths: 3 },
   rewardTiers: [
     {
-      id: 'ventureone-good-credit-travel-portal',
+      id: 'ventureone-travel-portal',
       name: 'Hotels & Rental Cars',
       rewardRate: 5.0,
       behavior: { type: 'AUTOMATIC' },

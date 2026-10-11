@@ -14,6 +14,7 @@ export const QUICKSILVER_REWARDS_STUDENTS: Card = {
   isBusiness: false,
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
+  imageOf: 'capital-one-quicksilver-rewards',
   defaultSignUpBonus: { amount: 50, currency: 'Cashback', spendRequired: 100, windowMonths: 3 },
   rewardTiers: [
     {

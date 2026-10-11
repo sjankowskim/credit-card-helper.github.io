@@ -14,6 +14,7 @@ export const QUICKSILVER_SECURED_REWARDS: Card = {
   isBusiness: false,
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
+  imageOf: 'capital-one-quicksilver-rewards',
   note: 'Secured card: $200 minimum refundable deposit.',
   rewardTiers: [
     {
