@@ -14,6 +14,7 @@ export const VENTURE_X_REWARDS: Card = {
   isBusiness: false,
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
+  defaultSignUpBonus: { amount: 75000, currency: 'Capital One Miles', spendRequired: 4000, windowMonths: 3 },
   referralCapPerYear: 100000,
   rewardTiers: [
     {

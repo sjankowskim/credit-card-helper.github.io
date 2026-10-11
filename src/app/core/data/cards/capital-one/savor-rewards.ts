@@ -1,7 +1,7 @@
 import type { Card } from '../../../models/card.model';
 
 // The id predates the SavorOne -> Savor rename; it's kept so saved cards still match.
-export const SAVOR_ONE_REWARDS: Card = {
+export const SAVOR_REWARDS: Card = {
   id: 'capital-one-savor-one-rewards',
   name: 'Capital One Savor',
   issuer: 'Capital One',

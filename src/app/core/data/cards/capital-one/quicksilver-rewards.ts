@@ -14,6 +14,7 @@ export const QUICKSILVER_REWARDS: Card = {
   isBusiness: false,
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
+  defaultSignUpBonus: { amount: 200, currency: 'Cashback', spendRequired: 500, windowMonths: 3 },
   rewardTiers: [
     {
       id: 'quicksilver-travel-portal',

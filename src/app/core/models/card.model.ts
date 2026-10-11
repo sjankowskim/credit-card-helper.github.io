@@ -64,7 +64,8 @@ export type RewardsProgram =
   | 'Discover Cashback Bonus'
   | 'Delta SkyMiles'
   | 'Hilton Honors'
-  | 'Marriott Bonvoy';
+  | 'Marriott Bonvoy'
+  | 'Store Rewards';
 
 // ============================================================================
 // 4. REWARD TIER DEFINITION

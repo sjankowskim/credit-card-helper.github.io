@@ -20,7 +20,9 @@ export const DEFAULT_CPP_VALUATIONS: Record<RewardsProgram, number> = {
   'Discover Cashback Bonus': 1.0,
   'Delta SkyMiles': 1.2,
   'Hilton Honors': 0.5,
-  'Marriott Bonvoy': 0.8
+  'Marriott Bonvoy': 0.8,
+  // Store credit at one retailer
+  'Store Rewards': 1.0
 };
 
 /**

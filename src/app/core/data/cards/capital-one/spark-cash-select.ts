@@ -1,0 +1,28 @@
+import type { Card } from '../../../models/card.model';
+
+export const SPARK_CASH_SELECT: Card = {
+  id: 'capital-one-spark-cash-select',
+  name: 'Capital One Spark 1.5% Cash Select',
+  issuer: 'Capital One',
+  rewardsProgram: 'Capital One Rewards',
+  rewardsCurrency: 'Cashback',
+  network: 'VISA',
+  hasForeignTransactionFee: false,
+  hasTravelPartnerAccess: false,
+  affectsChase524: false,
+  annualFee: 0,
+  isBusiness: true,
+  baseRewardRate: 1.5,
+  termsCheckedOn: '2026-10-11',
+  defaultSignUpBonus: { amount: 750, currency: 'Cashback', spendRequired: 6000, windowMonths: 3 },
+  rewardTiers: [
+    {
+      id: 'spark-cash-select-travel-portal',
+      name: 'Hotels & Rental Cars',
+      rewardRate: 5.0,
+      behavior: { type: 'AUTOMATIC' },
+      eligibleCategories: ['hotels', 'car-rentals'],
+      onlyWhen: 'Booked through Capital One Business Travel'
+    }
+  ]
+};

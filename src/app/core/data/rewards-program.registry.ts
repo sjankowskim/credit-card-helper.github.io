@@ -98,5 +98,11 @@ export const REWARDS_PROGRAM_REGISTRY: Record<RewardsProgram, RewardsProgramMeta
     name: 'Marriott Bonvoy',
     allowsTransfers: false,
     hasTravelPartners: true
+  },
+  'Store Rewards': {
+    id: 'Store Rewards',
+    name: 'Store Rewards',
+    allowsTransfers: false,
+    hasTravelPartners: false
   }
 };
