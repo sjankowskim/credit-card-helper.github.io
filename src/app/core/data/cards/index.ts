@@ -216,8 +216,15 @@ import { SECURED_VISA } from './us-bank/secured-visa';
 import { SHIELD } from './us-bank/shield';
 import { SMARTLY } from './us-bank/smartly';
 import { ACTIVE_CASH } from './wells-fargo/active-cash';
+import { AUTOGRAPH_JOURNEY } from './wells-fargo/autograph-journey';
 import { AUTOGRAPH } from './wells-fargo/autograph';
 import { BILT_MASTERCARD } from './wells-fargo/bilt-mastercard';
+import { CHOICE_PRIVILEGES_SELECT } from './wells-fargo/choice-privileges-select';
+import { CHOICE_PRIVILEGES } from './wells-fargo/choice-privileges';
+import { ONE_KEY_PLUS } from './wells-fargo/one-key-plus';
+import { ONE_KEY } from './wells-fargo/one-key';
+import { REFLECT } from './wells-fargo/reflect';
+import { SIGNIFY_BUSINESS_CASH } from './wells-fargo/signify-business-cash';
 
 export const ALL_CARDS: Card[] = [
   BLUE_BUSINESS_CASH,
@@ -432,8 +439,15 @@ export const ALL_CARDS: Card[] = [
   SHIELD,
   SMARTLY,
   ACTIVE_CASH,
+  AUTOGRAPH_JOURNEY,
   AUTOGRAPH,
   BILT_MASTERCARD,
+  CHOICE_PRIVILEGES_SELECT,
+  CHOICE_PRIVILEGES,
+  ONE_KEY_PLUS,
+  ONE_KEY,
+  REFLECT,
+  SIGNIFY_BUSINESS_CASH,
 ];
 
 export const CARD_MAP = new Map<string, Card>(
@@ -639,7 +653,16 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['us-bank-secured-visa', ['images/cards/us-bank/secured-visa.png']],
   ['us-bank-shield', ['images/cards/us-bank/shield.png']],
   ['us-bank-smartly', ['images/cards/us-bank/smartly.png']],
+  ['wells-fargo-active-cash', ['images/cards/wells-fargo/active-cash.webp']],
+  ['wells-fargo-autograph-journey', ['images/cards/wells-fargo/autograph-journey.webp']],
+  ['wells-fargo-autograph', ['images/cards/wells-fargo/autograph.webp']],
   ['wells-fargo-bilt-mastercard', ['images/cards/wells-fargo/bilt-mastercard.jpg']],
+  ['wells-fargo-choice-privileges-select', ['images/cards/wells-fargo/choice-privileges-select.webp']],
+  ['wells-fargo-choice-privileges', ['images/cards/wells-fargo/choice-privileges.webp']],
+  ['wells-fargo-one-key-plus', ['images/cards/wells-fargo/one-key-plus.webp']],
+  ['wells-fargo-one-key', ['images/cards/wells-fargo/one-key.webp']],
+  ['wells-fargo-reflect', ['images/cards/wells-fargo/reflect.webp']],
+  ['wells-fargo-signify-business-cash', ['images/cards/wells-fargo/signify-business-cash.webp']],
   ['bofa-bankamericard-students', ['images/cards/bank-of-america/bankamericard.png']],
   ['bofa-customized-cash-rewards-students', ['images/cards/bank-of-america/customized-cash-rewards.png']],
   ['bofa-travel-rewards-students', ['images/cards/bank-of-america/travel-rewards.png']],

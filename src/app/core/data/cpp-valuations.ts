@@ -43,7 +43,8 @@ export const DEFAULT_CPP_VALUATIONS: Record<RewardsProgram, number> = {
   'Air Canada Aeroplan': 1.5,
   // British Airways, Iberia, and Aer Lingus miles
   'Avios': 1.4,
-  'Chase Cash Back': 1.0
+  'Chase Cash Back': 1.0,
+  'Choice Privileges': 0.6
 };
 
 /**

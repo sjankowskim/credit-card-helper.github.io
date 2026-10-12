@@ -81,7 +81,8 @@ export type RewardsProgram =
   | 'World of Hyatt'
   | 'Air Canada Aeroplan'
   | 'Avios'
-  | 'Chase Cash Back';
+  | 'Chase Cash Back'
+  | 'Choice Privileges';
 
 // ============================================================================
 // 4. REWARD TIER DEFINITION

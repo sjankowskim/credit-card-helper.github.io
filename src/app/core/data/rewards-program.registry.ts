@@ -202,5 +202,11 @@ export const REWARDS_PROGRAM_REGISTRY: Record<RewardsProgram, RewardsProgramMeta
     name: 'Chase Cash Back',
     allowsTransfers: false,
     hasTravelPartners: false
+  },
+  'Choice Privileges': {
+    id: 'Choice Privileges',
+    name: 'Choice Privileges',
+    allowsTransfers: false,
+    hasTravelPartners: true
   }
 };
