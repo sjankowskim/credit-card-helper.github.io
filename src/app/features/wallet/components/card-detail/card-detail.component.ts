@@ -5,6 +5,8 @@ import { ToastService } from '../../../../core/services/toast.service';
 import { getCategoryName, type CategoryId } from '../../../../core/data/category.registry';
 import { ALL_CARDS, CARD_MAP } from '../../../../core/data/cards';
 import { ModalComponent } from '../../../../shared/modal/modal.component';
+import { OfferHistoryChartComponent } from '../../../../shared/offer-history-chart/offer-history-chart.component';
+import { OFFER_HISTORY } from '../../../../core/data/offer-history';
 import { InlineEditFieldComponent } from '../../../../shared/inline-edit-field/inline-edit-field.component';
 import {
   formatCurrency,
@@ -28,12 +30,14 @@ type InlineValue = string | number | undefined;
  */
 @Component({
   selector: 'app-card-detail',
-  imports: [ModalComponent, InlineEditFieldComponent],
+  imports: [ModalComponent, InlineEditFieldComponent, OfferHistoryChartComponent],
   templateUrl: './card-detail.component.html',
   styleUrl: './card-detail.component.scss'
 })
 export class CardDetailComponent {
   readonly creditLabels = CREDIT_LEVEL_LABELS;
+  /** Researched sign-up bonus history, when there is any */
+  readonly offerHistory = computed(() => OFFER_HISTORY[this.card().id] ?? []);
   /** Visa and Mastercard cards have a network tier; Amex, Discover, and store cards don't */
   readonly usesTiers = computed(() => this.card().network === 'VISA' || this.card().network === 'MASTERCARD');
 

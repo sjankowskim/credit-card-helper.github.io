@@ -306,6 +306,14 @@
     </ul>
   </section>
 
+  @if (offerHistory().length > 0) {
+    <section>
+      <h3>Sign-up bonus history</h3>
+      <p class="muted history-note">Public offers over time. Each one links to the pages that support it.</p>
+      <app-offer-history-chart [periods]="offerHistory()" />
+    </section>
+  }
+
   @if (!userCard()) {
     <div modal-actions class="modal-actions">
       <button class="btn btn-primary" (click)="add.emit()">+ Add to wallet</button>

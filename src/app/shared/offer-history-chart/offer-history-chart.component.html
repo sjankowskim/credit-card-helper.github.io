@@ -1,0 +1,127 @@
+<div class="chart">
+  <svg
+    #svg
+    [attr.viewBox]="'0 0 ' + width + ' ' + height"
+    role="img"
+    tabindex="0"
+    [attr.aria-label]="'Sign-up bonus history from ' + formatStart(periods()[0]) + '; the table below lists every offer. Use the arrow keys to step through offers.'"
+    (pointermove)="onPointerMove($event, svg)"
+    (pointerleave)="clear()"
+    (keydown)="onKeydown($event)"
+    (blur)="clear()"
+  >
+    <!-- Panel titles -->
+    <text class="panel-title" [attr.x]="left" [attr.y]="bonusTop - 8">Bonus ({{ currency() }})</text>
+    <text class="panel-title" [attr.x]="left" [attr.y]="spendTop - 8">Spend required</text>
+
+    <!-- Elevated offers -->
+    @for (band of elevatedBands(); track band.x) {
+      <rect class="elevated" [attr.x]="band.x" [attr.y]="bonusTop" [attr.width]="band.width" [attr.height]="panelHeight" />
+      <rect class="elevated" [attr.x]="band.x" [attr.y]="spendTop" [attr.width]="band.width" [attr.height]="panelHeight" />
+    }
+
+    <!-- Gridlines and y labels -->
+    @for (tick of bonusTicks(); track tick.value) {
+      <line class="grid" [attr.x1]="left" [attr.x2]="left + plotWidth" [attr.y1]="tick.y" [attr.y2]="tick.y" />
+      <text class="axis-label" [attr.x]="left - 8" [attr.y]="tick.y" text-anchor="end" dominant-baseline="middle">{{ tick.label }}</text>
+    }
+    @for (tick of spendTicks(); track tick.value) {
+      <line class="grid" [attr.x1]="left" [attr.x2]="left + plotWidth" [attr.y1]="tick.y" [attr.y2]="tick.y" />
+      <text class="axis-label" [attr.x]="left - 8" [attr.y]="tick.y" text-anchor="end" dominant-baseline="middle">{{ tick.label }}</text>
+    }
+
+    <!-- Time axis -->
+    @for (tick of timeTicks(); track tick.x) {
+      <line class="time-tick" [attr.x1]="tick.x" [attr.x2]="tick.x" [attr.y1]="spendTop + panelHeight" [attr.y2]="spendTop + panelHeight + 4" />
+      <text class="axis-label" [attr.x]="tick.x" [attr.y]="spendTop + panelHeight + 17" text-anchor="middle">{{ tick.label }}</text>
+    }
+
+    <!-- Series -->
+    <path class="bonus-area" [attr.d]="bonusArea()" />
+    <path class="bonus-line" [attr.d]="bonusPath()" />
+    <path class="spend-line" [attr.d]="spendPath()" />
+
+    <!-- Crosshair -->
+    @if (crosshair(); as c) {
+      <line class="crosshair" [attr.x1]="c.x" [attr.x2]="c.x" [attr.y1]="bonusTop" [attr.y2]="spendTop + panelHeight" />
+      <circle class="dot bonus-dot" [attr.cx]="c.x" [attr.cy]="c.bonusY" r="5" />
+      <circle class="dot spend-dot" [attr.cx]="c.x" [attr.cy]="c.spendY" r="5" />
+    }
+
+    <!-- Hover target -->
+    <rect class="hit" [attr.x]="left" y="0" [attr.width]="plotWidth" [attr.height]="height" />
+  </svg>
+
+  @if (activeSegment(); as s) {
+    @let c = crosshair()!;
+    <div
+      class="tooltip"
+      role="status"
+      [style.left.%]="c.alignRight ? null : (c.x / width) * 100"
+      [style.right.%]="c.alignRight ? (1 - c.x / width) * 100 : null"
+    >
+      <div class="tooltip-dates">
+        {{ formatStart(s.period) }} – {{ formatEnd(s) || formatDay(s.to) }}
+        @if (s.period.elevated) {
+          <span class="badge badge-warning">Limited time</span>
+        }
+      </div>
+      <div><span class="swatch bonus" aria-hidden="true"></span><strong>{{ s.period.amount.toLocaleString('en-US') }}</strong> {{ s.period.currency }}</div>
+      <div>
+        <span class="swatch spend" aria-hidden="true"></span><strong>{{ formatCurrency(s.period.spendRequired) }}</strong> spend in
+        {{ s.period.windowMonths }} months
+      </div>
+      @if (s.period.extras) {
+        <div class="muted">Plus {{ s.period.extras }}</div>
+      }
+    </div>
+  }
+</div>
+
+<div class="table-scroll">
+  <table class="data-table history">
+    <caption class="visually-hidden">Sign-up bonus history</caption>
+    <thead>
+      <tr>
+        <th>Offer period</th>
+        <th>Offer</th>
+        <th>Sources</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (s of segments().slice().reverse(); track s.index) {
+        <tr [class.highlight]="active() === s.index">
+          <td class="nowrap">
+            {{ formatStart(s.period) }} –<br />{{ formatEnd(s) || '…' }}
+          </td>
+          <td>
+            {{ describe(s.period) }}
+            @if (s.period.extras) {
+              <div class="muted">Plus {{ s.period.extras }}</div>
+            }
+            <div class="tags">
+              @if (s.period.elevated) {
+                <span class="badge badge-warning">Limited time</span>
+              }
+              @if (s.period.confidence !== 'high') {
+                <span class="badge" [title]="s.period.notes ?? ''">{{ s.period.confidence === 'medium' ? 'Dates approximate' : 'Uncertain' }}</span>
+              }
+            </div>
+            @if (s.period.notes) {
+              <div class="muted">{{ s.period.notes }}</div>
+            }
+          </td>
+          <td>
+            <ul class="sources">
+              @for (source of s.period.sources; track source.url) {
+                <li>
+                  <a [href]="source.url" target="_blank" rel="noopener noreferrer" [title]="source.supports ?? source.title">{{ sourceHost(source.url) }}</a>
+                </li>
+              }
+            </ul>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
