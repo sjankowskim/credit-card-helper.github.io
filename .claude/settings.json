@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "blockReadsOutsideWorkingDirectories": true,
+    "deny": [
+      "Bash(sudo *)",
+      "Bash(npm install -g *)",
+      "Bash(npm install --global *)",
+      "Bash(npm i -g *)",
+      "Bash(npm i --global *)",
+      "Bash(npm add -g *)",
+      "Bash(npm uninstall -g *)",
+      "Bash(npm link *)",
+      "Bash(npm config set *)",
+      "Bash(npx -y *)",
+      "Bash(npx --yes *)",
+      "Bash(pnpm add -g *)",
+      "Bash(yarn global *)",
+      "Bash(ng)",
+      "Bash(ng *)",
+      "Bash(/usr/bin/ng *)"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "allowUnsandboxedCommands": false,
+    "filesystem": {
+      "denyRead": ["~"],
+      "allowRead": ["."]
+    }
+  }
+}

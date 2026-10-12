@@ -42,3 +42,8 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Repo-local npm cache and Claude scratch files (see CLAUDE.md)
+.npm-cache/
+/.claude/scratch/
+/.claude/settings.local.json
