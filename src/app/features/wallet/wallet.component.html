@@ -5,32 +5,52 @@
   @if (hasAnyCards()) {
     <div class="toolbar">
       <app-search-bar (searchChange)="searchQuery.set($event)" />
-      <span class="summary">{{ summary() }}</span>
+      <div class="segmented" role="group" aria-label="View">
+        @for (option of views; track option.id) {
+          <button [class.active]="view() === option.id" [attr.aria-pressed]="view() === option.id" (click)="setView(option.id)">
+            {{ option.label }}
+          </button>
+        }
+      </div>
+      @if (view() === 'table') {
+        <button class="btn" (click)="editingColumns.set(true)">Columns</button>
+      }
     </div>
+    <p class="summary">{{ summary() }}</p>
 
-    @for (group of ownedGroups(); track group.title) {
-      <section class="wallet-section">
+    @for (group of ownedGroups(); track group.kind) {
+      <section class="wallet-section" [class.history]="group.kind === 'history'">
         <h2>{{ group.title }} <span class="count">{{ group.items.length }}</span></h2>
-        <app-card-list
-          mode="wallet"
-          [items]="group.items"
-          [contextCards]="ownedCards()"
-          (open)="selected.set($event)"
-        />
+        @if (view() === 'table') {
+          <app-wallet-table [kind]="group.kind" [columns]="columns()[group.kind]" [items]="group.items" [contextCards]="ownedCards()" (open)="selected.set($event)" />
+        } @else {
+          <app-card-list
+            mode="wallet"
+            [compact]="view() === 'compact'"
+            [items]="group.items"
+            [contextCards]="ownedCards()"
+            (open)="selected.set($event)"
+          />
+        }
       </section>
     }
 
     @if (wishlistItems().length > 0) {
       <section class="wallet-section">
         <h2>Wishlist <span class="count">{{ wishlistItems().length }}</span></h2>
-        <app-card-list
-          mode="wishlist"
-          [items]="wishlistItems()"
-          [contextCards]="wishlistCards()"
-          (open)="selected.set($event)"
-          (add)="adding.set($event)"
-          (toggleWishlist)="onUnwishlist($event)"
-        />
+        @if (view() === 'table') {
+          <app-wallet-table kind="wishlist" [columns]="columns().wishlist" [items]="wishlistItems()" [contextCards]="wishlistCards()" (open)="selected.set($event)" />
+        } @else {
+          <app-card-list
+            mode="wishlist"
+            [compact]="view() === 'compact'"
+            [items]="wishlistItems()"
+            [contextCards]="wishlistCards()"
+            (open)="selected.set($event)"
+            (add)="adding.set($event)"
+            (toggleWishlist)="onUnwishlist($event)"
+          />
+        }
       </section>
     }
 
@@ -39,6 +59,16 @@
     }
   } @else {
     <div class="empty">No cards yet. Add some from the Cards page.</div>
+  }
+
+  @if (editingColumns()) {
+    <app-column-picker
+      [groups]="columnGroups()"
+      note="Pick the columns each table shows. The card name is always shown."
+      (toggle)="toggleColumn($any($event.key), $any($event.id), $event.shown)"
+      (reset)="resetColumns($any($event))"
+      (closed)="editingColumns.set(false)"
+    />
   }
 
   @if (selected(); as item) {

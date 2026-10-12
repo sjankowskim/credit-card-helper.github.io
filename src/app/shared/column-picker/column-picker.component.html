@@ -1,0 +1,27 @@
+<app-modal title="Table columns" [width]="groups().length > 1 ? 'wide' : 'narrow'" (closed)="closed.emit()">
+  <p class="muted">{{ note() }}</p>
+  <div class="column-groups">
+    @for (group of groups(); track group.key) {
+      <fieldset class="column-group">
+        @if (group.title) {
+          <legend>{{ group.title }}</legend>
+        }
+        @for (column of group.columns; track column.id) {
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              [checked]="group.shown.includes(column.id)"
+              [disabled]="group.required.has(column.id)"
+              (change)="toggle.emit({ key: group.key, id: column.id, shown: $any($event.target).checked })"
+            />
+            {{ column.label }}
+          </label>
+        }
+        <button class="btn btn-small" [disabled]="group.isDefault" (click)="reset.emit(group.key)">Reset to default</button>
+      </fieldset>
+    }
+  </div>
+  <div modal-actions class="modal-actions">
+    <button class="btn btn-primary" (click)="closed.emit()">Done</button>
+  </div>
+</app-modal>

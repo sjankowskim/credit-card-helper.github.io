@@ -1,0 +1,112 @@
+<div class="table-scroll">
+  <table class="data-table wallet-table" [style.min-width]="minWidth()">
+    <colgroup>
+      @for (column of columns(); track column.id; let last = $last) {
+        <!-- The last column takes whatever width is left -->
+        <col [style.width]="last ? null : column.width" />
+      }
+    </colgroup>
+    <thead>
+      <tr>
+        @for (column of columns(); track column.id) {
+          <th [class.num]="column.align === 'right'">{{ column.label }}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of items(); track item.userCard?.id ?? item.card.id) {
+        @let data = item.userCard?.userData;
+        <tr class="row" tabindex="0" (click)="open.emit(item)" (keydown.enter)="open.emit(item)">
+          @for (column of columns(); track column.id) {
+            <td [class.num]="column.align === 'right'">
+              @switch (column.id) {
+                @case ('card') {
+                  <div class="card-cell">
+                    @if (getThumbnail(item); as thumbnail) {
+                      <img [src]="thumbnail" alt="" class="thumbnail" />
+                    } @else {
+                      <span class="thumbnail placeholder"></span>
+                    }
+                    <div class="card-text">
+                      <div class="card-name">
+                        {{ getDisplayName(item) }}
+                        @if (getDisplayNumber(item); as number) {
+                          <span class="instance-number">#{{ number }}</span>
+                        }
+                      </div>
+                      @if (getOriginalName(item); as original) {
+                        <div class="original-name">{{ original }}</div>
+                      }
+                      @let availability = kind() === 'wishlist' ? getAvailabilityBadge(item.card) : undefined;
+                      @if (item.card.isBusiness || data?.isAuthorizedUser || availability) {
+                        <div class="badges">
+                          @if (availability) {
+                            <span class="badge" [class]="availability.class" [title]="availability.title">{{ availability.label }}</span>
+                          }
+                          @if (item.card.isBusiness) {
+                            <span class="badge">Business</span>
+                          }
+                          @if (data?.isAuthorizedUser) {
+                            <span class="badge">Authorized user</span>
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+                @case ('status') {
+                  @if (data?.status === CardStatus.CLOSED) {
+                    <span class="badge">Closed</span>
+                  } @else {
+                    <span class="badge badge-info">Product changed</span>
+                  }
+                }
+                @case ('signUpBonus') {
+                  @switch (describeBonus(item)) {
+                    @case ('Earned') {
+                      <span class="badge badge-success">Earned</span>
+                    }
+                    @case ('In progress') {
+                      <span class="badge badge-warning">In progress</span>
+                    }
+                    @default {
+                      <span class="none">—</span>
+                    }
+                  }
+                }
+                @default {
+                  @if (getText(item, column.id); as text) {
+                    {{ text }}
+                  } @else {
+                    <span class="none">—</span>
+                  }
+                }
+              }
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+    @if (showTotals()) {
+      <tfoot>
+        <tr>
+          @for (column of columns(); track column.id) {
+            <td [class.num]="column.align === 'right'">
+              @switch (column.id) {
+                @case ('card') {
+                  Total · {{ items().length }} {{ items().length === 1 ? 'card' : 'cards' }}
+                }
+                @case ('annualFee') {
+                  {{ formatCurrency(totals().annualFee) }}
+                }
+                @case ('creditLimit') {
+                  {{ formatCurrency(totals().creditLimit) }}
+                }
+              }
+            </td>
+          }
+        </tr>
+      </tfoot>
+    }
+  </table>
+</div>

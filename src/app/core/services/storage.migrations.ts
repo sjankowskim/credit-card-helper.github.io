@@ -3,6 +3,7 @@ import {
   CURRENT_SCHEMA_VERSION,
   DEFAULT_CATALOG_SETTINGS,
   DEFAULT_DASHBOARD_SETTINGS,
+  DEFAULT_WALLET_SETTINGS,
   createDefaultAppState
 } from '../models/app-state.model';
 import { createDefaultRewardsState } from '../models/rewards.model';
@@ -95,6 +96,13 @@ const MIGRATIONS: Record<number, (state: RawState) => RawState> = {
     ...state,
     schemaVersion: 11,
     subscriptions: []
+  }),
+
+  // v11 -> v12: wallet view (grid, compact, or table)
+  11: (state) => ({
+    ...state,
+    schemaVersion: 12,
+    walletSettings: { ...DEFAULT_WALLET_SETTINGS }
   })
 };
 

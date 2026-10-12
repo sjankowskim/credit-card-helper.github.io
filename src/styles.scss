@@ -327,6 +327,34 @@ button {
   }
 }
 
+// Segmented control for picking a view (Grid, Compact, Table)
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+
+  button {
+    padding: 0.4375rem 0.875rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+
+    & + button {
+      border-left: 1px solid var(--border);
+    }
+
+    &:hover {
+      background: var(--surface-hover);
+    }
+
+    &.active {
+      background: var(--primary);
+      color: var(--background);
+    }
+  }
+}
+
 .table-scroll {
   overflow-x: auto;
 }

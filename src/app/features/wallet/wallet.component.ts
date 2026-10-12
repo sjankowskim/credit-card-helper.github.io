@@ -2,11 +2,25 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { CardListComponent, type CardListItem } from './components/card-list/card-list.component';
 import { CardDetailComponent } from './components/card-detail/card-detail.component';
+import { WalletTableComponent } from './components/wallet-table/wallet-table.component';
+import {
+  DEFAULT_WALLET_COLUMNS,
+  REQUIRED_COLUMNS,
+  WALLET_TABLE_TITLES,
+  getAvailableColumns,
+  getVisibleColumns,
+  type WalletColumn,
+  type WalletColumnId,
+  type WalletTableKind
+} from '../../core/data/wallet-columns';
 import { AddCardDialogComponent } from './components/add-card-dialog/add-card-dialog.component';
 import { ModalComponent } from '../../shared/modal/modal.component';
+import { ColumnPickerComponent, type ColumnPickerGroup } from '../../shared/column-picker/column-picker.component';
 import { CARD_MAP } from '../../core/data/cards';
 import { UserCardsService, type WalletEntry } from '../../core/services/user-cards.service';
 import { ToastService } from '../../core/services/toast.service';
+import { StorageService } from '../../core/services/storage.service';
+import type { CatalogView } from '../../core/models/app-state.model';
 import { CardStatus, type Card, type UserCard } from '../../core/models/card.model';
 import {
   formatCurrency,
@@ -18,18 +32,77 @@ import { formatDate, toIsoDate } from '../../core/utils/date.utils';
 
 interface WalletGroup {
   title: string;
+  kind: WalletTableKind;
   items: CardListItem[];
 }
 
 @Component({
   selector: 'app-wallet',
-  imports: [SearchBarComponent, CardListComponent, CardDetailComponent, AddCardDialogComponent, ModalComponent],
+  imports: [SearchBarComponent, CardListComponent, WalletTableComponent, CardDetailComponent, AddCardDialogComponent, ModalComponent, ColumnPickerComponent],
   templateUrl: './wallet.component.html',
   styleUrl: './wallet.component.scss'
 })
 export class WalletComponent {
   private readonly userCardsService = inject(UserCardsService);
   private readonly toastService = inject(ToastService);
+  private readonly storage = inject(StorageService);
+
+  readonly views: { id: CatalogView; label: string }[] = [
+    { id: 'grid', label: 'Grid' },
+    { id: 'compact', label: 'Compact' },
+    { id: 'table', label: 'Table' }
+  ];
+  readonly view = computed(() => this.storage.state().walletSettings.view);
+
+  setView(view: CatalogView): void {
+    this.storage.update('walletSettings', settings => ({ ...settings, view }));
+  }
+
+  // ---- Table columns ----
+
+  readonly tableKinds: WalletTableKind[] = ['active', 'churn', 'history', 'wishlist'];
+  readonly editingColumns = signal(false);
+
+  private readonly savedColumns = computed(() => this.storage.state().walletSettings.columns ?? {});
+
+  /** Columns each table shows */
+  readonly columns = computed(() => {
+    const saved = this.savedColumns();
+    return Object.fromEntries(this.tableKinds.map(kind => [kind, getVisibleColumns(kind, saved[kind])])) as Record<
+      WalletTableKind,
+      WalletColumn[]
+    >;
+  });
+
+  readonly columnGroups = computed<ColumnPickerGroup[]>(() =>
+    this.tableKinds.map(kind => ({
+      key: kind,
+      title: WALLET_TABLE_TITLES[kind],
+      columns: getAvailableColumns(kind),
+      shown: this.columns()[kind].map(c => c.id),
+      required: REQUIRED_COLUMNS,
+      isDefault: this.isDefaultColumns(kind)
+    }))
+  );
+
+  toggleColumn(kind: WalletTableKind, id: WalletColumnId, shown: boolean): void {
+    const current = this.columns()[kind].map(c => c.id);
+    const next = shown ? [...current, id] : current.filter(c => c !== id);
+    this.storage.update('walletSettings', settings => ({ ...settings, columns: { ...settings.columns, [kind]: next } }));
+  }
+
+  resetColumns(kind: WalletTableKind): void {
+    this.storage.update('walletSettings', settings => {
+      const { [kind]: _, ...rest } = settings.columns ?? {};
+      return { ...settings, columns: rest };
+    });
+  }
+
+  private isDefaultColumns(kind: WalletTableKind): boolean {
+    const shown = this.columns()[kind].map(c => c.id);
+    const defaults = DEFAULT_WALLET_COLUMNS[kind];
+    return shown.length === defaults.length && shown.every(id => defaults.includes(id));
+  }
 
   readonly searchQuery = signal('');
   readonly selected = signal<CardListItem | null>(null);
@@ -60,17 +133,21 @@ export class WalletComponent {
     );
   });
 
+  /** Kept cards, churn cards, then closed and product-changed cards (most recent first) */
   readonly ownedGroups = computed<WalletGroup[]>(() => {
     const owned = this.filtered().filter(i => !i.userCard.isWishlist);
-    const group = (title: string, status: CardStatus): WalletGroup => ({
-      title,
-      items: owned.filter(i => i.userCard.userData.status === status).map(i => this.toItem(i.card, i.userCard))
-    });
+    const active = owned.filter(i => i.userCard.userData.status === CardStatus.ACTIVE);
+    const history = owned
+      .filter(i => i.userCard.userData.status !== CardStatus.ACTIVE)
+      .sort((a, b) => (getChangeDate(b.userCard) ?? '').localeCompare(getChangeDate(a.userCard) ?? ''));
+    const toItems = (list: typeof owned) => list.map(i => this.toItem(i.card, i.userCard));
     return [
-      group('Active', CardStatus.ACTIVE),
-      group('Product changed', CardStatus.PRODUCT_CHANGED),
-      group('Closed', CardStatus.CLOSED)
-    ].filter(g => g.items.length > 0);
+      { kind: 'active' as const, items: toItems(active.filter(i => !i.userCard.userData.isChurnCard)) },
+      { kind: 'churn' as const, items: toItems(active.filter(i => i.userCard.userData.isChurnCard)) },
+      { kind: 'history' as const, items: toItems(history) }
+    ]
+      .map(group => ({ ...group, title: WALLET_TABLE_TITLES[group.kind] }))
+      .filter(g => g.items.length > 0);
   });
 
   readonly wishlistItems = computed(() =>
@@ -82,7 +159,11 @@ export class WalletComponent {
   readonly summary = computed(() => {
     const active = this.resolved().filter(i => i.userCard.userData.status === CardStatus.ACTIVE);
     const fees = active.reduce((sum, i) => sum + getAnnualFee(i.userCard, i.card), 0);
-    return `${active.length} active ${active.length === 1 ? 'card' : 'cards'} · ${formatCurrency(fees)} in annual fees per year`;
+    const limit = active.reduce((sum, i) => sum + (i.userCard.userData.activeData?.creditLimit ?? 0), 0);
+    return (
+      `${active.length} active ${active.length === 1 ? 'card' : 'cards'} · ${formatCurrency(fees)} in annual fees per year` +
+      (limit > 0 ? ` · ${formatCurrency(limit)} total credit` : '')
+    );
   });
 
   readonly hasAnyCards = computed(() => this.resolved().length > 0);
@@ -103,10 +184,15 @@ export class WalletComponent {
       }
       case CardStatus.CLOSED:
         if (data.closedData?.closedDate) lines.push(`Closed ${formatDate(data.closedData.closedDate)}`);
+        if (data.closedData?.reason) lines.push(data.closedData.reason);
         break;
       case CardStatus.PRODUCT_CHANGED: {
         const to = data.productChangedData?.productChangedToCardId;
-        lines.push(to ? `Changed to ${CARD_MAP.get(to)?.name ?? to}` : 'Pick the card it changed to');
+        const on = data.productChangedData?.productChangeDate;
+        lines.push(
+          (to ? `Changed to ${CARD_MAP.get(to)?.name ?? to}` : 'Pick the card it changed to') + (on ? ` · ${formatDate(on)}` : '')
+        );
+        if (data.productChangedData?.reason) lines.push(data.productChangedData.reason);
         break;
       }
     }
@@ -151,6 +237,12 @@ export class WalletComponent {
     this.toastService.info(`Removed ${item.card.name} from your ${item.userCard.isWishlist ? 'wishlist' : 'wallet'}`);
     this.removing.set(null);
   }
+}
+
+/** When a closed or product-changed card left the wallet (ISO date) */
+function getChangeDate(userCard: UserCard): string | undefined {
+  const data = userCard.userData;
+  return data.status === CardStatus.CLOSED ? data.closedData?.closedDate : data.productChangedData?.productChangeDate;
 }
 
 function describeAnnualFee(fee: number): string {
