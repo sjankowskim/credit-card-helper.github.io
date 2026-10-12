@@ -45,6 +45,7 @@ export type CardIssuer =
   | 'US Bank'
   | 'Discover'
   | 'Barclays'
+  | 'Credit One'
   | 'Cardless';
 
 // ============================================================================
@@ -82,7 +83,8 @@ export type RewardsProgram =
   | 'Air Canada Aeroplan'
   | 'Avios'
   | 'Chase Cash Back'
-  | 'Choice Privileges';
+  | 'Choice Privileges'
+  | 'Credit One Cash Back';
 
 // ============================================================================
 // 4. REWARD TIER DEFINITION

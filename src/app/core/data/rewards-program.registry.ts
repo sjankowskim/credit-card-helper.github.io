@@ -208,5 +208,11 @@ export const REWARDS_PROGRAM_REGISTRY: Record<RewardsProgram, RewardsProgramMeta
     name: 'Choice Privileges',
     allowsTransfers: false,
     hasTravelPartners: true
+  },
+  'Credit One Cash Back': {
+    id: 'Credit One Cash Back',
+    name: 'Credit One Cash Back',
+    allowsTransfers: false,
+    hasTravelPartners: false
   }
 };

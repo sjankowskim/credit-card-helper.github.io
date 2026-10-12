@@ -200,6 +200,16 @@ import { TSC_STORE_CARD } from './citi/tsc-store-card';
 import { TSC_VISA } from './citi/tsc-visa';
 import { WAYFAIR_CREDIT_CARD } from './citi/wayfair-credit-card';
 import { WAYFAIR_MASTERCARD } from './citi/wayfair-mastercard';
+import { AMEX_REBUILDING } from './credit-one/amex-rebuilding';
+import { OMNI_REWARDS_AMEX } from './credit-one/omni-rewards-amex';
+import { PLATINUM_REWARDS_NO_FEE } from './credit-one/platinum-rewards-no-fee';
+import { PLATINUM_REWARDS } from './credit-one/platinum-rewards';
+import { PLATINUM_VISA_REBUILDING } from './credit-one/platinum-visa-rebuilding';
+import { PLATINUM_X5 } from './credit-one/platinum-x5';
+import { PREMIER_AMEX } from './credit-one/premier-amex';
+import { SECURED } from './credit-one/secured';
+import { VEGAS_GOLDEN_KNIGHTS } from './credit-one/vegas-golden-knights';
+import { WANDER_AMEX } from './credit-one/wander-amex';
 import { DISCOVER_IT_CASH_BACK } from './discover/discover-it-cash-back';
 import { DISCOVER_IT_CHROME } from './discover/discover-it-chrome';
 import { DISCOVER_IT_MILES } from './discover/discover-it-miles';
@@ -423,6 +433,16 @@ export const ALL_CARDS: Card[] = [
   TSC_VISA,
   WAYFAIR_CREDIT_CARD,
   WAYFAIR_MASTERCARD,
+  AMEX_REBUILDING,
+  OMNI_REWARDS_AMEX,
+  PLATINUM_REWARDS_NO_FEE,
+  PLATINUM_REWARDS,
+  PLATINUM_VISA_REBUILDING,
+  PLATINUM_X5,
+  PREMIER_AMEX,
+  SECURED,
+  VEGAS_GOLDEN_KNIGHTS,
+  WANDER_AMEX,
   DISCOVER_IT_CASH_BACK,
   DISCOVER_IT_CHROME,
   DISCOVER_IT_MILES,
@@ -640,6 +660,16 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['citi-tsc-visa', ['images/cards/citi/tsc-visa.png']],
   ['citi-wayfair-credit-card', ['images/cards/citi/wayfair-credit-card.png']],
   ['citi-wayfair-mastercard', ['images/cards/citi/wayfair-mastercard.png']],
+  ['credit-one-amex-rebuilding', ['images/cards/credit-one/amex-rebuilding.png']],
+  ['credit-one-omni-rewards-amex', ['images/cards/credit-one/omni-rewards-amex.png']],
+  ['credit-one-platinum-rewards-no-fee', ['images/cards/credit-one/platinum-rewards-no-fee.png']],
+  ['credit-one-platinum-rewards', ['images/cards/credit-one/platinum-rewards.png']],
+  ['credit-one-platinum-visa-rebuilding', ['images/cards/credit-one/platinum-visa-rebuilding.png']],
+  ['credit-one-platinum-x5', ['images/cards/credit-one/platinum-x5.png']],
+  ['credit-one-premier-amex', ['images/cards/credit-one/premier-amex.png']],
+  ['credit-one-secured', ['images/cards/credit-one/secured.png']],
+  ['credit-one-vegas-golden-knights', ['images/cards/credit-one/vegas-golden-knights.png']],
+  ['credit-one-wander-amex', ['images/cards/credit-one/wander-amex.png']],
   ['discover-it-cash-back', ['images/cards/discover/discover-it-cash-back.avif']],
   ['discover-it-chrome', ['images/cards/discover/discover-it-chrome.png']],
   ['discover-it-miles', ['images/cards/discover/discover-it-miles.png']],
