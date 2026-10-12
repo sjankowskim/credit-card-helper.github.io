@@ -207,7 +207,14 @@ import { DISCOVER_IT_SECURED } from './discover/discover-it-secured';
 import { DISCOVER_IT_STUDENT_CASH_BACK } from './discover/discover-it-student-cash-back';
 import { DISCOVER_IT_STUDENT_CHROME } from './discover/discover-it-student-chrome';
 import { NHL_DISCOVER_IT } from './discover/nhl-discover-it';
+import { ALTITUDE_CONNECT } from './us-bank/altitude-connect';
+import { ALTITUDE_GO_SECURED } from './us-bank/altitude-go-secured';
+import { ALTITUDE_GO } from './us-bank/altitude-go';
+import { CASH_PLUS_SECURED } from './us-bank/cash-plus-secured';
 import { CASH_PLUS } from './us-bank/cash-plus';
+import { SECURED_VISA } from './us-bank/secured-visa';
+import { SHIELD } from './us-bank/shield';
+import { SMARTLY } from './us-bank/smartly';
 import { ACTIVE_CASH } from './wells-fargo/active-cash';
 import { AUTOGRAPH } from './wells-fargo/autograph';
 import { BILT_MASTERCARD } from './wells-fargo/bilt-mastercard';
@@ -416,7 +423,14 @@ export const ALL_CARDS: Card[] = [
   DISCOVER_IT_STUDENT_CASH_BACK,
   DISCOVER_IT_STUDENT_CHROME,
   NHL_DISCOVER_IT,
+  ALTITUDE_CONNECT,
+  ALTITUDE_GO_SECURED,
+  ALTITUDE_GO,
+  CASH_PLUS_SECURED,
   CASH_PLUS,
+  SECURED_VISA,
+  SHIELD,
+  SMARTLY,
   ACTIVE_CASH,
   AUTOGRAPH,
   BILT_MASTERCARD,
@@ -617,7 +631,14 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['discover-it-miles', ['images/cards/discover/discover-it-miles.png']],
   ['discover-it-student-cash-back', ['images/cards/discover/discover-it-student-cash-back.png']],
   ['discover-nhl', ['images/cards/discover/nhl-discover-it.png']],
+  ['us-bank-altitude-connect', ['images/cards/us-bank/altitude-connect.png']],
+  ['us-bank-altitude-go-secured', ['images/cards/us-bank/altitude-go-secured.png']],
+  ['us-bank-altitude-go', ['images/cards/us-bank/altitude-go.png']],
+  ['us-bank-cash-plus-secured', ['images/cards/us-bank/cash-plus-secured.png']],
   ['us-bank-cash-plus', ['images/cards/us-bank/cash-plus.png']],
+  ['us-bank-secured-visa', ['images/cards/us-bank/secured-visa.png']],
+  ['us-bank-shield', ['images/cards/us-bank/shield.png']],
+  ['us-bank-smartly', ['images/cards/us-bank/smartly.png']],
   ['wells-fargo-bilt-mastercard', ['images/cards/wells-fargo/bilt-mastercard.jpg']],
   ['bofa-bankamericard-students', ['images/cards/bank-of-america/bankamericard.png']],
   ['bofa-customized-cash-rewards-students', ['images/cards/bank-of-america/customized-cash-rewards.png']],
