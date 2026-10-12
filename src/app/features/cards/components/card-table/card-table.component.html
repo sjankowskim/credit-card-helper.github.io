@@ -1,63 +1,69 @@
 @if (items().length > 0) {
   <div class="table-scroll">
-    <table class="data-table">
+    <table class="data-table catalog-table" [style.min-width]="minWidth()">
+      <colgroup>
+        @for (column of columns(); track column.id) {
+          <col [style.width]="column.width ?? null" />
+        }
+        <col [style.width]="actionsWidth" />
+      </colgroup>
       <thead>
         <tr>
-          <th><button class="sort" (click)="sortBy('name')">Card {{ sortIndicator('name') }}</button></th>
-          <th><button class="sort" (click)="sortBy('issuer')">Issuer {{ sortIndicator('issuer') }}</button></th>
-          <th class="num"><button class="sort" (click)="sortBy('fee')">Annual fee {{ sortIndicator('fee') }}</button></th>
-          <th class="num">Base</th>
-          <th class="num"><button class="sort" (click)="sortBy('best-rate')">Best rate {{ sortIndicator('best-rate') }}</button></th>
-          <th>Rewards</th>
-          <th>Current offer</th>
-          <th></th>
+          @for (column of columns(); track column.id) {
+            <th [class.num]="column.align === 'right'">
+              @if (column.sort) {
+                <button class="sort" (click)="sortBy(column)">{{ column.label }} {{ sortIndicator(column) }}</button>
+              } @else {
+                {{ column.label }}
+              }
+            </th>
+          }
+          <th><span class="visually-hidden">Actions</span></th>
         </tr>
       </thead>
       <tbody>
         @for (item of items(); track item.card.id) {
           <tr class="row" (click)="open.emit(item)">
-            <td>
-              <div class="card-cell">
-                @if (getThumbnail(item.card); as thumbnail) {
-                  <img [src]="thumbnail" alt="" class="thumbnail" />
-                } @else {
-                  <span class="thumbnail placeholder"></span>
+            @for (column of columns(); track column.id) {
+              <td [class.num]="column.align === 'right'" [class.strong]="column.id === 'bestRate'">
+                @switch (column.id) {
+                  @case ('card') {
+                    <div class="card-cell">
+                      @if (getThumbnail(item.card); as thumbnail) {
+                        <img [src]="thumbnail" alt="" class="thumbnail" />
+                      } @else {
+                        <span class="thumbnail placeholder"></span>
+                      }
+                      <div class="card-text">
+                        <div class="card-name">{{ item.card.name }}</div>
+                        <div class="badges">
+                          @if (ownedCardIds().has(item.card.id)) {
+                            <span class="badge badge-success">Owned</span>
+                          }
+                          @if (wishlistedCardIds().has(item.card.id)) {
+                            <span class="badge badge-warning">Wishlisted</span>
+                          }
+                          @if (item.card.isBusiness) {
+                            <span class="badge">Business</span>
+                          }
+                          @if (getAvailabilityBadge(item.card); as availability) {
+                            <span class="badge" [class]="availability.class" [title]="availability.title">{{ availability.label }}</span>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                  @default {
+                    @if (getText(item.card, column.id); as text) {
+                      {{ text }}
+                    } @else {
+                      <span class="none">—</span>
+                    }
+                  }
                 }
-                <div>
-                  <div class="card-name">{{ item.card.name }}</div>
-                  <div class="badges">
-                    @if (ownedCardIds().has(item.card.id)) {
-                      <span class="badge badge-success">Owned</span>
-                    }
-                    @if (wishlistedCardIds().has(item.card.id)) {
-                      <span class="badge badge-warning">Wishlisted</span>
-                    }
-                    @if (item.card.isBusiness) {
-                      <span class="badge">Business</span>
-                    }
-                    @if (getAvailabilityBadge(item.card); as availability) {
-                      <span class="badge" [class]="availability.class" [title]="availability.title">{{ availability.label }}</span>
-                    }
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td class="nowrap">{{ item.card.issuer }}</td>
-            <td class="num">{{ item.card.annualFee ? formatCurrency(item.card.annualFee) : '$0' }}</td>
-            <td class="num">{{ formatRate(item.card.baseRewardRate, item.card) }}</td>
-            <td class="num strong">{{ formatRate(getBestRate(item.card), item.card) }}</td>
+              </td>
+            }
             <td>
-              {{ item.card.rewardsCurrency }}
-              <div class="muted">{{ item.card.network }}</div>
-            </td>
-            <td class="offer">
-              @if (item.card.defaultSignUpBonus; as bonus) {
-                {{ formatSignUpBonus(bonus) }}
-              } @else {
-                <span class="muted">—</span>
-              }
-            </td>
-            <td class="num">
               <div class="actions">
                 <button class="btn btn-small" (click)="fire($event, add, item)" title="Add to wallet">+ Add</button>
                 <button

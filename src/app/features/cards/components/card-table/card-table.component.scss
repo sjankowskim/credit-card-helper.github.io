@@ -1,3 +1,14 @@
+// Fixed layout keeps each column at its set width, so columns line up across issuer groups
+.catalog-table {
+  table-layout: fixed;
+
+  th,
+  td {
+    vertical-align: middle;
+    overflow-wrap: break-word;
+  }
+}
+
 .sort {
   padding: 0;
   font: inherit;
@@ -23,7 +34,10 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  min-width: 220px;
+}
+
+.card-text {
+  min-width: 0;
 }
 
 .thumbnail {
@@ -62,9 +76,8 @@
   font-weight: 600;
 }
 
-.offer {
-  min-width: 160px;
-  font-size: 0.875rem;
+.none {
+  color: var(--text-tertiary);
 }
 
 .actions {
@@ -88,4 +101,14 @@
     background: var(--warning);
     color: var(--background);
   }
+}
+
+// Labels the actions column for screen readers without showing a header
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

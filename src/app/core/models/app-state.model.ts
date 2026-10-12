@@ -6,6 +6,7 @@ import type { ContributionTracker } from './contribution.model';
 import type { Loan } from './loan.model';
 import type { Subscription } from './subscription.model';
 import type { WalletColumnId, WalletTableKind } from '../data/wallet-columns';
+import type { CatalogColumnId } from '../data/catalog-columns';
 
 export interface DashboardSettings {
   numCards: 1 | 3 | 5;
@@ -22,6 +23,8 @@ export interface CatalogSettings {
   view: CatalogView;
   sort: CatalogSort;
   groupByIssuer: boolean;
+  /** Columns shown in the table view; missing means the default columns */
+  columns?: CatalogColumnId[];
 }
 
 export interface WalletSettings {

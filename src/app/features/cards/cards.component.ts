@@ -5,6 +5,14 @@ import { CardDetailComponent } from '../wallet/components/card-detail/card-detai
 import { AddCardDialogComponent } from '../wallet/components/add-card-dialog/add-card-dialog.component';
 import { CardTableComponent } from './components/card-table/card-table.component';
 import { RangeSliderComponent } from '../../shared/range-slider/range-slider.component';
+import { ColumnPickerComponent, type ColumnPickerGroup } from '../../shared/column-picker/column-picker.component';
+import {
+  CATALOG_COLUMNS,
+  DEFAULT_CATALOG_COLUMNS,
+  REQUIRED_CATALOG_COLUMNS,
+  getVisibleCatalogColumns,
+  type CatalogColumnId
+} from '../../core/data/catalog-columns';
 import { StorageService } from '../../core/services/storage.service';
 import type { CatalogSettings, CatalogSort, CatalogView } from '../../core/models/app-state.model';
 import { ALL_CARDS } from '../../core/data/cards';
@@ -106,7 +114,7 @@ function matchesKind(filter: KindFilter, isKind: boolean): boolean {
 
 @Component({
   selector: 'app-cards',
-  imports: [SearchBarComponent, CardListComponent, CardTableComponent, CardDetailComponent, AddCardDialogComponent, RangeSliderComponent],
+  imports: [SearchBarComponent, CardListComponent, CardTableComponent, CardDetailComponent, AddCardDialogComponent, RangeSliderComponent, ColumnPickerComponent],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.scss'
 })
@@ -132,6 +140,34 @@ export class CardsComponent {
 
   updateSettings(patch: Partial<CatalogSettings>): void {
     this.storage.update('catalogSettings', settings => ({ ...settings, ...patch }));
+  }
+
+  // ---- Table columns ----
+
+  readonly editingColumns = signal(false);
+  readonly columns = computed(() => getVisibleCatalogColumns(this.settings().columns));
+
+  readonly columnGroups = computed<ColumnPickerGroup[]>(() => {
+    const shown = this.columns().map(c => c.id);
+    const defaults = DEFAULT_CATALOG_COLUMNS;
+    return [
+      {
+        key: 'catalog',
+        columns: CATALOG_COLUMNS,
+        shown,
+        required: REQUIRED_CATALOG_COLUMNS,
+        isDefault: shown.length === defaults.length && shown.every(id => defaults.includes(id))
+      }
+    ];
+  });
+
+  toggleColumn(id: CatalogColumnId, shown: boolean): void {
+    const current = this.columns().map(c => c.id);
+    this.updateSettings({ columns: shown ? [...current, id] : current.filter(c => c !== id) });
+  }
+
+  resetColumns(): void {
+    this.updateSettings({ columns: undefined });
   }
 
   readonly searchQuery = signal('');

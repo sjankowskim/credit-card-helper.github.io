@@ -145,6 +145,9 @@
           </button>
         }
       </div>
+      @if (settings().view === 'table') {
+        <button class="btn" (click)="editingColumns.set(true)">Columns</button>
+      }
     </div>
   </div>
 
@@ -156,6 +159,7 @@
       @if (settings().view === 'table') {
         <app-card-table
           [items]="group.items"
+          [columns]="columns()"
           [sort]="settings().sort"
           [ownedCardIds]="ownedCardIds()"
           [wishlistedCardIds]="wishlistedCardIds()"
@@ -187,5 +191,15 @@
 
   @if (adding(); as card) {
     <app-add-card-dialog [card]="card" (added)="onAdded($event)" (closed)="adding.set(null)" />
+  }
+
+  @if (editingColumns()) {
+    <app-column-picker
+      [groups]="columnGroups()"
+      note="Pick the columns the table shows. The card name is always shown."
+      (toggle)="toggleColumn($any($event.id), $event.shown)"
+      (reset)="resetColumns()"
+      (closed)="editingColumns.set(false)"
+    />
   }
 </div>
