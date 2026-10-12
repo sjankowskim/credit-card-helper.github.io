@@ -164,6 +164,12 @@ export class CardDetailComponent {
     this.patch(d => ({ activeData: { ...d.activeData, [field]: value === undefined ? undefined : Number(value) } }));
   }
 
+  setLastCliRequestDate(value: InlineValue): void {
+    this.patch(d => ({
+      activeData: { ...d.activeData, lastCliRequestDate: value === undefined ? undefined : String(value) }
+    }));
+  }
+
   setClosedDate(value: InlineValue): void {
     this.patch(d => ({ closedData: { ...d.closedData, closedDate: value === undefined ? undefined : String(value) } }));
   }
@@ -171,6 +177,16 @@ export class CardDetailComponent {
   setProductChangeDate(value: InlineValue): void {
     this.patch(d => ({
       productChangedData: { ...d.productChangedData, productChangeDate: value === undefined ? undefined : String(value) }
+    }));
+  }
+
+  setClosedReason(value: InlineValue): void {
+    this.patch(d => ({ closedData: { ...d.closedData, reason: value === undefined ? undefined : String(value) } }));
+  }
+
+  setProductChangeReason(value: InlineValue): void {
+    this.patch(d => ({
+      productChangedData: { ...d.productChangedData, reason: value === undefined ? undefined : String(value) }
     }));
   }
 

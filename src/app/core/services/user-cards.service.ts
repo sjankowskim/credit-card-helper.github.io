@@ -188,6 +188,7 @@ export class UserCardsService {
       Object.values(common).some(value => value !== undefined) ||
       activeData?.paymentDueDate !== undefined ||
       activeData?.creditLimit !== undefined ||
+      activeData?.lastCliRequestDate !== undefined ||
       Object.values(activeData?.selectedCategories ?? {}).some(selected => selected.length > 0) ||
       Object.values(closedData ?? {}).some(value => value !== undefined) ||
       Object.values(productChangedData ?? {}).some(value => value !== undefined)

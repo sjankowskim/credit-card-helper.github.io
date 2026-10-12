@@ -362,6 +362,8 @@ export interface UserCard {
       paymentDueDate?: number;
       /** Credit limit for this card */
       creditLimit?: number;
+      /** Date the user last asked for a credit limit increase (ISO string format) */
+      lastCliRequestDate?: string;
 
       /**
        * Tracks active selections for USER_CHOICE tiers.
@@ -384,6 +386,8 @@ export interface UserCard {
     closedData?: {
       /** Date when the card was closed (ISO string format) */
       closedDate?: string;
+      /** Why the card was closed, e.g. "Annual fee not worth it" */
+      reason?: string;
     };
     
     /** Status-specific data for product-changed cards */
@@ -392,6 +396,8 @@ export interface UserCard {
       productChangeDate?: string;
       /** ID of the card that this card was product-changed to */
       productChangedToCardId?: string;
+      /** Why the card was product changed */
+      reason?: string;
     };
   };
 }
