@@ -39,6 +39,8 @@ export class HomeComponent {
   private readonly userCardsService = inject(UserCardsService);
 
   readonly editing = signal(false);
+  /** Widget whose contents picker is open */
+  readonly optionsOpenFor = signal<HomeWidgetId | null>(null);
   readonly hasCards = computed(() => this.userCardsService.cards().length > 0);
 
   /** Widgets on the page, in order; ids from an older or newer app version are skipped */

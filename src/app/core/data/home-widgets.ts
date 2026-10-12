@@ -5,6 +5,8 @@ interface HomeWidgetDefinition {
   /** Shown when picking widgets to add */
   description: string;
   link: { path: string; label: string };
+  /** Set for widgets whose contents the user picks; labels the button that opens the picker */
+  optionsLabel?: string;
 }
 
 /** Every Home widget, in the order the "Add a widget" list shows them. Widget ids come from this list. */
@@ -42,14 +44,16 @@ export const HOME_WIDGETS = [
   {
     id: 'application-rules',
     title: 'Application rules',
-    description: 'Chase 5/24 and the issuer rules you are closest to hitting',
-    link: { path: '/new-accounts', label: 'New Accounts' }
+    description: 'Chase 5/24 and the issuer rules you choose, blocked ones first',
+    link: { path: '/new-accounts', label: 'New Accounts' },
+    optionsLabel: 'Choose rules'
   },
   {
     id: 'best-cards',
     title: 'Best card by category',
-    description: 'Your top card for everyday categories like dining, groceries, and gas',
-    link: { path: '/best-card', label: 'All categories' }
+    description: 'Your top card for the categories you choose, like dining, groceries, and gas',
+    link: { path: '/best-card', label: 'All categories' },
+    optionsLabel: 'Choose categories'
   },
   {
     id: 'subscriptions',

@@ -38,11 +38,23 @@
             @case ('sign-up-bonuses') { <app-sign-up-bonuses-widget /> }
             @case ('rewards') { <app-rewards-widget /> }
             @case ('credits') { <app-credits-widget /> }
-            @case ('application-rules') { <app-application-rules-widget /> }
-            @case ('best-cards') { <app-best-cards-widget /> }
+            @case ('application-rules') {
+              <app-application-rules-widget
+                [optionsOpen]="optionsOpenFor() === 'application-rules'"
+                (optionsClosed)="optionsOpenFor.set(null)"
+              />
+            }
+            @case ('best-cards') {
+              <app-best-cards-widget [optionsOpen]="optionsOpenFor() === 'best-cards'" (optionsClosed)="optionsOpenFor.set(null)" />
+            }
             @case ('subscriptions') { <app-subscriptions-widget /> }
             @case ('loans') { <app-loans-widget /> }
             @case ('contributions') { <app-contributions-widget /> }
+          }
+          @if (widget.optionsLabel) {
+            <footer class="widget-footer">
+              <button class="widget-link" (click)="optionsOpenFor.set(widget.id)">{{ widget.optionsLabel }}</button>
+            </footer>
           }
         </section>
       }

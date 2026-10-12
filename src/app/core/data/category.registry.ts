@@ -1,4 +1,4 @@
-import type { CategoryMetadata } from '../models/category.model';
+import type { CategoryGroup, CategoryMetadata } from '../models/category.model';
 
 /**
  * Spending categories. A card tier on a parent category also covers its children
@@ -187,6 +187,17 @@ export const CATEGORY_REGISTRY = {
 export type CategoryId = keyof typeof CATEGORY_REGISTRY;
 
 export const ALL_CATEGORIES: readonly CategoryMetadata[] = Object.values(CATEGORY_REGISTRY);
+
+/** Display names for category groups, in display order */
+export const CATEGORY_GROUP_LABELS: Record<CategoryGroup, string> = {
+  'food-and-drink': 'Food & drink',
+  'travel-and-transit': 'Travel & transit',
+  'shopping-and-retail': 'Shopping & retail',
+  'bills-and-utilities': 'Bills & utilities',
+  'entertainment-and-leisure': 'Entertainment & leisure',
+  'business': 'Business',
+  'everyday': 'Everyday'
+};
 
 export function isCategoryId(id: string): id is CategoryId {
   return Object.hasOwn(CATEGORY_REGISTRY, id);

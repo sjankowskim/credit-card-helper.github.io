@@ -62,10 +62,11 @@
   }
 
   @if (editingColumns()) {
-    <app-column-picker
+    <app-checklist-picker
+      title="Table columns"
       [groups]="columnGroups()"
       note="Pick the columns each table shows. The card name is always shown."
-      (toggle)="toggleColumn($any($event.key), $any($event.id), $event.shown)"
+      (toggle)="toggleColumn($any($event.key), $any($event.id), $event.checked)"
       (reset)="resetColumns($any($event))"
       (closed)="editingColumns.set(false)"
     />

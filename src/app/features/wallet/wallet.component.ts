@@ -15,7 +15,7 @@ import {
 } from '../../core/data/wallet-columns';
 import { AddCardDialogComponent } from './components/add-card-dialog/add-card-dialog.component';
 import { ModalComponent } from '../../shared/modal/modal.component';
-import { ColumnPickerComponent, type ColumnPickerGroup } from '../../shared/column-picker/column-picker.component';
+import { ChecklistPickerComponent, type ChecklistGroup } from '../../shared/checklist-picker/checklist-picker.component';
 import { CARD_MAP } from '../../core/data/cards';
 import { UserCardsService, type WalletEntry } from '../../core/services/user-cards.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -38,7 +38,7 @@ interface WalletGroup {
 
 @Component({
   selector: 'app-wallet',
-  imports: [SearchBarComponent, CardListComponent, WalletTableComponent, CardDetailComponent, AddCardDialogComponent, ModalComponent, ColumnPickerComponent],
+  imports: [SearchBarComponent, CardListComponent, WalletTableComponent, CardDetailComponent, AddCardDialogComponent, ModalComponent, ChecklistPickerComponent],
   templateUrl: './wallet.component.html',
   styleUrl: './wallet.component.scss'
 })
@@ -74,12 +74,12 @@ export class WalletComponent {
     >;
   });
 
-  readonly columnGroups = computed<ColumnPickerGroup[]>(() =>
+  readonly columnGroups = computed<ChecklistGroup[]>(() =>
     this.tableKinds.map(kind => ({
       key: kind,
       title: WALLET_TABLE_TITLES[kind],
-      columns: getAvailableColumns(kind),
-      shown: this.columns()[kind].map(c => c.id),
+      items: getAvailableColumns(kind),
+      checked: this.columns()[kind].map(c => c.id),
       required: REQUIRED_COLUMNS,
       isDefault: this.isDefaultColumns(kind)
     }))

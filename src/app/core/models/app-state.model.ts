@@ -37,6 +37,10 @@ export interface WalletSettings {
 export interface HomeSettings {
   /** Widgets on the Home page, in order */
   widgets: HomeWidgetId[];
+  /** Categories the Best card widget shows (category ids, plus 'fallthrough'); missing means the defaults */
+  bestCardCategories?: string[];
+  /** Rules the Application rules widget shows (VelocityRule ids); missing means the featured issuers' rules */
+  applicationRuleIds?: string[];
 }
 
 /**

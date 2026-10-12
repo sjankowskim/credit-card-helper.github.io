@@ -5,7 +5,7 @@ import { CardDetailComponent } from '../wallet/components/card-detail/card-detai
 import { AddCardDialogComponent } from '../wallet/components/add-card-dialog/add-card-dialog.component';
 import { CardTableComponent } from './components/card-table/card-table.component';
 import { RangeSliderComponent } from '../../shared/range-slider/range-slider.component';
-import { ColumnPickerComponent, type ColumnPickerGroup } from '../../shared/column-picker/column-picker.component';
+import { ChecklistPickerComponent, type ChecklistGroup } from '../../shared/checklist-picker/checklist-picker.component';
 import {
   CATALOG_COLUMNS,
   DEFAULT_CATALOG_COLUMNS,
@@ -114,7 +114,7 @@ function matchesKind(filter: KindFilter, isKind: boolean): boolean {
 
 @Component({
   selector: 'app-cards',
-  imports: [SearchBarComponent, CardListComponent, CardTableComponent, CardDetailComponent, AddCardDialogComponent, RangeSliderComponent, ColumnPickerComponent],
+  imports: [SearchBarComponent, CardListComponent, CardTableComponent, CardDetailComponent, AddCardDialogComponent, RangeSliderComponent, ChecklistPickerComponent],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.scss'
 })
@@ -147,14 +147,14 @@ export class CardsComponent {
   readonly editingColumns = signal(false);
   readonly columns = computed(() => getVisibleCatalogColumns(this.settings().columns));
 
-  readonly columnGroups = computed<ColumnPickerGroup[]>(() => {
+  readonly columnGroups = computed<ChecklistGroup[]>(() => {
     const shown = this.columns().map(c => c.id);
     const defaults = DEFAULT_CATALOG_COLUMNS;
     return [
       {
         key: 'catalog',
-        columns: CATALOG_COLUMNS,
-        shown,
+        items: CATALOG_COLUMNS,
+        checked: shown,
         required: REQUIRED_CATALOG_COLUMNS,
         isDefault: shown.length === defaults.length && shown.every(id => defaults.includes(id))
       }

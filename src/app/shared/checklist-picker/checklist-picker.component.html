@@ -1,20 +1,22 @@
-<app-modal title="Table columns" [width]="groups().length > 1 ? 'wide' : 'narrow'" (closed)="closed.emit()">
-  <p class="muted">{{ note() }}</p>
-  <div class="column-groups">
+<app-modal [title]="title()" [width]="groups().length > 1 ? 'wide' : 'narrow'" (closed)="closed.emit()">
+  @if (note()) {
+    <p class="muted">{{ note() }}</p>
+  }
+  <div class="groups">
     @for (group of groups(); track group.key) {
-      <fieldset class="column-group">
+      <fieldset class="group">
         @if (group.title) {
           <legend>{{ group.title }}</legend>
         }
-        @for (column of group.columns; track column.id) {
+        @for (item of group.items; track item.id) {
           <label class="checkbox">
             <input
               type="checkbox"
-              [checked]="group.shown.includes(column.id)"
-              [disabled]="group.required.has(column.id)"
-              (change)="toggle.emit({ key: group.key, id: column.id, shown: $any($event.target).checked })"
+              [checked]="group.checked.includes(item.id)"
+              [disabled]="group.required?.has(item.id)"
+              (change)="toggle.emit({ key: group.key, id: item.id, checked: $any($event.target).checked })"
             />
-            {{ column.label }}
+            {{ item.label }}
           </label>
         }
         <button class="btn btn-small" [disabled]="group.isDefault" (click)="reset.emit(group.key)">Reset to default</button>

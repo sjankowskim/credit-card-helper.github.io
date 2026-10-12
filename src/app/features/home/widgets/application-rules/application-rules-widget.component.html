@@ -1,17 +1,32 @@
-<ul class="list">
-  @for (item of rules(); track item.rule.id) {
-    <li class="item">
-      <div class="item-main">
-        <span class="name">{{ item.rule.issuer }} {{ item.rule.name }}</span>
-        <span class="detail">
-          {{ item.status.counted.length }} of {{ item.rule.max }} in the last {{ item.rule.window.amount }} {{ item.rule.window.unit }}
-        </span>
-      </div>
-      @if (item.status.canApply) {
-        <span class="badge badge-success side">Can apply</span>
-      } @else {
-        <span class="badge badge-danger side">Wait until {{ formatDay(item.status.eligibleOn) }}</span>
-      }
-    </li>
-  }
-</ul>
+@if (rules().length > 0) {
+  <ul class="list">
+    @for (item of rules(); track item.rule.id) {
+      <li class="item">
+        <div class="item-main">
+          <span class="name">{{ item.rule.issuer }} {{ item.rule.name }}</span>
+          <span class="detail">
+            {{ item.status.counted.length }} of {{ item.rule.max }} in the last {{ item.rule.window.amount }} {{ item.rule.window.unit }}
+          </span>
+        </div>
+        @if (item.status.canApply) {
+          <span class="badge badge-success side">Can apply</span>
+        } @else {
+          <span class="badge badge-danger side">Wait until {{ formatDay(item.status.eligibleOn) }}</span>
+        }
+      </li>
+    }
+  </ul>
+} @else {
+  <p class="empty">No rules chosen. Use Choose rules below to pick some.</p>
+}
+
+@if (optionsOpen()) {
+  <app-checklist-picker
+    title="Application rules"
+    note="Pick the rules this widget shows. They're community data points and can change."
+    [groups]="pickerGroups()"
+    (toggle)="toggle($event.id, $event.checked)"
+    (reset)="reset($event)"
+    (closed)="optionsClosed.emit()"
+  />
+}

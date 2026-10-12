@@ -12,6 +12,19 @@
       </li>
     }
   </ul>
+} @else if (selected().length === 0) {
+  <p class="empty">No categories chosen. Use Choose categories below to pick some.</p>
 } @else {
   <p class="empty">Add active cards to your wallet to see which to use.</p>
+}
+
+@if (optionsOpen()) {
+  <app-checklist-picker
+    title="Best card categories"
+    note="Pick the categories this widget shows."
+    [groups]="pickerGroups()"
+    (toggle)="toggle($event.id, $event.checked)"
+    (reset)="reset($event)"
+    (closed)="optionsClosed.emit()"
+  />
 }
