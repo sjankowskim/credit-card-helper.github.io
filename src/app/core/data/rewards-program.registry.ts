@@ -158,5 +158,49 @@ export const REWARDS_PROGRAM_REGISTRY: Record<RewardsProgram, RewardsProgramMeta
     name: 'Barclays Cash Back',
     allowsTransfers: false,
     hasTravelPartners: false
+  },
+  'United MileagePlus': {
+    id: 'United MileagePlus',
+    name: 'United MileagePlus',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'Southwest Rapid Rewards': {
+    id: 'Southwest Rapid Rewards',
+    name: 'Southwest Rapid Rewards',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'IHG One Rewards': {
+    id: 'IHG One Rewards',
+    name: 'IHG One Rewards',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'World of Hyatt': {
+    id: 'World of Hyatt',
+    name: 'World of Hyatt',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'Air Canada Aeroplan': {
+    id: 'Air Canada Aeroplan',
+    name: 'Air Canada Aeroplan',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  // British Airways, Iberia, and Aer Lingus share Avios, which move freely between their accounts
+  'Avios': {
+    id: 'Avios',
+    name: 'Avios',
+    allowsTransfers: true,
+    hasTravelPartners: true
+  },
+  // Chase co-brand and no-rewards cards whose points are fixed-value cash back, not Ultimate Rewards
+  'Chase Cash Back': {
+    id: 'Chase Cash Back',
+    name: 'Chase Cash Back',
+    allowsTransfers: false,
+    hasTravelPartners: false
   }
 };

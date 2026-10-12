@@ -74,7 +74,14 @@ export type RewardsProgram =
   | 'Miles & More'
   | 'Frontier Miles'
   | 'Gap Inc. Rewards'
-  | 'Barclays Cash Back';
+  | 'Barclays Cash Back'
+  | 'United MileagePlus'
+  | 'Southwest Rapid Rewards'
+  | 'IHG One Rewards'
+  | 'World of Hyatt'
+  | 'Air Canada Aeroplan'
+  | 'Avios'
+  | 'Chase Cash Back';
 
 // ============================================================================
 // 4. REWARD TIER DEFINITION

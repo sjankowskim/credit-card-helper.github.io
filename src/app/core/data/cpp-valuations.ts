@@ -35,7 +35,15 @@ export const DEFAULT_CPP_VALUATIONS: Record<RewardsProgram, number> = {
   'Frontier Miles': 1.1,
   // 500 points = $1
   'Gap Inc. Rewards': 0.2,
-  'Barclays Cash Back': 1.0
+  'Barclays Cash Back': 1.0,
+  'United MileagePlus': 1.35,
+  'Southwest Rapid Rewards': 1.35,
+  'IHG One Rewards': 0.6,
+  'World of Hyatt': 1.7,
+  'Air Canada Aeroplan': 1.5,
+  // British Airways, Iberia, and Aer Lingus miles
+  'Avios': 1.4,
+  'Chase Cash Back': 1.0
 };
 
 /**
