@@ -1,6 +1,6 @@
 import type { Card } from '../../../models/card.model';
 
-export const XBOX_MASTERCARD: Card = {
+export const XBOX_CARD: Card = {
   id: 'barclays-xbox-mastercard',
   name: 'Xbox Mastercard',
   issuer: 'Barclays',

@@ -147,7 +147,7 @@ const cardPaths = new Set(seenVarNames.values());
 for (const [base, images] of imagesByCardPath) {
   if (!cardPaths.has(base)) {
     for (const image of images) {
-      console.warn(`\x1b[33m[Card Indexer]\x1b[0m public${image.url} doesn't match any card file`);
+      console.warn(`\x1b[33m[Card Indexer]\x1b[0m public/${image.url} doesn't match any card file`);
     }
   }
 }

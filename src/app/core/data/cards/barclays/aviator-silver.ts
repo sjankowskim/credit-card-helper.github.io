@@ -1,7 +1,7 @@
 import type { Card } from '../../../models/card.model';
 
 // Closed to new applicants. Terms come from older sources; Barclays no longer publishes them.
-export const AADVANTAGE_AVIATOR_SILVER: Card = {
+export const AVIATOR_SILVER: Card = {
   id: 'barclays-aadvantage-aviator-silver',
   name: 'AAdvantage Aviator Silver World Elite Mastercard',
   issuer: 'Barclays',
