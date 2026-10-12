@@ -16,6 +16,7 @@ export class NavbarComponent {
     { path: '/rewards', label: 'Rewards' },
     { path: '/benefits', label: 'Benefits & Bonuses' },
     { path: '/new-accounts', label: 'New Accounts' },
+    { path: '/contributions', label: 'Contributions' },
     { path: '/settings', label: 'Settings' }
   ];
 }

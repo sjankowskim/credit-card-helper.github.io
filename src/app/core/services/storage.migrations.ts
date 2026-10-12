@@ -74,6 +74,13 @@ const MIGRATIONS: Record<number, (state: RawState) => RawState> = {
     ...state,
     schemaVersion: 8,
     rewards: { ...(isObject(state['rewards']) ? state['rewards'] : createDefaultRewardsState()), loyaltyAccounts: [], loyaltyEarned: [] }
+  }),
+
+  // v8 -> v9: yearly contribution trackers (401(k), IRA, HSA, ...)
+  8: (state) => ({
+    ...state,
+    schemaVersion: 9,
+    contributions: []
   })
 };
 

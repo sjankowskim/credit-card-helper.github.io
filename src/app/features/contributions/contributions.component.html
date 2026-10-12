@@ -1,0 +1,260 @@
+<div class="page-container">
+  <h1>Contributions</h1>
+  <p>Yearly limits for 401(k), IRA, HSA, FSA, and other tax-advantaged accounts</p>
+
+  <div class="toolbar">
+    <div class="form-field year-field">
+      <span id="tax-year-label">Tax year</span>
+      <div class="year-stepper">
+        <button class="btn btn-small" type="button" (click)="stepYear(-1)" aria-label="Previous year">‹</button>
+        <input
+          class="input"
+          type="number"
+          inputmode="numeric"
+          [min]="minYear"
+          [max]="maxYear"
+          step="1"
+          aria-labelledby="tax-year-label"
+          [value]="year()"
+          (change)="setYear($any($event.target))"
+        />
+        <button class="btn btn-small" type="button" (click)="stepYear(1)" aria-label="Next year">›</button>
+      </div>
+      @if (trackedYears().length > 0) {
+        <div class="year-chips" aria-label="Years with trackers">
+          @for (y of trackedYears(); track y) {
+            <button class="chip" type="button" [class.active]="y === year()" (click)="year.set(y)">{{ y }}</button>
+          }
+        </div>
+      }
+    </div>
+    @if (!formOpen()) {
+      <button class="btn btn-primary" (click)="formOpen.set(true)">Add account</button>
+    }
+  </div>
+
+  <section class="stat-tiles">
+    <div class="stat-tile">
+      <span class="stat-value">{{ formatCurrency(stats().contributed) }}</span>
+      <span class="stat-label">Contributed in {{ year() }}</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-value">{{ formatCurrency(stats().remaining) }}</span>
+      <span class="stat-label">Room left</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-value">{{ stats().maxed }} / {{ stats().count }}</span>
+      <span class="stat-label">Accounts maxed</span>
+    </div>
+  </section>
+
+  @if (formOpen()) {
+    <form class="tracker-form" (submit)="addTracker($event)">
+      <h3>Track an account for {{ year() }}</h3>
+      <div class="fields">
+        <label class="form-field">
+          <span>Account type</span>
+          <select class="input" [value]="draftType()" (change)="setDraftType($any($event.target).value)">
+            @for (t of types; track t.id) {
+              <option [value]="t.id" [selected]="t.id === draftType()">{{ t.label }}</option>
+            }
+          </select>
+        </label>
+        <label class="form-field">
+          <span>Name{{ draftType() === 'custom' ? '' : ' (optional)' }}</span>
+          <input
+            class="input"
+            type="text"
+            [placeholder]="draftType() === 'custom' ? 'e.g. 529 plan' : 'e.g. Fidelity Roth IRA'"
+            [value]="draftName()"
+            (input)="draftName.set($any($event.target).value)"
+          />
+        </label>
+        @if (draftInfo().hasCoverage) {
+          <label class="form-field">
+            <span>Coverage</span>
+            <select class="input" [value]="draftCoverage()" (change)="draftCoverage.set($any($event.target).value)">
+              <option value="self" [selected]="draftCoverage() === 'self'">Self-only</option>
+              <option value="family" [selected]="draftCoverage() === 'family'">Family</option>
+            </select>
+          </label>
+        }
+        @if (draftInfo().catchUps.length > 1) {
+          <label class="form-field">
+            <span>Catch-up</span>
+            <select class="input" [value]="draftCatchUp()" (change)="draftCatchUp.set($any($event.target).value)">
+              @for (c of draftInfo().catchUps; track c) {
+                <option [value]="c" [selected]="c === draftCatchUp()">{{ catchUpLabels[c] }}</option>
+              }
+            </select>
+          </label>
+        }
+        <label class="form-field">
+          <span>Yearly limit ($)</span>
+          <input
+            class="input"
+            type="number"
+            min="0"
+            step="any"
+            [placeholder]="defaultLimit() ?? 'Enter the limit'"
+            [value]="draftLimit()"
+            (input)="draftLimit.set($any($event.target).value)"
+          />
+          <small class="muted">
+            @if (defaultLimit() !== undefined) {
+              IRS limit for {{ year() }}: {{ formatCurrency(defaultLimit()!) }}
+            } @else if (draftType() !== 'custom') {
+              {{ year() }} limit isn't built in yet; enter it
+            }
+          </small>
+        </label>
+      </div>
+      @if (draftInfo().note) {
+        <p class="muted">{{ draftInfo().note }}</p>
+      }
+      <div class="form-actions">
+        <button class="btn" type="button" (click)="formOpen.set(false)">Cancel</button>
+        <button class="btn btn-primary" type="submit" [disabled]="!canAdd()">Add</button>
+      </div>
+    </form>
+  }
+
+  <section>
+    @for (p of progress(); track p.tracker.id) {
+      <article class="tracker" [class.behind]="p.behindPace" [class.maxed]="p.remaining === 0 && !p.overLimit" [class.over]="p.overLimit">
+        <header>
+          <div>
+            <div class="name">{{ p.label }}</div>
+            @if (describeOptions(p)) {
+              <div class="muted">{{ describeOptions(p) }}</div>
+            }
+          </div>
+          @if (p.overLimit) {
+            <span class="badge badge-danger">Over limit</span>
+          } @else if (p.remaining === 0) {
+            <span class="badge badge-success">Maxed</span>
+          } @else if (p.daysLeft < 0) {
+            <span class="badge badge-warning">Deadline passed</span>
+          } @else if (p.behindPace) {
+            <span class="badge badge-warning">Behind pace</span>
+          } @else {
+            <span class="badge badge-info">On pace</span>
+          }
+        </header>
+
+        <div class="bar" role="progressbar" [attr.aria-valuenow]="p.contributed" aria-valuemin="0" [attr.aria-valuemax]="p.tracker.limit">
+          <div class="fill" [style.width.%]="p.percent"></div>
+        </div>
+
+        <div class="facts">
+          <span>
+            <strong>{{ formatCurrency(p.contributed) }}</strong> of
+            <app-inline-edit-field type="currency" [min]="0" [value]="p.tracker.limit" (saved)="setLimit(p, $event)" />
+            @if (p.overLimit) {
+              · <span class="negative">{{ formatCurrency(p.contributed - p.tracker.limit) }} over</span>
+            } @else if (p.remaining > 0) {
+              · {{ formatCurrency(p.remaining) }} left
+            }
+          </span>
+          @if (p.remaining > 0) {
+            @if (p.daysLeft >= 0) {
+              <span>
+                Deadline {{ formatDay(p.deadline) }} · {{ p.daysLeft }} {{ p.daysLeft === 1 ? 'day' : 'days' }}
+                @if (p.perMonthNeeded) {
+                  · {{ formatCurrency(p.perMonthNeeded) }}/month to max
+                }
+              </span>
+            } @else {
+              <span>Deadline was {{ formatDay(p.deadline) }}</span>
+            }
+          }
+        </div>
+        @if (p.behindPace) {
+          <div class="pace-note">Contributing evenly, you'd be at {{ formatCurrency(p.expected) }} by now.</div>
+        }
+
+        <div class="actions">
+          <form class="entry-form" (submit)="addEntry(p, $event)">
+            @let draft = getEntryDraft(p.tracker.id);
+            <span class="prefix">+$</span>
+            <input
+              class="input amount"
+              type="number"
+              min="0"
+              step="any"
+              placeholder="Amount"
+              aria-label="Contribution amount"
+              [value]="draft.amount"
+              (input)="setEntryDraft(p.tracker.id, 'amount', $any($event.target).value)"
+            />
+            <input
+              class="input"
+              type="date"
+              aria-label="Contribution date"
+              [value]="draft.date"
+              (input)="setEntryDraft(p.tracker.id, 'date', $any($event.target).value)"
+            />
+            <input
+              class="input note-input"
+              type="text"
+              placeholder="Note (optional)"
+              aria-label="Contribution note"
+              [value]="draft.note"
+              (input)="setEntryDraft(p.tracker.id, 'note', $any($event.target).value)"
+            />
+            <button class="btn btn-small" type="submit">Add</button>
+          </form>
+          <div class="buttons">
+            @if (p.tracker.entries.length > 0) {
+              <button class="btn btn-small" (click)="toggleExpanded(p.tracker.id)">
+                {{ expanded().has(p.tracker.id) ? 'Hide' : 'Show' }} {{ p.tracker.entries.length }}
+                {{ p.tracker.entries.length === 1 ? 'contribution' : 'contributions' }}
+              </button>
+            }
+            <button class="btn btn-small" (click)="carryForward(p)">Copy to {{ p.tracker.year + 1 }}</button>
+            <button class="btn btn-small" (click)="remove(p)" aria-label="Delete tracker">✕</button>
+          </div>
+        </div>
+
+        @if (expanded().has(p.tracker.id)) {
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Note</th>
+                  <th class="num">Amount</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (entry of sortedEntries(p); track entry.id) {
+                  <tr>
+                    <td class="nowrap">{{ formatIso(entry.date) }}</td>
+                    <td>{{ entry.note || '—' }}</td>
+                    <td class="num">{{ formatCurrency(entry.amount) }}</td>
+                    <td class="num">
+                      <button class="btn btn-small" (click)="removeEntry(p, entry.id)" aria-label="Delete contribution">✕</button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+
+        @if (getTypeInfo(p.tracker.type).note) {
+          <div class="muted">{{ getTypeInfo(p.tracker.type).note }}</div>
+        }
+      </article>
+    } @empty {
+      @if (!formOpen()) {
+        <div class="empty-state">No accounts tracked for {{ year() }}. Add your 401(k), IRA, HSA, or FSA to see how close you are to each limit.</div>
+      }
+    }
+  </section>
+
+  <p class="muted note">
+    Built-in IRS limits cover {{ limitYears.first }}–{{ limitYears.last }}. For other years, enter the limit yourself; every limit is editable.
+  </p>
+</div>

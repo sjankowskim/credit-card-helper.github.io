@@ -7,6 +7,7 @@ import { CardsComponent } from './features/cards/cards.component';
 import { SettingsComponent } from './features/settings/settings.component';
 import { RewardsComponent } from './features/rewards/rewards.component';
 import { BenefitsComponent } from './features/benefits/benefits.component';
+import { ContributionsComponent } from './features/contributions/contributions.component';
 
 export const routes: Routes = [
   { path: 'wallet', component: WalletComponent },
@@ -18,6 +19,7 @@ export const routes: Routes = [
   { path: 'benefits', component: BenefitsComponent },
   { path: 'new-accounts', component: NewAccountsComponent },
   { path: 'account-tracker', redirectTo: '/new-accounts' },
+  { path: 'contributions', component: ContributionsComponent },
   { path: 'settings', component: SettingsComponent },
   { path: '', redirectTo: '/cards', pathMatch: 'full' },
   { path: '**', redirectTo: '/cards' }

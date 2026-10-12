@@ -2,6 +2,7 @@ import type { RewardsProgram, UserCard } from './card.model';
 import { createDefaultRewardsState, type RewardsState } from './rewards.model';
 import { createDefaultBenefitsState, type BenefitsState, type Referral } from './benefits.model';
 import type { BankBonus } from './bank-bonus.model';
+import type { ContributionTracker } from './contribution.model';
 
 export interface DashboardSettings {
   numCards: 1 | 3 | 5;
@@ -35,9 +36,10 @@ export interface AppState {
   benefits: BenefitsState;
   referrals: Referral[];
   bankBonuses: BankBonus[];
+  contributions: ContributionTracker[];
 }
 
-export const CURRENT_SCHEMA_VERSION = 8;
+export const CURRENT_SCHEMA_VERSION = 9;
 
 export const DEFAULT_DASHBOARD_SETTINGS: DashboardSettings = {
   numCards: 3,
@@ -63,6 +65,7 @@ export function createDefaultAppState(): AppState {
     rewards: createDefaultRewardsState(),
     benefits: createDefaultBenefitsState(),
     referrals: [],
-    bankBonuses: []
+    bankBonuses: [],
+    contributions: []
   };
 }
