@@ -12,6 +12,7 @@ export const SAVORONE_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 39,
   isBusiness: false,
+  creditNeeded: 'excellent',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

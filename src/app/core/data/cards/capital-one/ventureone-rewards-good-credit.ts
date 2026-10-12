@@ -12,6 +12,7 @@ export const VENTUREONE_REWARDS_GOOD_CREDIT: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.25,
   termsCheckedOn: '2026-10-11',
   imageOf: 'capital-one-ventureone-rewards',

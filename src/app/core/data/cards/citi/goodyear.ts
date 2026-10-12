@@ -13,6 +13,7 @@ export const GOODYEAR: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'fair',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'No rewards. Works at Goodyear locations and Exxon and Mobil stations; cardmember rebates on select Goodyear tires.',

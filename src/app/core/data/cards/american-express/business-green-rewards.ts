@@ -13,6 +13,7 @@ export const BUSINESS_GREEN_REWARDS: Card = {
   affectsChase524: false,
   annualFee: 95,
   isBusiness: true,
+  creditNeeded: 'excellent',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

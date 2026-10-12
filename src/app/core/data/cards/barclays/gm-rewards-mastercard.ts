@@ -12,6 +12,7 @@ export const GM_REWARDS_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 3.0,
   termsCheckedOn: '2026-10-11',
   note: 'GM Rewards points are for GM vehicles and services; their value per point is not shown, so 1¢ is assumed.',

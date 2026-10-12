@@ -12,6 +12,7 @@ export const SECURED_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'rebuilding',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'No rewards; a secured card for building credit.',

@@ -13,6 +13,7 @@ export const HILTON_HONORS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 3.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

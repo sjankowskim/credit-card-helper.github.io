@@ -13,6 +13,7 @@ export const BUSINESS_PLATINUM: Card = {
   affectsChase524: false,
   annualFee: 895,
   isBusiness: true,
+  creditNeeded: 'excellent',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Earns 2x on single purchases of $5,000 or more, up to $2 million a year.',

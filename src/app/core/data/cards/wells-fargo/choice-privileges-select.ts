@@ -12,6 +12,7 @@ export const CHOICE_PRIVILEGES_SELECT: Card = {
   affectsChase524: true,
   annualFee: 95,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Choice Privileges Platinum Elite status and 25% bonus points on qualifying stays.',

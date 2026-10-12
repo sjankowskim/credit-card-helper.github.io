@@ -13,6 +13,7 @@ export const HILTON_HONORS_SURPASS: Card = {
   affectsChase524: true,
   annualFee: 150,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 3.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

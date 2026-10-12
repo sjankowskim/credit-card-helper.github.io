@@ -12,6 +12,7 @@ export const QUICKSILVER_ONE_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 39,
   isBusiness: false,
+  creditNeeded: 'fair',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

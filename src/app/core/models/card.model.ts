@@ -204,6 +204,23 @@ export type CardNetwork =
   | 'DISCOVER'
   | 'STORE';
 
+/** Network product tier, e.g. Visa Signature; benefits like concierge and travel coverage follow it */
+export type NetworkTier =
+  | 'Visa Signature'
+  | 'Visa Infinite'
+  | 'Visa Signature Business'
+  | 'Visa Infinite Business'
+  | 'Visa Business'
+  | 'World Mastercard'
+  | 'World Elite Mastercard'
+  | 'World Legend Mastercard';
+
+/**
+ * Typical credit an applicant needs. Issuers rarely publish cutoffs and look at more than
+ * the score, so this is a guide: 'rebuilding' covers new-to-credit and rebuilding applicants.
+ */
+export type CreditLevel = 'excellent' | 'good' | 'fair' | 'rebuilding';
+
 export interface Card {
   /** Permanent string slug for the card (e.g., 'us-bank-cash-plus') */
   id: string;
@@ -237,6 +254,12 @@ export interface Card {
 
   /** Whether this is a business card (most business cards don't count toward 5/24) */
   isBusiness: boolean;
+
+  /** Typical credit needed to be approved */
+  creditNeeded: CreditLevel;
+
+  /** Network product tier, when known */
+  networkTier?: NetworkTier;
 
   /** Default fallback rate for unlisted categories (typically 1.0 for 1%) */
   baseRewardRate: number;

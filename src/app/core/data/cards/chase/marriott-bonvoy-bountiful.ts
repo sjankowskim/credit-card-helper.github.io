@@ -12,6 +12,8 @@ export const MARRIOTT_BONVOY_BOUNTIFUL: Card = {
   affectsChase524: true,
   annualFee: 250,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   note: 'Free Night Award (up to 50,000 points) after $15,000 spend in a calendar year. Gold Elite status and 15 Elite Night Credits each year.',

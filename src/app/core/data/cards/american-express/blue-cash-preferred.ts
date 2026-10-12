@@ -13,6 +13,7 @@ export const BLUE_CASH_PREFERRED: Card = {
   // $0 the first year
   annualFee: 95,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 250, currency: 'Cashback', spendRequired: 3000, windowMonths: 6 },

@@ -12,6 +12,7 @@ export const WANDER_AMEX: Card = {
   affectsChase524: true,
   annualFee: 95,
   isBusiness: false,
+  creditNeeded: 'fair',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Rewards are points worth 1 cent each, redeemable for statement credits, gift cards, and travel.',

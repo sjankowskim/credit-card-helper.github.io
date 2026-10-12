@@ -14,6 +14,7 @@ export const DELTA_SKYMILES_GOLD: Card = {
   // $0 the first year
   annualFee: 150,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

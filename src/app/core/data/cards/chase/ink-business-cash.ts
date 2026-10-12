@@ -12,6 +12,8 @@ export const INK_BUSINESS_CASH: Card = {
   affectsChase524: false,
   annualFee: 0,
   isBusiness: true,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature Business',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 75000, currency: 'Ultimate Rewards', spendRequired: 6000, windowMonths: 3 },

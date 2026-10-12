@@ -12,6 +12,7 @@ export const SIGNIFY_BUSINESS_CASH: Card = {
   affectsChase524: false,
   annualFee: 0,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 500, currency: 'Cashback', spendRequired: 5000, windowMonths: 3 },

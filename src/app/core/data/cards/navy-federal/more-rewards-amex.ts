@@ -12,6 +12,7 @@ export const MORE_REWARDS_AMEX: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 20000, currency: 'Navy Federal Points', spendRequired: 2000, windowMonths: 3 },

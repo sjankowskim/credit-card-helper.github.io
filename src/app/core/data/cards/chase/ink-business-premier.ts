@@ -12,6 +12,8 @@ export const INK_BUSINESS_PREMIER: Card = {
   affectsChase524: false,
   annualFee: 195,
   isBusiness: true,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature Business',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   note: 'Purchases of $5,000 or more earn 2.5%. A pay-in-full card with a Flex for Business balance. Rewards are cash back and can\'t be moved to other Ultimate Rewards cards.',

@@ -12,6 +12,7 @@ export const SAVOR_REWARDS_STUDENTS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'rebuilding',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   imageOf: 'capital-one-savor-one-rewards',

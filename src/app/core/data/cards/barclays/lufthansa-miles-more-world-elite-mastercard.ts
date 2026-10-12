@@ -12,6 +12,8 @@ export const LUFTHANSA_MILES_MORE_WORLD_ELITE_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 89,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Two Lufthansa Business Lounge vouchers and a Companion Ticket each year. The fee is waived for Senator and HON Circle members.',

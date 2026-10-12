@@ -13,6 +13,7 @@ export const GRAPHITE_BUSINESS_CASH_UNLIMITED: Card = {
   affectsChase524: false,
   annualFee: 295,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

@@ -1,0 +1,30 @@
+<div class="slider">
+  <div class="track" aria-hidden="true">
+    <div class="band" [style.left.%]="band().left" [style.right.%]="band().right"></div>
+  </div>
+  <input
+    type="range"
+    [min]="min()"
+    [max]="max()"
+    [step]="step()"
+    [value]="low()"
+    [class.on-top]="low() >= max()"
+    [attr.aria-label]="lowLabel()"
+    [attr.aria-valuetext]="format()(low())"
+    (input)="setLow($any($event.target).value)"
+  />
+  <input
+    type="range"
+    [min]="min()"
+    [max]="max()"
+    [step]="step()"
+    [value]="high()"
+    [attr.aria-label]="highLabel()"
+    [attr.aria-valuetext]="format()(high())"
+    (input)="setHigh($any($event.target).value)"
+  />
+</div>
+<div class="readout">
+  <span>{{ format()(low()) }}</span>
+  <span>{{ format()(high()) }}</span>
+</div>

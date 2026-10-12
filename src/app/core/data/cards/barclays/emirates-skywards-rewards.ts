@@ -12,6 +12,8 @@ export const EMIRATES_SKYWARDS_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 99,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Silver tier the first year.',

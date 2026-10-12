@@ -12,6 +12,7 @@ export const OMNI_REWARDS_AMEX: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'excellent',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 200, currency: 'Cashback', spendRequired: 1000, windowMonths: 6 },

@@ -13,6 +13,7 @@ export const WAYFAIR_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Rewards are Wayfair rewards. On qualifying Wayfair items you can take special financing with 5% back instead.',

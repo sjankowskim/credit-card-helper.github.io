@@ -12,6 +12,7 @@ export const WEST_ELM_KEY_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Capital One lists up to 5% back without naming categories, so only the brand rate is shown and 1% elsewhere is assumed. Rewards are store credit at Williams-Sonoma, Inc. brands.',

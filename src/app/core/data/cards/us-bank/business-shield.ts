@@ -12,6 +12,8 @@ export const BUSINESS_SHIELD: Card = {
   affectsChase524: false,
   annualFee: 0,
   isBusiness: true,
+  creditNeeded: 'good',
+  networkTier: 'Visa Business',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'A low intro APR business card.',

@@ -13,6 +13,7 @@ export const DISCOVER_IT_SECURED: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'rebuilding',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'A secured card for building credit; requires a refundable security deposit.',

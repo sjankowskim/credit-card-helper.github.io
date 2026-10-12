@@ -12,6 +12,8 @@ export const PAYPAL_CASHBACK_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'World Mastercard',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

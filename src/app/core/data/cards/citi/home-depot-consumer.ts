@@ -13,6 +13,7 @@ export const HOME_DEPOT_CONSUMER: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'fair',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'No rewards. Only works at The Home Depot; offers special financing and 1-year returns.',

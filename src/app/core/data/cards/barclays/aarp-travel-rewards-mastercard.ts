@@ -12,6 +12,7 @@ export const AARP_TRAVEL_REWARDS_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 100, currency: 'Cashback', spendRequired: 500, windowMonths: 3 },

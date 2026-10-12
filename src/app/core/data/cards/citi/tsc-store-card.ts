@@ -12,6 +12,7 @@ export const TSC_STORE_CARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'fair',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'Only works at Tractor Supply and Petsense. Rewards are Tractor Supply rewards. Cardmembers get Preferred Plus Neighbor status. At Tractor Supply you can take special financing on $199+ instead of rewards.',

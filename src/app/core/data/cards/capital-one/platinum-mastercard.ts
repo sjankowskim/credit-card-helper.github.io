@@ -12,6 +12,7 @@ export const PLATINUM_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'fair',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'No rewards; a card for building credit.',

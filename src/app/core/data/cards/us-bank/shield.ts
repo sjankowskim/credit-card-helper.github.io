@@ -12,6 +12,7 @@ export const SHIELD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'A low intro APR card. Cell phone protection up to $600 when you pay your phone bill with the card.',

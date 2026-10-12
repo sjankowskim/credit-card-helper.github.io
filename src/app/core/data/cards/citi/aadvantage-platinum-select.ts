@@ -13,6 +13,8 @@ export const AADVANTAGE_PLATINUM_SELECT: Card = {
   // Waived the first year
   annualFee: 99,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 80000, currency: 'AAdvantage Miles', spendRequired: 3500, windowMonths: 4 },

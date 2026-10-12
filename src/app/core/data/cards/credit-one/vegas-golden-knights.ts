@@ -12,6 +12,7 @@ export const VEGAS_GOLDEN_KNIGHTS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'rebuilding',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'Annual fee depends on credit: $0 (excellent), $39 (average), or $75 the first year then $99 (rebuilding). Vegas Golden Knights fan offers.',

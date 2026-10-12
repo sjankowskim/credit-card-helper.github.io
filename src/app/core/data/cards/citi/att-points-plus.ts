@@ -12,6 +12,7 @@ export const ATT_POINTS_PLUS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '$10 off per line on your AT&T wireless bill and $10 off eligible AT&T internet, with AutoPay and paperless billing.',

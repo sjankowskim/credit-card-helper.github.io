@@ -12,6 +12,7 @@ export const COINBASE_ONE_CARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   note: 'Rewards are bitcoin. Requires a paid Coinbase One membership ($49.99+ a year). Earns 2% to 4% depending on assets held on Coinbase.',

@@ -12,6 +12,8 @@ export const PREMIER_WORLD_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'World Mastercard',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: []

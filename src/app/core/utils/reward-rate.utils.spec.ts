@@ -14,6 +14,7 @@ function card(rewardTiers: RewardTier[]): Card {
     affectsChase524: true,
     annualFee: 0,
     isBusiness: false,
+    creditNeeded: 'good',
     baseRewardRate: 1,
     rewardTiers
   };

@@ -13,6 +13,7 @@ export const ROBINHOOD_PLATINUM_CARD: Card = {
   affectsChase524: true,
   annualFee: 695,
   isBusiness: false,
+  creditNeeded: 'excellent',
   baseRewardRate: 3.0,
   termsCheckedOn: '2026-10-11',
   note: 'Includes Robinhood Gold. Priority Pass lounges. Global Entry/TSA PreCheck credit. WHOOP, Function Health, and One Medical memberships.',

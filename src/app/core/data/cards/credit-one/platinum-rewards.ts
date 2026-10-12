@@ -12,6 +12,7 @@ export const PLATINUM_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 39,
   isBusiness: false,
+  creditNeeded: 'fair',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

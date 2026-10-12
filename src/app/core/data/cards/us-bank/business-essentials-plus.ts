@@ -12,6 +12,8 @@ export const BUSINESS_ESSENTIALS_PLUS: Card = {
   affectsChase524: false,
   annualFee: 295,
   isBusiness: true,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature Business',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   note: 'Metal card. Up to 3.5% on $200,000 a year with large balances in a qualifying U.S. Bank business checking account.',

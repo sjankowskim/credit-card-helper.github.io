@@ -12,6 +12,8 @@ export const FREEDOM_UNLIMITED: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 20000, currency: 'Ultimate Rewards', spendRequired: 500, windowMonths: 3 },

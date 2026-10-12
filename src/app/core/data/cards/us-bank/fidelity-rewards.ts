@@ -13,6 +13,8 @@ export const FIDELITY_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   note: '2% when rewards are deposited into an eligible Fidelity account. Up to $100 in points for Global Entry or TSA PreCheck.',

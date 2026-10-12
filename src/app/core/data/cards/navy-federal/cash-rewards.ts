@@ -12,6 +12,7 @@ export const CASH_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   note: 'Approvals with a credit limit of $5,000 or more get cashRewards Plus (2%) instead.',

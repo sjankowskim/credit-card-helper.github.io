@@ -12,6 +12,7 @@ export const CUSTOM_CASH: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   // Closed to new applicants on 2026-05-28
   discontinued: true,

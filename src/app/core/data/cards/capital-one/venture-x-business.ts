@@ -12,6 +12,7 @@ export const VENTURE_X_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 395,
   isBusiness: true,
+  creditNeeded: 'excellent',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   note: 'Charge card: the balance is due in full each month.',

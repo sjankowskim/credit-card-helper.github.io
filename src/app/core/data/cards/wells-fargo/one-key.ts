@@ -12,6 +12,7 @@ export const ONE_KEY: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   note: 'Rewards are OneKeyCash for Expedia, Hotels.com, and Vrbo. Automatic One Key Silver status.',

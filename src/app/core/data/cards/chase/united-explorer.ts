@@ -12,6 +12,8 @@ export const UNITED_EXPLORER: Card = {
   affectsChase524: true,
   annualFee: 150,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '$0 annual fee the first year. Free first checked bag, 2 United Club passes a year, and 25% back on United inflight purchases. $100 United travel credit after $10,000 spend each calendar year.',

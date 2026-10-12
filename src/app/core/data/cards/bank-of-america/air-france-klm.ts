@@ -12,6 +12,8 @@ export const AIR_FRANCE_KLM: Card = {
   affectsChase524: true,
   annualFee: 89,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   note: '5,000 bonus miles each year you spend at least $50. Earns Flying Blue XP based on spend.',

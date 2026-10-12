@@ -12,6 +12,8 @@ export const BUSINESS_ESSENTIALS: Card = {
   affectsChase524: false,
   annualFee: 0,
   isBusiness: true,
+  creditNeeded: 'good',
+  networkTier: 'Visa Business',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   note: '2.5% on the first $10,000 each billing cycle with $10,000+ in a qualifying U.S. Bank business checking account.',

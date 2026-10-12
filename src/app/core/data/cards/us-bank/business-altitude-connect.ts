@@ -12,6 +12,8 @@ export const BUSINESS_ALTITUDE_CONNECT: Card = {
   affectsChase524: false,
   annualFee: 95,
   isBusiness: true,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature Business',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '$0 annual fee the first year. $25 credit after three straight months of taxi or rideshare purchases.',

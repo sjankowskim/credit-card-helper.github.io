@@ -12,6 +12,8 @@ export const SUN_COUNTRY_VISA: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 25000, currency: 'Sun Country Points', spendRequired: 1000, windowMonths: 3 },

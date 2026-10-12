@@ -12,6 +12,8 @@ export const ROYAL_ONE: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Points are for Royal Caribbean, Celebrity, and Silversea cruises.',

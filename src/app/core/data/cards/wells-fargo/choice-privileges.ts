@@ -12,6 +12,7 @@ export const CHOICE_PRIVILEGES: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Choice Privileges Gold Elite status and 10% bonus points on qualifying stays.',

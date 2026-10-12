@@ -12,6 +12,7 @@ export const VENTUREONE_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'excellent',
   baseRewardRate: 1.25,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 20000, currency: 'Capital One Miles', spendRequired: 500, windowMonths: 3 },

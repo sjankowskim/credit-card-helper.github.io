@@ -13,6 +13,7 @@ export const BILT_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   discontinued: true,
   termsCheckedOn: '2026-10-11',

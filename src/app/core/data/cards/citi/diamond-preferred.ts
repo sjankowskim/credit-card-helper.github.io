@@ -12,6 +12,7 @@ export const DIAMOND_PREFERRED: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'No rewards; a low intro APR card for balance transfers and purchases.',

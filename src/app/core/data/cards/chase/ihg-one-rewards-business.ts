@@ -12,6 +12,7 @@ export const IHG_ONE_REWARDS_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 200,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 3.0,
   termsCheckedOn: '2026-10-11',
   note: 'Free night each anniversary. Platinum Elite status. 20,000 bonus points and 5 Elite Night Credits after $25,000 spend in a calendar year. Global Entry, TSA PreCheck, or NEXUS credit up to $120 every 4 years.',

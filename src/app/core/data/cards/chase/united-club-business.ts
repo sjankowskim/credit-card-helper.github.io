@@ -12,6 +12,8 @@ export const UNITED_CLUB_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 695,
   isBusiness: true,
+  creditNeeded: 'excellent',
+  networkTier: 'Visa Signature Business',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   note: 'United Club membership. Free first and second checked bags and Premier Access. 1 PQP per $15 spent, up to 28,000 a year.',

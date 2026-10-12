@@ -13,6 +13,7 @@ export const DELTA_SKYMILES_RESERVE_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 650,
   isBusiness: true,
+  creditNeeded: 'excellent',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

@@ -13,6 +13,7 @@ export const BLUE_BUSINESS_PLUS: Card = {
   affectsChase524: false,
   annualFee: 0,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   note: '2x applies to the first $50,000 in purchases each calendar year, then 1x.',

@@ -12,6 +12,8 @@ export const AUTOGRAPH: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 20000, currency: 'Wells Fargo Rewards', spendRequired: 1000, windowMonths: 3 },

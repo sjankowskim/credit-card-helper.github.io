@@ -13,6 +13,8 @@ export const AVIATOR_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 95,
   isBusiness: true,
+  creditNeeded: 'good',
+  networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
   discontinued: true,
   transitionedTo: { cardId: 'citi-aadvantage-business', startedOn: '2026-04-24' },

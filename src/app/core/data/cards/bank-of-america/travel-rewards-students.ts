@@ -12,6 +12,7 @@ export const TRAVEL_REWARDS_STUDENTS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'rebuilding',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   imageOf: 'bofa-travel-rewards',

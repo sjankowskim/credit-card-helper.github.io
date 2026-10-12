@@ -12,6 +12,7 @@ export const DOUBLE_CASH: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 20000, currency: 'ThankYou Points', spendRequired: 1500, windowMonths: 6 },

@@ -13,6 +13,7 @@ export const DELTA_SKYMILES_PLATINUM: Card = {
   affectsChase524: true,
   annualFee: 350,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

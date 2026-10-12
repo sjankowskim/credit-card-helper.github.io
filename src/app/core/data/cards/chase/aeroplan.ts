@@ -13,6 +13,8 @@ export const AEROPLAN: Card = {
   affectsChase524: true,
   annualFee: 195,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Aeroplan 25K status. Free first checked bags on Air Canada for you and up to 8 companions. 15% off Air Canada award flights.',

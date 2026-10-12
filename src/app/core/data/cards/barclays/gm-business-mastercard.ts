@@ -12,6 +12,7 @@ export const GM_BUSINESS_MASTERCARD: Card = {
   affectsChase524: false,
   annualFee: 0,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 3.0,
   termsCheckedOn: '2026-10-11',
   note: 'Business Card Points can only be redeemed at GM dealers; their value per point is not shown, so 1¢ is assumed.',

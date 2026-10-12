@@ -12,6 +12,7 @@ export const JETBLUE_PREMIER: Card = {
   affectsChase524: true,
   annualFee: 499,
   isBusiness: false,
+  creditNeeded: 'excellent',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '5,000 bonus points each anniversary. Up to $2,000 a year in companion pass credits with high spend. Priority Pass. Global Entry/TSA PreCheck credit up to $120 every 4 years.',

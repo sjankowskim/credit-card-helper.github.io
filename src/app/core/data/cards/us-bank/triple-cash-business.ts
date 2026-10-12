@@ -12,6 +12,8 @@ export const TRIPLE_CASH_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 0,
   isBusiness: true,
+  creditNeeded: 'good',
+  networkTier: 'Visa Business',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 750, currency: 'Cashback', spendRequired: 6000, windowMonths: 6 },

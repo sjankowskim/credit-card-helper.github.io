@@ -13,6 +13,8 @@ export const AADVANTAGE_BUSINESS: Card = {
   // Waived the first year
   annualFee: 99,
   isBusiness: true,
+  creditNeeded: 'good',
+  networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 65000, currency: 'AAdvantage Miles', spendRequired: 4000, windowMonths: 4 },

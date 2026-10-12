@@ -12,6 +12,7 @@ export const QUICKSILVER_SECURED_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'rebuilding',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   imageOf: 'capital-one-quicksilver-rewards',

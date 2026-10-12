@@ -12,6 +12,8 @@ export const STRATA_PREMIER: Card = {
   affectsChase524: true,
   annualFee: 95,
   isBusiness: false,
+  creditNeeded: 'excellent',
+  networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 60000, currency: 'ThankYou Points', spendRequired: 4000, windowMonths: 3 },

@@ -13,6 +13,7 @@ export const DOORDASH_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Free DashPass each year you spend $10,000.',

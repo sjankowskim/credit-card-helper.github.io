@@ -13,6 +13,7 @@ export const DILLARDS_CREDIT_CARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'fair',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: "Only works at Dillard's. Rates are cash value: 2 points per $1, and 1,500 points earn a $10 Reward Certificate or a 10% off One-Day Shopping Pass.",

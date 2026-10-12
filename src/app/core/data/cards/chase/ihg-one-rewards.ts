@@ -12,6 +12,7 @@ export const IHG_ONE_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   note: 'Silver Elite status and 5 Elite Night Credits each year. 10,000 bonus points after $15,000 spend in a calendar year.',

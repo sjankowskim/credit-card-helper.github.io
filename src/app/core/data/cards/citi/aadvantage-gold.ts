@@ -13,6 +13,8 @@ export const AADVANTAGE_GOLD: Card = {
   affectsChase524: true,
   annualFee: 50,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
   discontinued: true,
   termsCheckedOn: '2026-10-11',

@@ -16,6 +16,7 @@ import {
   getNextAnniversary
 } from '../../../../core/utils/card-display.utils';
 import { formatDate, toIsoDate, today } from '../../../../core/utils/date.utils';
+import { CREDIT_LEVEL_LABELS } from '../../../../core/utils/card-filters.utils';
 import { getQuarter } from '../../../../core/utils/reward-rate.utils';
 import { createSignUpBonus } from '../../../../core/utils/sub.utils';
 
@@ -32,6 +33,10 @@ type InlineValue = string | number | undefined;
   styleUrl: './card-detail.component.scss'
 })
 export class CardDetailComponent {
+  readonly creditLabels = CREDIT_LEVEL_LABELS;
+  /** Visa and Mastercard cards have a network tier; Amex, Discover, and store cards don't */
+  readonly usesTiers = computed(() => this.card().network === 'VISA' || this.card().network === 'MASTERCARD');
+
   private readonly userCardsService = inject(UserCardsService);
   private readonly toastService = inject(ToastService);
 

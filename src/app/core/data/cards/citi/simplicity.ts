@@ -12,6 +12,7 @@ export const SIMPLICITY: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'No rewards and no late fees; a low intro APR card for purchases and balance transfers.',

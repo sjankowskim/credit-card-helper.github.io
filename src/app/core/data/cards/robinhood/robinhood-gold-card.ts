@@ -13,6 +13,7 @@ export const ROBINHOOD_GOLD_CARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 3.0,
   termsCheckedOn: '2026-10-11',
   note: 'Requires a paid Robinhood Gold membership. Cash back is redeemed to a Robinhood brokerage account.',

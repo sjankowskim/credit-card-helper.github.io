@@ -12,6 +12,7 @@ export const COSTCO_ANYWHERE_VISA_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 0,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Requires a paid Costco membership. Cash back comes once a year as a reward certificate, redeemable for cash or merchandise at U.S. Costco warehouses.',

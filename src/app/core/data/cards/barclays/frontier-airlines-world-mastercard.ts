@@ -13,6 +13,8 @@ export const FRONTIER_AIRLINES_WORLD_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 99,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'World Mastercard',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '$100 flight voucher each anniversary you spend $2,500 in the cardmembership year. Two free checked bags.',

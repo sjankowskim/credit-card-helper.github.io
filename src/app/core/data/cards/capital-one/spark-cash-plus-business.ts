@@ -12,6 +12,7 @@ export const SPARK_CASH_PLUS_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 150,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   note: 'Charge card: the balance is due in full each month. The $150 fee is refunded each year you spend $150,000.',

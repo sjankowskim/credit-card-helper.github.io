@@ -12,6 +12,7 @@ export const MYLOWES_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'fair',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: "Only works at Lowe's. The 5% comes off at checkout; you can take special financing instead.",

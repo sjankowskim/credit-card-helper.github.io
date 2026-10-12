@@ -13,6 +13,7 @@ export const MARRIOTT_BONVOY_BEVY: Card = {
   affectsChase524: true,
   annualFee: 250,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

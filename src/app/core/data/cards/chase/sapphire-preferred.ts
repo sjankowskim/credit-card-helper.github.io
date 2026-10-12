@@ -12,6 +12,8 @@ export const SAPPHIRE_PREFERRED: Card = {
   affectsChase524: true,
   annualFee: 95,
   isBusiness: false,
+  creditNeeded: 'excellent',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 100000, currency: 'Ultimate Rewards', spendRequired: 5000, windowMonths: 3 },

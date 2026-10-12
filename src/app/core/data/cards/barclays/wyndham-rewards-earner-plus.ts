@@ -13,6 +13,7 @@ export const WYNDHAM_REWARDS_EARNER_PLUS: Card = {
   affectsChase524: true,
   annualFee: 95,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '15,000 bonus points each anniversary year after paying the annual fee. Diamond status the first year, then Platinum.',

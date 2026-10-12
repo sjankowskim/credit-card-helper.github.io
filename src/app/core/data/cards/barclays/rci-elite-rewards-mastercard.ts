@@ -12,6 +12,8 @@ export const RCI_ELITE_REWARDS_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'World Mastercard',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'A $250 Vacation Credit each calendar year you spend $10,000. Rewards are worth about 1¢.',

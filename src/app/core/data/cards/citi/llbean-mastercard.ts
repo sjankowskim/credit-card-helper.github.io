@@ -13,6 +13,7 @@ export const LLBEAN_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Rewards are Bean Bucks ($1 each) for L.L.Bean purchases. Free shipping and returns at L.L.Bean.',

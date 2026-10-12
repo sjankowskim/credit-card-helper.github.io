@@ -13,6 +13,7 @@ export const APPLE_CARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Earns 2% on any purchase made with Apple Pay; 1% is the rate for the physical card. No fees of any kind.',

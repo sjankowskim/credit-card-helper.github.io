@@ -13,6 +13,7 @@ export const GREEN: Card = {
   affectsChase524: true,
   annualFee: 150,
   isBusiness: false,
+  creditNeeded: 'excellent',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

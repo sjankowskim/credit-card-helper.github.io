@@ -12,6 +12,8 @@ export const SOUTHWEST_PERFORMANCE_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 299,
   isBusiness: true,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature Business',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '9,000 points each anniversary. Preferred seat at booking, Extra Legroom upgrades, and first checked bag free. Global Entry, TSA PreCheck, or NEXUS credit up to $120 every 4 years.',

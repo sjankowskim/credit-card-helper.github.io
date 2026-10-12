@@ -12,6 +12,7 @@ export const JETBLUE_PLUS: Card = {
   affectsChase524: true,
   annualFee: 99,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '5,000 bonus points each anniversary. Free first checked bag for you and 3 companions.',

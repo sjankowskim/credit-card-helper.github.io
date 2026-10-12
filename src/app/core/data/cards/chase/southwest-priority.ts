@@ -12,6 +12,8 @@ export const SOUTHWEST_PRIORITY: Card = {
   affectsChase524: true,
   annualFee: 229,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '7,500 points each anniversary. Preferred seat at booking, Extra Legroom upgrades, first checked bag free, and 2,500 A-List qualifying points per $5,000 spent.',

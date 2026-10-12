@@ -12,6 +12,7 @@ export const PLATINUM_SECURED: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'rebuilding',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   imageOf: 'capital-one-platinum',

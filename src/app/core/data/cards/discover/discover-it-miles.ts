@@ -13,6 +13,7 @@ export const DISCOVER_IT_MILES: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   note: 'Miles are worth 1 cent each, as a statement credit for travel or as cash.',

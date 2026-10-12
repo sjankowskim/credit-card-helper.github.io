@@ -12,6 +12,7 @@ export const BASS_PRO_SHOPS_CLUB: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: "CLUB Points are store credit at Bass Pro Shops and Cabela's. Capital One's page doesn't list the rate elsewhere; 1x is assumed.",

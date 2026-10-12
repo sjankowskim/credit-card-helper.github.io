@@ -12,6 +12,7 @@ export const BANANA_REPUBLIC_ENCORE_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '500 points = $1, so 5X is 1% and 3X is 0.6%. Free shipping on $35+ online orders. The page does not state a foreign transaction fee.',

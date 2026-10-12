@@ -12,6 +12,8 @@ export const SAPPHIRE_RESERVE: Card = {
   affectsChase524: true,
   annualFee: 795,
   isBusiness: false,
+  creditNeeded: 'excellent',
+  networkTier: 'Visa Infinite',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   referralCapPerYear: 100000,

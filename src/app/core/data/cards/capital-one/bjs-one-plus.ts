@@ -12,6 +12,7 @@ export const BJS_ONE_PLUS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   note: "Rewards are store credit at BJ's. Also 15¢ off per gallon at BJ's Gas.",

@@ -12,6 +12,7 @@ export const BILT_PALLADIUM: Card = {
   affectsChase524: true,
   annualFee: 495,
   isBusiness: false,
+  creditNeeded: 'excellent',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 50000, currency: 'Bilt Points', spendRequired: 4000, windowMonths: 3 },

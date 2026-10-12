@@ -12,6 +12,7 @@ export const STRATA: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 20000, currency: 'ThankYou Points', spendRequired: 1000, windowMonths: 3 },

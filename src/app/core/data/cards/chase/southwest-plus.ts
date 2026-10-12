@@ -12,6 +12,8 @@ export const SOUTHWEST_PLUS: Card = {
   affectsChase524: true,
   annualFee: 99,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '3,000 points each anniversary. First checked bag free, 10% flight discount each anniversary, and 10,000 Companion Pass qualifying points each year.',

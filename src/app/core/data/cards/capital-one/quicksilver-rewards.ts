@@ -12,6 +12,7 @@ export const QUICKSILVER_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'excellent',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 200, currency: 'Cashback', spendRequired: 500, windowMonths: 3 },

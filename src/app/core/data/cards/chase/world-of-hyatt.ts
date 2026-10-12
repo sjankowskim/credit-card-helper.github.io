@@ -14,6 +14,8 @@ export const WORLD_OF_HYATT: Card = {
   affectsChase524: true,
   annualFee: 95,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Free night at a Category 1-4 hotel each anniversary, plus another after $15,000 spend in a calendar year. 5 tier-qualifying night credits each year.',

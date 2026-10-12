@@ -12,6 +12,8 @@ export const UNITED_QUEST: Card = {
   affectsChase524: true,
   annualFee: 350,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '10,000-mile award flight discount each anniversary. Free first and second checked bags. 1,000 PQP each year, plus 1 PQP per $20 spent.',

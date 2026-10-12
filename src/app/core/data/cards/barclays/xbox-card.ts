@@ -12,6 +12,7 @@ export const XBOX_CARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Points are worth 1¢ toward purchases at xbox.com, Microsoft.com, on console, and in-game. Bonus points are not earned through mobile wallets or mobile card readers. New accounts also get 3 months of Game Pass Ultimate after the first purchase.',

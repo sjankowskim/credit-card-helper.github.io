@@ -12,6 +12,8 @@ export const FREEDOM_FLEX: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 25000, currency: 'Ultimate Rewards', spendRequired: 500, windowMonths: 3 },

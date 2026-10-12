@@ -13,6 +13,7 @@ export const BEST_BUY_VISA: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Rewards are Best Buy reward certificates. At Best Buy you can take special financing instead of rewards. 10% back on your first day of Best Buy purchases. Annual fee is $0 or $59 depending on creditworthiness.',

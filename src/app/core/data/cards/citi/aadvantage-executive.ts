@@ -12,6 +12,8 @@ export const AADVANTAGE_EXECUTIVE: Card = {
   affectsChase524: true,
   annualFee: 695,
   isBusiness: false,
+  creditNeeded: 'excellent',
+  networkTier: 'World Legend Mastercard',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Admirals Club membership. First checked bag free on domestic American Airlines itineraries. Global Entry/TSA PreCheck credit up to $120 every 4 years.',

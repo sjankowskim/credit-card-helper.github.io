@@ -13,6 +13,8 @@ export const DISNEY_PREMIER: Card = {
   affectsChase524: true,
   annualFee: 49,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Rewards are Disney Rewards Dollars, redeemable at most U.S. Disney locations or toward airline purchases. 10% off select merchandise and dining at Disney parks.',

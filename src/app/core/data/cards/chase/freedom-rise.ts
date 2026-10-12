@@ -13,6 +13,7 @@ export const FREEDOM_RISE: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'rebuilding',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   referralCapPerYear: 25000,

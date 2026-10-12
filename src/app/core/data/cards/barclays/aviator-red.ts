@@ -13,6 +13,7 @@ export const AVIATOR_RED: Card = {
   affectsChase524: true,
   annualFee: 99,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   discontinued: true,
   transitionedTo: { cardId: 'citi-aadvantage-platinum-select', startedOn: '2026-04-24' },

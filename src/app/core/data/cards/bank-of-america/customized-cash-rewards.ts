@@ -12,6 +12,7 @@ export const CUSTOMIZED_CASH_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Also offered as the Susan G. Komen Customized Cash Rewards card (pink ribbon design, design 2) with the same rewards; Bank of America donates to Komen for each account.',

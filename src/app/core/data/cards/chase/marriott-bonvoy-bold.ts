@@ -12,6 +12,8 @@ export const MARRIOTT_BONVOY_BOLD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Silver Elite status and 5 Elite Night Credits each year.',

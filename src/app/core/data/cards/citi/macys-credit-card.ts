@@ -13,6 +13,7 @@ export const MACYS_CREDIT_CARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'fair',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: "Only works at Macy's. Silver level shown; Gold ($500+ a year at Macy's) earns 3% at Macy's and Platinum ($1,200+) earns 5%. Rewards are Star Money (1,000 points = $10) for Macy's merchandise.",

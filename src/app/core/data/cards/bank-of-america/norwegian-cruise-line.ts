@@ -12,6 +12,8 @@ export const NORWEGIAN_CRUISE_LINE: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'World Mastercard',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Points are for Norwegian Cruise Line.',

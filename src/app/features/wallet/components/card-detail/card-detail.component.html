@@ -234,7 +234,17 @@
       <div class="row"><span class="label">Issuer</span><span class="value">{{ card().issuer }}</span></div>
       <div class="row"><span class="label">Rewards program</span><span class="value">{{ card().rewardsProgram }}</span></div>
       <div class="row"><span class="label">Network</span><span class="value">{{ card().network }}</span></div>
+      @if (usesTiers()) {
+        <div class="row">
+          <span class="label">Network tier</span>
+          <span class="value" [class.muted]="!card().networkTier">{{ card().networkTier ?? 'Unknown' }}</span>
+        </div>
+      }
       <div class="row"><span class="label">Type</span><span class="value">{{ card().isBusiness ? 'Business' : 'Personal' }}</span></div>
+      <div class="row">
+        <span class="label">Credit needed</span>
+        <span class="value" title="A typical guide; issuers weigh more than your score">{{ creditLabels[card().creditNeeded] }} (typical)</span>
+      </div>
       <div class="row">
         <span class="label">Annual fee</span>
         <span class="value">{{ card().annualFee ? formatCurrency(card().annualFee) : 'None' }}</span>

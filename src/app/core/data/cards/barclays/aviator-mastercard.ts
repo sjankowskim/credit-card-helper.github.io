@@ -13,6 +13,8 @@ export const AVIATOR_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
   discontinued: true,
   transitionedTo: { cardId: 'citi-aadvantage-mileup', startedOn: '2026-04-24' },

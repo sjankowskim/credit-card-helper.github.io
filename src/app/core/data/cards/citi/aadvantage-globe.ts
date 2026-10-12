@@ -12,6 +12,7 @@ export const AADVANTAGE_GLOBE: Card = {
   affectsChase524: true,
   annualFee: 350,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Four Admirals Club passes a year. Global Entry/TSA PreCheck credit up to $120 every 4 years.',

@@ -12,6 +12,7 @@ export const SECURED: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'rebuilding',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'A secured card for building credit; the security deposit earns interest.',

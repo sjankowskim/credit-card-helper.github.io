@@ -14,6 +14,8 @@ export const MARRIOTT_BONVOY_BOUNDLESS: Card = {
   affectsChase524: true,
   annualFee: 95,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   note: 'Free Night Award (up to 35,000 points) each anniversary. Silver Elite status and 15 Elite Night Credits each year.',

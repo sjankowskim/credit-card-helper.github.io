@@ -12,6 +12,8 @@ export const CATHAY_WORLD_ELITE: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 38000, currency: 'Asia Miles', spendRequired: 3000, windowMonths: 3 },

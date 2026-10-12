@@ -14,6 +14,7 @@ export const MARRIOTT_BONVOY_BUSINESS: Card = {
   // Sources list $125 or $150
   annualFee: 125,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

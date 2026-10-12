@@ -12,6 +12,7 @@ export const WORLD_OF_HYATT_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 199,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Spend $50,000 in a calendar year to get 10% of redeemed points back for the rest of the year.',

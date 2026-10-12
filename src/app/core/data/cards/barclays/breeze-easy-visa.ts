@@ -12,6 +12,7 @@ export const BREEZE_EASY_VISA: Card = {
   affectsChase524: true,
   annualFee: 89,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'BreezePoints are worth about 1¢ toward Breeze flights. 7,500 anniversary points with eligible purchases. Zone 1 boarding and inflight WiFi.',

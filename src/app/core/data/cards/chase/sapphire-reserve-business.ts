@@ -12,6 +12,8 @@ export const SAPPHIRE_RESERVE_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 795,
   isBusiness: true,
+  creditNeeded: 'excellent',
+  networkTier: 'Visa Infinite Business',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Priority Pass and Chase Sapphire Lounge access. IHG Platinum Elite status through 2027. Global Entry, TSA PreCheck, or NEXUS credit up to $120 every 4 years.',

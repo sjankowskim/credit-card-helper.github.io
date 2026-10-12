@@ -12,6 +12,7 @@ export const UNLIMITED_CASH_REWARDS_SECURED: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'rebuilding',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   note: 'Secured card: $200 to $5,000 refundable deposit.',

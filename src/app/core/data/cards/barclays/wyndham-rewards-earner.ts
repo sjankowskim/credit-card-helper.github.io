@@ -13,6 +13,7 @@ export const WYNDHAM_REWARDS_EARNER: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '7,500 bonus points each anniversary year you spend $15,000. Gold status.',

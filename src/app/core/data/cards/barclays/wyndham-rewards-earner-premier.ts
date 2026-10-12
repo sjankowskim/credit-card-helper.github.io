@@ -13,6 +13,7 @@ export const WYNDHAM_REWARDS_EARNER_PREMIER: Card = {
   affectsChase524: true,
   annualFee: 395,
   isBusiness: false,
+  creditNeeded: 'excellent',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '30,000 bonus points each anniversary year after paying the annual fee. Diamond status. Global Entry/TSA PreCheck credit up to $120 every 4 years.',

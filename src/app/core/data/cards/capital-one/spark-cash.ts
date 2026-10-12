@@ -13,6 +13,7 @@ export const SPARK_CASH: Card = {
   // $0 the first year
   annualFee: 95,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 1000, currency: 'Cashback', spendRequired: 10000, windowMonths: 3 },

@@ -13,6 +13,7 @@ export const BEST_BUY_CREDIT_CARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'fair',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'Only works at Best Buy. Rewards are Best Buy reward certificates. At Best Buy you can take special financing instead of rewards. 10% back on your first day of Best Buy purchases.',

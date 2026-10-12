@@ -12,6 +12,7 @@ export const PREMIUM_REWARDS_ELITE: Card = {
   affectsChase524: true,
   annualFee: 550,
   isBusiness: false,
+  creditNeeded: 'excellent',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   note: 'Bank of America Preferred Rewards members earn 25%-75% more. Includes 20% off airfare paid with points.',

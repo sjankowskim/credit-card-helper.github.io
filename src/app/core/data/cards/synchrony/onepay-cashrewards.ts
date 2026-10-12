@@ -12,6 +12,7 @@ export const ONEPAY_CASHREWARDS: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   note: "Walmart's credit card. Cash back is redeemed as a statement credit or to a OnePay Cash account.",

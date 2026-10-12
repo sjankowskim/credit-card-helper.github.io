@@ -13,6 +13,7 @@ export const BUSINESS_GOLD: Card = {
   affectsChase524: false,
   annualFee: 375,
   isBusiness: true,
+  creditNeeded: 'excellent',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

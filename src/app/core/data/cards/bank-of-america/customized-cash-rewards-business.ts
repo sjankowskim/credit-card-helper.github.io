@@ -13,6 +13,7 @@ export const CUSTOMIZED_CASH_REWARDS_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 0,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Preferred Rewards for Business boosts the rates by 25% to 75%.',

@@ -13,6 +13,7 @@ export const WAYFAIR_CREDIT_CARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'fair',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'Only works at the Wayfair family of brands (Wayfair, Joss & Main, AllModern, Birch Lane, Perigold). Rewards are Wayfair rewards. On qualifying Wayfair items you can take special financing with 5% back instead.',

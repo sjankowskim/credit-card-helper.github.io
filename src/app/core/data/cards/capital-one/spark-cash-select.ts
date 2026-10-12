@@ -12,6 +12,7 @@ export const SPARK_CASH_SELECT: Card = {
   affectsChase524: false,
   annualFee: 0,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   imageOf: 'capital-one-spark-cash',

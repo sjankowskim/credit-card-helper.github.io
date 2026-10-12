@@ -12,6 +12,8 @@ export const SOUTHWEST_PREMIER: Card = {
   affectsChase524: true,
   annualFee: 149,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '6,000 points each anniversary. First checked bag free, 15% flight discount each anniversary, and 1,500 A-List qualifying points per $5,000 spent.',

@@ -12,6 +12,7 @@ export const PREMIUM_REWARDS: Card = {
   affectsChase524: true,
   annualFee: 95,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   defaultSignUpBonus: { amount: 60000, currency: 'Bank of America Points', spendRequired: 4000, windowMonths: 3 },

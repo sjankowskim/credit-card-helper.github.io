@@ -12,6 +12,7 @@ export const T_MOBILE_VISA: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 2.0,
   termsCheckedOn: '2026-10-11',
   note: 'Rewards are store credit at T-Mobile.',

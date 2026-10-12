@@ -13,6 +13,7 @@ export const HOME_DEPOT_PRO_XTRA: Card = {
   affectsChase524: false,
   annualFee: 0,
   isBusiness: true,
+  creditNeeded: 'fair',
   baseRewardRate: 0.0,
   termsCheckedOn: '2026-10-11',
   note: 'No rewards. Only works at The Home Depot; purchases count 4x toward Pro Xtra Perks.',

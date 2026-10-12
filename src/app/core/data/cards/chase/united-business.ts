@@ -12,6 +12,8 @@ export const UNITED_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 150,
   isBusiness: true,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature Business',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Free first checked bag and 2 United Club passes a year. 5,000-mile anniversary bonus if you also have a personal United card. $125 United travel credit after 5 United flight purchases of $100+ each calendar year.',

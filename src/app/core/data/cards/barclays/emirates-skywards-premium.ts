@@ -12,6 +12,8 @@ export const EMIRATES_SKYWARDS_PREMIUM: Card = {
   affectsChase524: true,
   annualFee: 499,
   isBusiness: false,
+  creditNeeded: 'excellent',
+  networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '10,000 bonus miles each cardmembership year you spend $30,000. Gold tier the first year. Priority Pass Select. Global Entry/TSA PreCheck credit up to $120 every 5 years.',

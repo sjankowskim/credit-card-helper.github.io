@@ -12,6 +12,8 @@ export const BRITISH_AIRWAYS: Card = {
   affectsChase524: true,
   annualFee: 95,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Travel Together Ticket each calendar year you spend $30,000.',

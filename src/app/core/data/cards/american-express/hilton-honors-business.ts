@@ -14,6 +14,7 @@ export const HILTON_HONORS_BUSINESS: Card = {
   // $0 the first year
   annualFee: 195,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 5.0,
   termsCheckedOn: '2026-10-11',
   note: '5x applies to the first $100,000 in purchases each calendar year, then 3x.',

@@ -13,6 +13,7 @@ export const DILLARDS_MASTERCARD: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
   baseRewardRate: 0.67,
   termsCheckedOn: '2026-10-11',
   note: 'Rates are cash value: 2 points per $1, and 1,500 points earn a $10 Reward Certificate or a 10% off One-Day Shopping Pass. Other purchases earn 1 point per $1.',

@@ -12,6 +12,7 @@ export const STRATA_ELITE: Card = {
   affectsChase524: true,
   annualFee: 595,
   isBusiness: false,
+  creditNeeded: 'excellent',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   note: 'Priority Pass Select and 4 Admirals Club passes a year. Global Entry/TSA PreCheck credit up to $120 every 4 years.',

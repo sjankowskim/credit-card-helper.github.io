@@ -12,6 +12,8 @@ export const UNITED_CLUB: Card = {
   affectsChase524: true,
   annualFee: 695,
   isBusiness: false,
+  creditNeeded: 'excellent',
+  networkTier: 'Visa Infinite',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'United Club membership. Free first and second checked bags and Premier Access. 1,500 PQP each year, plus 1 PQP per $15 spent.',

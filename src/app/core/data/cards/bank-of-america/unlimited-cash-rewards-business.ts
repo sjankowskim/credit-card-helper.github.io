@@ -13,6 +13,7 @@ export const UNLIMITED_CASH_REWARDS_BUSINESS: Card = {
   affectsChase524: false,
   annualFee: 0,
   isBusiness: true,
+  creditNeeded: 'good',
   baseRewardRate: 1.5,
   termsCheckedOn: '2026-10-11',
   note: 'Preferred Rewards for Business boosts this to 1.87% (Gold), 2.25% (Platinum), or 2.62% (Platinum Honors).',

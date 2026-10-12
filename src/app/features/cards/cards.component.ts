@@ -4,26 +4,109 @@ import { CardListComponent, type CardListItem } from '../wallet/components/card-
 import { CardDetailComponent } from '../wallet/components/card-detail/card-detail.component';
 import { AddCardDialogComponent } from '../wallet/components/add-card-dialog/add-card-dialog.component';
 import { CardTableComponent } from './components/card-table/card-table.component';
+import { RangeSliderComponent } from '../../shared/range-slider/range-slider.component';
 import { StorageService } from '../../core/services/storage.service';
 import type { CatalogSettings, CatalogSort, CatalogView } from '../../core/models/app-state.model';
 import { ALL_CARDS } from '../../core/data/cards';
 import { UserCardsService, type WalletEntry } from '../../core/services/user-cards.service';
 import { ToastService } from '../../core/services/toast.service';
-import type { Card } from '../../core/models/card.model';
+import type { Card, CreditLevel, NetworkTier } from '../../core/models/card.model';
+import { ALL_CATEGORIES, type CategoryId } from '../../core/data/category.registry';
 import { formatCurrency, getBestRate } from '../../core/utils/card-display.utils';
+import {
+  CREDIT_LEVEL_LABELS,
+  REWARDS_KIND_LABELS,
+  earnsBonusOn,
+  getRewardsKind,
+  isSecuredCard,
+  isStoreOnly,
+  isStudentCard,
+  qualifiesWith,
+  type RewardsKind
+} from '../../core/utils/card-filters.utils';
+
+/** Show a kind of card, show only that kind, or hide it */
+export type KindFilter = 'any' | 'only' | 'hide';
 
 export interface CardFilters {
   issuer: string;
   network: string;
-  fee: '' | 'none' | 'paid';
+  /** A tier, or 'unknown' for Visa and Mastercard cards whose tier isn't filled in */
+  tier: '' | NetworkTier | 'unknown';
   type: '' | 'personal' | 'business';
+  /** Your credit; shows cards you typically qualify for */
+  credit: '' | CreditLevel;
+  feeMin: number;
+  feeMax: number;
+  rewards: '' | RewardsKind;
+  category: '' | CategoryId;
+  student: KindFilter;
+  secured: KindFilter;
+  storeOnly: KindFilter;
+  discontinued: KindFilter;
+  noForeignFee: boolean;
+  hasBonus: boolean;
+  hideOwned: boolean;
 }
 
-const NO_FILTERS: CardFilters = { issuer: '', network: '', fee: '', type: '' };
+/** Highest annual fee in the catalog, rounded up to the slider step */
+const FEE_STEP = 25;
+const MAX_FEE = Math.ceil(Math.max(...ALL_CARDS.map(c => c.annualFee)) / FEE_STEP) * FEE_STEP;
+
+const NO_FILTERS: CardFilters = {
+  issuer: '',
+  network: '',
+  tier: '',
+  type: '',
+  credit: '',
+  feeMin: 0,
+  feeMax: MAX_FEE,
+  rewards: '',
+  category: '',
+  student: 'any',
+  secured: 'any',
+  storeOnly: 'any',
+  discontinued: 'any',
+  noForeignFee: false,
+  hasBonus: false,
+  hideOwned: false
+};
+
+/** Lowest to highest within each network */
+const TIER_ORDER: NetworkTier[] = [
+  'Visa Signature',
+  'Visa Infinite',
+  'Visa Business',
+  'Visa Signature Business',
+  'Visa Infinite Business',
+  'World Mastercard',
+  'World Elite Mastercard',
+  'World Legend Mastercard'
+];
+
+/** Groups tiers under their network and gives each a short label ('Visa Signature' → Visa: 'Signature') */
+function groupTiers(tiers: NetworkTier[]): { network: string; tiers: { id: NetworkTier; label: string }[] }[] {
+  const groups = new Map<string, { id: NetworkTier; label: string }[]>();
+  for (const id of [...tiers].sort((a, b) => TIER_ORDER.indexOf(a) - TIER_ORDER.indexOf(b))) {
+    const network = id.startsWith('Visa') ? 'Visa' : 'Mastercard';
+    const label = id.replace(/^Visa /, '').replace(/ Mastercard$/, '');
+    groups.set(network, [...(groups.get(network) ?? []), { id, label }]);
+  }
+  return [...groups.entries()].map(([network, list]) => ({ network, tiers: list }));
+}
+
+/** Visa and Mastercard cards have a tier; Amex, Discover, and store cards don't use tiers */
+function isTierUnknown(card: Card): boolean {
+  return !card.networkTier && (card.network === 'VISA' || card.network === 'MASTERCARD');
+}
+
+function matchesKind(filter: KindFilter, isKind: boolean): boolean {
+  return filter === 'any' || (filter === 'only') === isKind;
+}
 
 @Component({
   selector: 'app-cards',
-  imports: [SearchBarComponent, CardListComponent, CardTableComponent, CardDetailComponent, AddCardDialogComponent],
+  imports: [SearchBarComponent, CardListComponent, CardTableComponent, CardDetailComponent, AddCardDialogComponent, RangeSliderComponent],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.scss'
 })
@@ -58,6 +141,21 @@ export class CardsComponent {
 
   readonly issuers = [...new Set(ALL_CARDS.map(c => c.issuer))].sort();
   readonly networks = [...new Set(ALL_CARDS.map(c => c.network))].sort();
+  /** Tiers in the catalog grouped by network, e.g. Visa → Signature, Infinite; ordered lowest to highest */
+  readonly tierGroups = groupTiers([...new Set(ALL_CARDS.flatMap(c => (c.networkTier ? [c.networkTier] : [])))]);
+  readonly creditLevels = Object.entries(CREDIT_LEVEL_LABELS) as [CreditLevel, string][];
+  readonly rewardsKinds = Object.entries(REWARDS_KIND_LABELS) as [RewardsKind, string][];
+  readonly categories = [...ALL_CATEGORIES].sort((a, b) => a.name.localeCompare(b.name));
+  readonly kindFilters: { key: 'student' | 'secured' | 'storeOnly' | 'discontinued'; label: string }[] = [
+    { key: 'student', label: 'Student cards' },
+    { key: 'secured', label: 'Secured cards' },
+    { key: 'storeOnly', label: 'Store-only cards' },
+    { key: 'discontinued', label: 'Discontinued cards' }
+  ];
+  readonly maxFee = MAX_FEE;
+  readonly feeStep = FEE_STEP;
+  readonly formatFee = (value: number): string => (value === 0 ? '$0' : formatCurrency(value));
+  readonly moreOpen = signal(false);
 
   readonly ownedCardIds = computed(
     () => new Set(this.userCardsService.cards().filter(c => !c.isWishlist).map(c => c.cardId))
@@ -66,19 +164,42 @@ export class CardsComponent {
     () => new Set(this.userCardsService.cards().filter(c => c.isWishlist).map(c => c.cardId))
   );
 
-  readonly hasFilters = computed(() => Object.values(this.filters()).some(Boolean));
+  /** Filters that differ from the defaults; the fee range counts once */
+  private countActive(keys: (keyof CardFilters)[]): number {
+    const f = this.filters();
+    const feeChanged = f.feeMin !== NO_FILTERS.feeMin || f.feeMax !== NO_FILTERS.feeMax;
+    return keys.filter(k => k !== 'feeMin' && k !== 'feeMax' && f[k] !== NO_FILTERS[k]).length + (feeChanged ? 1 : 0);
+  }
+
+  readonly hasFilters = computed(() => this.countActive(Object.keys(NO_FILTERS) as (keyof CardFilters)[]) > 0);
+
+  /** Active filters inside the More filters panel, shown on its button */
+  readonly moreCount = computed(() =>
+    this.countActive(['tier', 'rewards', 'category', 'student', 'secured', 'storeOnly', 'discontinued', 'noForeignFee', 'hasBonus', 'hideOwned'])
+  );
 
   readonly items = computed<CardListItem[]>(() => {
     const query = this.searchQuery().trim().toLowerCase();
-    const { issuer, network, fee, type } = this.filters();
+    const f = this.filters();
+    const owned = this.ownedCardIds();
 
     return ALL_CARDS.filter(card => {
       if (query && ![card.name, card.issuer, card.rewardsCurrency].some(t => t.toLowerCase().includes(query))) return false;
-      if (issuer && card.issuer !== issuer) return false;
-      if (network && card.network !== network) return false;
-      if (fee === 'none' && card.annualFee > 0) return false;
-      if (fee === 'paid' && card.annualFee === 0) return false;
-      if (type && card.isBusiness !== (type === 'business')) return false;
+      if (f.issuer && card.issuer !== f.issuer) return false;
+      if (f.network && card.network !== f.network) return false;
+      if (f.tier && (f.tier === 'unknown' ? !isTierUnknown(card) : card.networkTier !== f.tier)) return false;
+      if (f.type && card.isBusiness !== (f.type === 'business')) return false;
+      if (f.credit && !qualifiesWith(card, f.credit)) return false;
+      if (card.annualFee < f.feeMin || card.annualFee > f.feeMax) return false;
+      if (f.rewards && getRewardsKind(card) !== f.rewards) return false;
+      if (f.category && !earnsBonusOn(card, f.category)) return false;
+      if (!matchesKind(f.student, isStudentCard(card))) return false;
+      if (!matchesKind(f.secured, isSecuredCard(card))) return false;
+      if (!matchesKind(f.storeOnly, isStoreOnly(card))) return false;
+      if (!matchesKind(f.discontinued, !!card.discontinued)) return false;
+      if (f.noForeignFee && card.hasForeignTransactionFee) return false;
+      if (f.hasBonus && !card.defaultSignUpBonus) return false;
+      if (f.hideOwned && owned.has(card.id)) return false;
       return true;
     })
       .sort(compareCards(this.settings().sort))
@@ -104,6 +225,10 @@ export class CardsComponent {
 
   setFilter<K extends keyof CardFilters>(key: K, value: CardFilters[K]): void {
     this.filters.update(f => ({ ...f, [key]: value }));
+  }
+
+  setFeeRange({ low, high }: { low: number; high: number }): void {
+    this.filters.update(f => ({ ...f, feeMin: low, feeMax: high }));
   }
 
   clearFilters(): void {

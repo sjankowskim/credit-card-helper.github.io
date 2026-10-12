@@ -12,6 +12,8 @@ export const VERIZON_VISA: Card = {
   affectsChase524: true,
   annualFee: 0,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: 'Rewards are Verizon Dollars for Verizon purchases and bills. $10 a month off each line with AutoPay. The bonus is $50 after a first purchase plus $100 after $1,500.',

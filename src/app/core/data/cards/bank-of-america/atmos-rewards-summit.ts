@@ -12,6 +12,8 @@ export const ATMOS_REWARDS_SUMMIT: Card = {
   affectsChase524: true,
   annualFee: 395,
   isBusiness: false,
+  creditNeeded: 'excellent',
+  networkTier: 'Visa Infinite',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '10% more points with an eligible Bank of America account. Yearly 25,000-point Global Companion Award, 10,000 status points, and 8 Alaska Lounge passes.',

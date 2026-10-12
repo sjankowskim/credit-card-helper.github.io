@@ -12,6 +12,8 @@ export const ATMOS_REWARDS_ASCENT: Card = {
   affectsChase524: true,
   annualFee: 95,
   isBusiness: false,
+  creditNeeded: 'good',
+  networkTier: 'Visa Signature',
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   note: '10% more points with an eligible Bank of America account. Free checked bag and preferred boarding for you and up to 6 guests.',
