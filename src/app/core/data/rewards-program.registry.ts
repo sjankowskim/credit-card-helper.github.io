@@ -214,5 +214,47 @@ export const REWARDS_PROGRAM_REGISTRY: Record<RewardsProgram, RewardsProgramMeta
     name: 'Credit One Cash Back',
     allowsTransfers: false,
     hasTravelPartners: false
+  },
+  'Navy Federal Rewards': {
+    id: 'Navy Federal Rewards',
+    name: 'Navy Federal Rewards',
+    allowsTransfers: false,
+    hasTravelPartners: false
+  },
+  'Synchrony Cash Back': {
+    id: 'Synchrony Cash Back',
+    name: 'Synchrony Cash Back',
+    allowsTransfers: false,
+    hasTravelPartners: false
+  },
+  'Apple Daily Cash': {
+    id: 'Apple Daily Cash',
+    name: 'Apple Daily Cash',
+    allowsTransfers: false,
+    hasTravelPartners: false
+  },
+  'Robinhood Cash Back': {
+    id: 'Robinhood Cash Back',
+    name: 'Robinhood Cash Back',
+    allowsTransfers: false,
+    hasTravelPartners: false
+  },
+  'Coinbase Bitcoin Back': {
+    id: 'Coinbase Bitcoin Back',
+    name: 'Coinbase Bitcoin Back',
+    allowsTransfers: false,
+    hasTravelPartners: false
+  },
+  'Sun Country Rewards': {
+    id: 'Sun Country Rewards',
+    name: 'Sun Country Rewards',
+    allowsTransfers: false,
+    hasTravelPartners: true
+  },
+  'Asia Miles': {
+    id: 'Asia Miles',
+    name: 'Asia Miles',
+    allowsTransfers: false,
+    hasTravelPartners: true
   }
 };

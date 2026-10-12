@@ -122,6 +122,7 @@ import { WILLIAMS_SONOMA_KEY_REWARDS } from './capital-one/williams-sonoma-key-r
 import { BILT_BLUE } from './cardless/bilt-blue';
 import { BILT_OBSIDIAN } from './cardless/bilt-obsidian';
 import { BILT_PALLADIUM } from './cardless/bilt-palladium';
+import { COINBASE_ONE_CARD } from './cardless/coinbase-one-card';
 import { AER_LINGUS } from './chase/aer-lingus';
 import { AEROPLAN } from './chase/aeroplan';
 import { AMAZON_VISA } from './chase/amazon-visa';
@@ -217,14 +218,45 @@ import { DISCOVER_IT_SECURED } from './discover/discover-it-secured';
 import { DISCOVER_IT_STUDENT_CASH_BACK } from './discover/discover-it-student-cash-back';
 import { DISCOVER_IT_STUDENT_CHROME } from './discover/discover-it-student-chrome';
 import { NHL_DISCOVER_IT } from './discover/nhl-discover-it';
+import { APPLE_CARD } from './goldman-sachs/apple-card';
+import { CASH_REWARDS_PLUS } from './navy-federal/cash-rewards-plus';
+import { CASH_REWARDS_SECURED } from './navy-federal/cash-rewards-secured';
+import { CASH_REWARDS } from './navy-federal/cash-rewards';
+import { FLAGSHIP_PREMIER } from './navy-federal/flagship-premier';
+import { GO_REWARDS } from './navy-federal/go-rewards';
+import { MORE_REWARDS_AMEX } from './navy-federal/more-rewards-amex';
+import { NAVY_FEDERAL_PLATINUM } from './navy-federal/navy-federal-platinum';
+import { ROBINHOOD_GOLD_CARD } from './robinhood/robinhood-gold-card';
+import { ROBINHOOD_PLATINUM_CARD } from './robinhood/robinhood-platinum-card';
+import { AMAZON_STORE_CARD } from './synchrony/amazon-store-card';
+import { CARECREDIT } from './synchrony/carecredit';
+import { CATHAY_WORLD_ELITE } from './synchrony/cathay-world-elite';
+import { DICKS_CREDIT_CARD } from './synchrony/dicks-credit-card';
+import { HARBOR_FREIGHT } from './synchrony/harbor-freight';
+import { MYLOWES_REWARDS } from './synchrony/mylowes-rewards';
+import { MYWALGREENS } from './synchrony/mywalgreens';
+import { ONEPAY_CASHREWARDS } from './synchrony/onepay-cashrewards';
+import { PAYPAL_CASHBACK_MASTERCARD } from './synchrony/paypal-cashback-mastercard';
+import { PREMIER_WORLD_MASTERCARD } from './synchrony/premier-world-mastercard';
+import { REAL_REWARDS } from './synchrony/real-rewards';
+import { SUN_COUNTRY_VISA } from './synchrony/sun-country-visa';
+import { VENMO_CREDIT_CARD } from './synchrony/venmo-credit-card';
+import { VERIZON_VISA } from './synchrony/verizon-visa';
+import { TARGET_CIRCLE_CARD } from './td-bank/target-circle-card';
 import { ALTITUDE_CONNECT } from './us-bank/altitude-connect';
 import { ALTITUDE_GO_SECURED } from './us-bank/altitude-go-secured';
 import { ALTITUDE_GO } from './us-bank/altitude-go';
+import { BUSINESS_ALTITUDE_CONNECT } from './us-bank/business-altitude-connect';
+import { BUSINESS_ESSENTIALS_PLUS } from './us-bank/business-essentials-plus';
+import { BUSINESS_ESSENTIALS } from './us-bank/business-essentials';
+import { BUSINESS_SHIELD } from './us-bank/business-shield';
 import { CASH_PLUS_SECURED } from './us-bank/cash-plus-secured';
 import { CASH_PLUS } from './us-bank/cash-plus';
+import { FIDELITY_REWARDS } from './us-bank/fidelity-rewards';
 import { SECURED_VISA } from './us-bank/secured-visa';
 import { SHIELD } from './us-bank/shield';
 import { SMARTLY } from './us-bank/smartly';
+import { TRIPLE_CASH_BUSINESS } from './us-bank/triple-cash-business';
 import { ACTIVE_CASH } from './wells-fargo/active-cash';
 import { AUTOGRAPH_JOURNEY } from './wells-fargo/autograph-journey';
 import { AUTOGRAPH } from './wells-fargo/autograph';
@@ -355,6 +387,7 @@ export const ALL_CARDS: Card[] = [
   BILT_BLUE,
   BILT_OBSIDIAN,
   BILT_PALLADIUM,
+  COINBASE_ONE_CARD,
   AER_LINGUS,
   AEROPLAN,
   AMAZON_VISA,
@@ -450,14 +483,45 @@ export const ALL_CARDS: Card[] = [
   DISCOVER_IT_STUDENT_CASH_BACK,
   DISCOVER_IT_STUDENT_CHROME,
   NHL_DISCOVER_IT,
+  APPLE_CARD,
+  CASH_REWARDS_PLUS,
+  CASH_REWARDS_SECURED,
+  CASH_REWARDS,
+  FLAGSHIP_PREMIER,
+  GO_REWARDS,
+  MORE_REWARDS_AMEX,
+  NAVY_FEDERAL_PLATINUM,
+  ROBINHOOD_GOLD_CARD,
+  ROBINHOOD_PLATINUM_CARD,
+  AMAZON_STORE_CARD,
+  CARECREDIT,
+  CATHAY_WORLD_ELITE,
+  DICKS_CREDIT_CARD,
+  HARBOR_FREIGHT,
+  MYLOWES_REWARDS,
+  MYWALGREENS,
+  ONEPAY_CASHREWARDS,
+  PAYPAL_CASHBACK_MASTERCARD,
+  PREMIER_WORLD_MASTERCARD,
+  REAL_REWARDS,
+  SUN_COUNTRY_VISA,
+  VENMO_CREDIT_CARD,
+  VERIZON_VISA,
+  TARGET_CIRCLE_CARD,
   ALTITUDE_CONNECT,
   ALTITUDE_GO_SECURED,
   ALTITUDE_GO,
+  BUSINESS_ALTITUDE_CONNECT,
+  BUSINESS_ESSENTIALS_PLUS,
+  BUSINESS_ESSENTIALS,
+  BUSINESS_SHIELD,
   CASH_PLUS_SECURED,
   CASH_PLUS,
+  FIDELITY_REWARDS,
   SECURED_VISA,
   SHIELD,
   SMARTLY,
+  TRIPLE_CASH_BUSINESS,
   ACTIVE_CASH,
   AUTOGRAPH_JOURNEY,
   AUTOGRAPH,
@@ -591,7 +655,6 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['chase-disney-visa', ['images/cards/chase/disney-visa.png']],
   ['chase-doordash-rewards', ['images/cards/chase/doordash-rewards.png']],
   ['chase-freedom-flex', ['images/cards/chase/freedom-flex.png']],
-  ['chase-freedom-rise', ['images/cards/chase/freedom-rise.png']],
   ['chase-freedom-unlimited', ['images/cards/chase/freedom-unlimited.png']],
   ['chase-freedom', ['images/cards/chase/freedom.webp']],
   ['chase-iberia', ['images/cards/chase/iberia.png']],
@@ -612,7 +675,6 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['chase-sapphire-reserve-business', ['images/cards/chase/sapphire-reserve-business.png']],
   ['chase-sapphire-reserve', ['images/cards/chase/sapphire-reserve.png']],
   ['chase-slate-edge', ['images/cards/chase/slate-edge.png']],
-  ['chase-slate', ['images/cards/chase/slate.png']],
   ['chase-southwest-performance-business', ['images/cards/chase/southwest-performance-business.png']],
   ['chase-southwest-plus', ['images/cards/chase/southwest-plus.png']],
   ['chase-southwest-premier-business', ['images/cards/chase/southwest-premier-business.png']],
@@ -633,24 +695,16 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['citi-aadvantage-mileup', ['images/cards/citi/aadvantage-mileup.png']],
   ['citi-aadvantage-platinum-select', ['images/cards/citi/aadvantage-platinum-select.webp']],
   ['citi-att-points-plus', ['images/cards/citi/att-points-plus.png']],
-  ['citi-best-buy-credit-card', ['images/cards/citi/best-buy-credit-card.png']],
-  ['citi-best-buy-visa', ['images/cards/citi/best-buy-visa.png']],
-  ['citi-bloomingdales-amex', ['images/cards/citi/bloomingdales-amex.png']],
-  ['citi-bloomingdales-credit-card', ['images/cards/citi/bloomingdales-credit-card.png']],
   ['citi-costco-anywhere-visa-business', ['images/cards/citi/costco-anywhere-visa-business.png']],
   ['citi-costco-anywhere-visa', ['images/cards/citi/costco-anywhere-visa.png']],
   ['citi-custom-cash', ['images/cards/citi/custom-cash.png']],
   ['citi-diamond-preferred', ['images/cards/citi/diamond-preferred.png']],
-  ['citi-dillards-credit-card', ['images/cards/citi/dillards-credit-card.png']],
-  ['citi-dillards-mastercard', ['images/cards/citi/dillards-mastercard.png']],
   ['citi-double-cash', ['images/cards/citi/double-cash.png']],
   ['citi-exxon-mobil-smart-card-plus', ['images/cards/citi/exxon-mobil-smart-card-plus.png']],
   ['citi-goodyear', ['images/cards/citi/goodyear.png']],
   ['citi-home-depot-consumer', ['images/cards/citi/home-depot-consumer.png']],
   ['citi-home-depot-pro-xtra', ['images/cards/citi/home-depot-pro-xtra.png']],
   ['citi-llbean-mastercard', ['images/cards/citi/llbean-mastercard.png']],
-  ['citi-macys-amex', ['images/cards/citi/macys-amex.png']],
-  ['citi-macys-credit-card', ['images/cards/citi/macys-credit-card.png']],
   ['citi-secured-mastercard', ['images/cards/citi/secured-mastercard.png']],
   ['citi-simplicity', ['images/cards/citi/simplicity.png']],
   ['citi-strata-elite', ['images/cards/citi/strata-elite.png']],
@@ -658,8 +712,6 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['citi-strata', ['images/cards/citi/strata.png']],
   ['citi-tsc-store-card', ['images/cards/citi/tsc-store-card.png']],
   ['citi-tsc-visa', ['images/cards/citi/tsc-visa.png']],
-  ['citi-wayfair-credit-card', ['images/cards/citi/wayfair-credit-card.png']],
-  ['citi-wayfair-mastercard', ['images/cards/citi/wayfair-mastercard.png']],
   ['credit-one-amex-rebuilding', ['images/cards/credit-one/amex-rebuilding.png']],
   ['credit-one-omni-rewards-amex', ['images/cards/credit-one/omni-rewards-amex.png']],
   ['credit-one-platinum-rewards-no-fee', ['images/cards/credit-one/platinum-rewards-no-fee.png']],
@@ -675,20 +727,38 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['discover-it-miles', ['images/cards/discover/discover-it-miles.png']],
   ['discover-it-student-cash-back', ['images/cards/discover/discover-it-student-cash-back.png']],
   ['discover-nhl', ['images/cards/discover/nhl-discover-it.png']],
+  ['navy-federal-cash-rewards', ['images/cards/navy-federal/cash-rewards.png']],
+  ['navy-federal-flagship-premier', ['images/cards/navy-federal/flagship-premier.png']],
+  ['navy-federal-go-rewards', ['images/cards/navy-federal/go-rewards.png']],
+  ['navy-federal-more-rewards-amex', ['images/cards/navy-federal/more-rewards-amex.png']],
+  ['navy-federal-platinum', ['images/cards/navy-federal/navy-federal-platinum.png']],
+  ['synchrony-amazon-store-card', ['images/cards/synchrony/amazon-store-card.png']],
+  ['synchrony-carecredit', ['images/cards/synchrony/carecredit.png']],
+  ['synchrony-cathay-world-elite', ['images/cards/synchrony/cathay-world-elite.png']],
+  ['synchrony-harbor-freight', ['images/cards/synchrony/harbor-freight.png']],
+  ['synchrony-mylowes-rewards', ['images/cards/synchrony/mylowes-rewards.png']],
+  ['synchrony-onepay-cashrewards', ['images/cards/synchrony/onepay-cashrewards.png']],
+  ['synchrony-paypal-cashback-mastercard', ['images/cards/synchrony/paypal-cashback-mastercard.png']],
+  ['synchrony-real-rewards', ['images/cards/synchrony/real-rewards.png']],
+  ['synchrony-sun-country-visa', ['images/cards/synchrony/sun-country-visa.png']],
   ['us-bank-altitude-connect', ['images/cards/us-bank/altitude-connect.png']],
   ['us-bank-altitude-go-secured', ['images/cards/us-bank/altitude-go-secured.png']],
   ['us-bank-altitude-go', ['images/cards/us-bank/altitude-go.png']],
+  ['us-bank-business-altitude-connect', ['images/cards/us-bank/business-altitude-connect.webp']],
+  ['us-bank-business-essentials-plus', ['images/cards/us-bank/business-essentials-plus.webp']],
+  ['us-bank-business-essentials', ['images/cards/us-bank/business-essentials.webp']],
+  ['us-bank-business-shield', ['images/cards/us-bank/business-shield.webp']],
   ['us-bank-cash-plus-secured', ['images/cards/us-bank/cash-plus-secured.png']],
   ['us-bank-cash-plus', ['images/cards/us-bank/cash-plus.png']],
   ['us-bank-secured-visa', ['images/cards/us-bank/secured-visa.png']],
   ['us-bank-shield', ['images/cards/us-bank/shield.png']],
   ['us-bank-smartly', ['images/cards/us-bank/smartly.png']],
+  ['us-bank-triple-cash-business', ['images/cards/us-bank/triple-cash-business.webp']],
   ['wells-fargo-active-cash', ['images/cards/wells-fargo/active-cash.webp']],
   ['wells-fargo-autograph-journey', ['images/cards/wells-fargo/autograph-journey.webp']],
   ['wells-fargo-autograph', ['images/cards/wells-fargo/autograph.webp']],
   ['wells-fargo-bilt-mastercard', ['images/cards/wells-fargo/bilt-mastercard.jpg']],
   ['wells-fargo-choice-privileges-select', ['images/cards/wells-fargo/choice-privileges-select.webp']],
-  ['wells-fargo-choice-privileges', ['images/cards/wells-fargo/choice-privileges.webp']],
   ['wells-fargo-one-key-plus', ['images/cards/wells-fargo/one-key-plus.webp']],
   ['wells-fargo-one-key', ['images/cards/wells-fargo/one-key.webp']],
   ['wells-fargo-reflect', ['images/cards/wells-fargo/reflect.webp']],
@@ -707,4 +777,5 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['capital-one-ventureone-rewards-good-credit', ['images/cards/capital-one/ventureone-rewards.avif']],
   ['discover-it-secured', ['images/cards/discover/discover-it-cash-back.avif']],
   ['discover-it-student-chrome', ['images/cards/discover/discover-it-chrome.png']],
+  ['navy-federal-cash-rewards-secured', ['images/cards/navy-federal/cash-rewards.png']],
 ]);

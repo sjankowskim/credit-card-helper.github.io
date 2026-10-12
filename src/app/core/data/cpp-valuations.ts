@@ -45,7 +45,16 @@ export const DEFAULT_CPP_VALUATIONS: Record<RewardsProgram, number> = {
   'Avios': 1.4,
   'Chase Cash Back': 1.0,
   'Choice Privileges': 0.6,
-  'Credit One Cash Back': 1.0
+  'Credit One Cash Back': 1.0,
+  'Navy Federal Rewards': 1.0,
+  'Synchrony Cash Back': 1.0,
+  'Apple Daily Cash': 1.0,
+  'Robinhood Cash Back': 1.0,
+  // Paid in bitcoin; valued at the dollar amount when earned
+  'Coinbase Bitcoin Back': 1.0,
+  'Sun Country Rewards': 1.0,
+  // Cathay Pacific miles
+  'Asia Miles': 1.3
 };
 
 /**

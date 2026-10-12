@@ -109,5 +109,13 @@ export const VELOCITY_RULES: readonly VelocityRule[] = [
     description: 'At most 4 Bank of America cards in 24 months',
     max: 4,
     window: { amount: 24, unit: 'months' }
+  },
+  {
+    id: 'navy-federal-1-90',
+    issuer: 'Navy Federal',
+    name: '1/90',
+    description: 'At most 1 new Navy Federal card in 90 days (and at most 3 Navy Federal cards in total)',
+    max: 1,
+    window: { amount: 90, unit: 'days' }
   }
 ];

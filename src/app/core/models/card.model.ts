@@ -46,6 +46,11 @@ export type CardIssuer =
   | 'Discover'
   | 'Barclays'
   | 'Credit One'
+  | 'Synchrony'
+  | 'Navy Federal'
+  | 'Goldman Sachs'
+  | 'TD Bank'
+  | 'Robinhood'
   | 'Cardless';
 
 // ============================================================================
@@ -84,7 +89,14 @@ export type RewardsProgram =
   | 'Avios'
   | 'Chase Cash Back'
   | 'Choice Privileges'
-  | 'Credit One Cash Back';
+  | 'Credit One Cash Back'
+  | 'Navy Federal Rewards'
+  | 'Synchrony Cash Back'
+  | 'Apple Daily Cash'
+  | 'Robinhood Cash Back'
+  | 'Coinbase Bitcoin Back'
+  | 'Sun Country Rewards'
+  | 'Asia Miles';
 
 // ============================================================================
 // 4. REWARD TIER DEFINITION
