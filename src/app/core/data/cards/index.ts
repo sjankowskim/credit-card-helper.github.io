@@ -201,6 +201,12 @@ import { TSC_VISA } from './citi/tsc-visa';
 import { WAYFAIR_CREDIT_CARD } from './citi/wayfair-credit-card';
 import { WAYFAIR_MASTERCARD } from './citi/wayfair-mastercard';
 import { DISCOVER_IT_CASH_BACK } from './discover/discover-it-cash-back';
+import { DISCOVER_IT_CHROME } from './discover/discover-it-chrome';
+import { DISCOVER_IT_MILES } from './discover/discover-it-miles';
+import { DISCOVER_IT_SECURED } from './discover/discover-it-secured';
+import { DISCOVER_IT_STUDENT_CASH_BACK } from './discover/discover-it-student-cash-back';
+import { DISCOVER_IT_STUDENT_CHROME } from './discover/discover-it-student-chrome';
+import { NHL_DISCOVER_IT } from './discover/nhl-discover-it';
 import { CASH_PLUS } from './us-bank/cash-plus';
 import { ACTIVE_CASH } from './wells-fargo/active-cash';
 import { AUTOGRAPH } from './wells-fargo/autograph';
@@ -404,6 +410,12 @@ export const ALL_CARDS: Card[] = [
   WAYFAIR_CREDIT_CARD,
   WAYFAIR_MASTERCARD,
   DISCOVER_IT_CASH_BACK,
+  DISCOVER_IT_CHROME,
+  DISCOVER_IT_MILES,
+  DISCOVER_IT_SECURED,
+  DISCOVER_IT_STUDENT_CASH_BACK,
+  DISCOVER_IT_STUDENT_CHROME,
+  NHL_DISCOVER_IT,
   CASH_PLUS,
   ACTIVE_CASH,
   AUTOGRAPH,
@@ -601,6 +613,10 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['citi-wayfair-credit-card', ['images/cards/citi/wayfair-credit-card.png']],
   ['citi-wayfair-mastercard', ['images/cards/citi/wayfair-mastercard.png']],
   ['discover-it-cash-back', ['images/cards/discover/discover-it-cash-back.avif']],
+  ['discover-it-chrome', ['images/cards/discover/discover-it-chrome.png']],
+  ['discover-it-miles', ['images/cards/discover/discover-it-miles.png']],
+  ['discover-it-student-cash-back', ['images/cards/discover/discover-it-student-cash-back.png']],
+  ['discover-nhl', ['images/cards/discover/nhl-discover-it.png']],
   ['us-bank-cash-plus', ['images/cards/us-bank/cash-plus.png']],
   ['wells-fargo-bilt-mastercard', ['images/cards/wells-fargo/bilt-mastercard.jpg']],
   ['bofa-bankamericard-students', ['images/cards/bank-of-america/bankamericard.png']],
@@ -615,4 +631,6 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['capital-one-savor-rewards-students', ['images/cards/capital-one/savor-rewards.avif']],
   ['capital-one-spark-cash-select', ['images/cards/capital-one/spark-cash.avif']],
   ['capital-one-ventureone-rewards-good-credit', ['images/cards/capital-one/ventureone-rewards.avif']],
+  ['discover-it-secured', ['images/cards/discover/discover-it-cash-back.avif']],
+  ['discover-it-student-chrome', ['images/cards/discover/discover-it-chrome.png']],
 ]);
