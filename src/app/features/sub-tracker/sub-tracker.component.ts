@@ -5,13 +5,16 @@ import { ToastService } from '../../core/services/toast.service';
 import { CARD_MAP } from '../../core/data/cards';
 import type { Card, UserCard } from '../../core/models/card.model';
 import { CardDetailComponent } from '../wallet/components/card-detail/card-detail.component';
+import { BankBonusesComponent } from './components/bank-bonuses/bank-bonuses.component';
 import { formatCurrency, getCardDisplayName, getDisplayInstanceNumber } from '../../core/utils/card-display.utils';
 import { formatDate, parseLocalDate, toIsoDate, today } from '../../core/utils/date.utils';
 import { compareUrgency, getBonusValue, getSubProgress, type SubProgress } from '../../core/utils/sub.utils';
 
+type SubTrackerTab = 'cards' | 'banks';
+
 @Component({
   selector: 'app-sub-tracker',
-  imports: [CardDetailComponent],
+  imports: [CardDetailComponent, BankBonusesComponent],
   templateUrl: './sub-tracker.component.html',
   styleUrl: './sub-tracker.component.scss'
 })
@@ -22,6 +25,12 @@ export class SubTrackerComponent {
 
   readonly formatCurrency = formatCurrency;
   readonly formatIso = formatDate;
+
+  readonly tabs: { id: SubTrackerTab; label: string }[] = [
+    { id: 'cards', label: 'Credit cards' },
+    { id: 'banks', label: 'Bank accounts' }
+  ];
+  readonly tab = signal<SubTrackerTab>('cards');
 
   readonly selected = signal<{ card: Card; userCard: UserCard } | null>(null);
   /** Quick-add spend amounts being typed, by UserCard.id */

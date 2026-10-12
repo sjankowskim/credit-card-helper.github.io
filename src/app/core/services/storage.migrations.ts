@@ -60,6 +60,13 @@ const MIGRATIONS: Record<number, (state: RawState) => RawState> = {
     ...state,
     schemaVersion: 6,
     catalogSettings: { ...DEFAULT_CATALOG_SETTINGS }
+  }),
+
+  // v6 -> v7: bank account bonuses
+  6: (state) => ({
+    ...state,
+    schemaVersion: 7,
+    bankBonuses: []
   })
 };
 

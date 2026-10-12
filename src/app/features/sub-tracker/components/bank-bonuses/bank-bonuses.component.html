@@ -1,0 +1,198 @@
+<section class="stat-tiles">
+  <div class="stat-tile">
+    <span class="stat-value">{{ stats().active }}</span>
+    <span class="stat-label">In progress</span>
+  </div>
+  <div class="stat-tile">
+    <span class="stat-value">{{ formatCurrency(stats().pendingValue) }}</span>
+    <span class="stat-label">Bonuses in progress</span>
+  </div>
+  <div class="stat-tile">
+    <span class="stat-value">{{ formatCurrency(stats().earnedValue) }}</span>
+    <span class="stat-label">Earned in {{ stats().year }}</span>
+    <span class="muted">{{ stats().earnedCount }} {{ stats().earnedCount === 1 ? 'bonus' : 'bonuses' }} · usually taxed as interest</span>
+  </div>
+</section>
+
+<section>
+  <div class="section-header">
+    <h2 class="section-title">In progress</h2>
+    @if (!formOpen()) {
+      <button class="btn btn-primary btn-small" (click)="openAdd()">Add bank bonus</button>
+    }
+  </div>
+
+  @if (formOpen()) {
+    @let d = draft();
+    <form class="bonus-form" (submit)="save($event)">
+      <h3>{{ editingId() ? 'Edit bank bonus' : 'Add a bank bonus' }}</h3>
+      <div class="fields">
+        <label class="form-field">
+          <span>Bank</span>
+          <input class="input" type="text" placeholder="e.g. Chase" [value]="d.bank" (input)="setField('bank', $any($event.target).value)" />
+        </label>
+        <label class="form-field">
+          <span>Account (optional)</span>
+          <input class="input" type="text" placeholder="e.g. Total Checking" [value]="d.accountName" (input)="setField('accountName', $any($event.target).value)" />
+        </label>
+        <label class="form-field">
+          <span>Bonus ($)</span>
+          <input class="input" type="number" min="0" step="any" [value]="d.amount" (input)="setField('amount', $any($event.target).value)" />
+        </label>
+        <label class="form-field wide">
+          <span>Requirement</span>
+          <input class="input" type="text" placeholder="e.g. 2 direct deposits of $500+" [value]="d.requirement" (input)="setField('requirement', $any($event.target).value)" />
+        </label>
+        <label class="form-field">
+          <span>Goal</span>
+          <input class="input" type="number" min="0" step="any" [value]="d.goal" (input)="setField('goal', $any($event.target).value)" />
+          <small class="muted">What progress counts toward: deposits, or dollars for a balance</small>
+        </label>
+        <label class="form-field">
+          <span>Opened</span>
+          <input class="input" type="date" [value]="d.openedDate" (input)="setField('openedDate', $any($event.target).value)" />
+        </label>
+        <label class="form-field">
+          <span>Days to complete</span>
+          <input class="input" type="number" min="1" step="1" [value]="d.windowDays" (input)="setField('windowDays', $any($event.target).value)" />
+        </label>
+        <label class="form-field">
+          <span>Keep open until (optional)</span>
+          <input class="input" type="date" [value]="d.keepOpenUntil" (input)="setField('keepOpenUntil', $any($event.target).value)" />
+          <small class="muted">Closing sooner can forfeit the bonus or add a fee</small>
+        </label>
+      </div>
+      <div class="form-actions">
+        <button class="btn" type="button" (click)="closeForm()">Cancel</button>
+        <button class="btn btn-primary" type="submit" [disabled]="!canSave()">{{ editingId() ? 'Save changes' : 'Add' }}</button>
+      </div>
+    </form>
+  }
+
+  @for (p of active(); track p.bonus.id) {
+    <article class="sub" [class.behind]="p.behindPace" [class.met]="p.requirementMet">
+      <header>
+        <div>
+          <div class="name">{{ getName(p.bonus) }}</div>
+          <div class="muted">
+            {{ formatCurrency(p.bonus.amount) }}
+            @if (p.bonus.requirement) {
+              · {{ p.bonus.requirement }}
+            }
+          </div>
+        </div>
+        @if (p.requirementMet) {
+          <span class="badge badge-success">Requirement met</span>
+        } @else if (p.behindPace) {
+          <span class="badge badge-danger">Behind pace</span>
+        } @else if (p.deadline) {
+          <span class="badge badge-info">On pace</span>
+        }
+      </header>
+
+      <div class="bar" role="progressbar" [attr.aria-valuenow]="p.bonus.progress" aria-valuemin="0" [attr.aria-valuemax]="p.bonus.goal">
+        <div class="fill" [style.width.%]="p.percent"></div>
+      </div>
+
+      <div class="facts">
+        <span>
+          <strong>{{ formatProgress(p.bonus.progress, p.bonus.goal) }}</strong> of {{ formatProgress(p.bonus.goal, p.bonus.goal) }}
+          @if (p.bonus.progressUpdated) {
+            <span class="muted">· updated {{ formatIso(p.bonus.progressUpdated) }}</span>
+          }
+        </span>
+        @if (p.daysLeft !== null && p.daysLeft < 0) {
+          <span>Deadline was {{ formatDay(p.deadline) }}. Mark it earned once the bonus posts.</span>
+        } @else if (p.deadline) {
+          <span>Due {{ formatDay(p.deadline) }} · {{ p.daysLeft }} {{ p.daysLeft === 1 ? 'day' : 'days' }} left</span>
+        } @else {
+          <span class="muted">Add an open date to get a deadline.</span>
+        }
+      </div>
+      @if (p.bonus.keepOpenUntil) {
+        <div class="muted">Keep open until {{ formatIso(p.bonus.keepOpenUntil) }}</div>
+      }
+
+      <div class="actions">
+        <form class="quick-add" (submit)="saveProgress(p, $event)">
+          <span class="prefix">Progress</span>
+          <input
+            class="input"
+            type="number"
+            min="0"
+            step="any"
+            [placeholder]="p.bonus.progress"
+            aria-label="Set progress"
+            [value]="progressDrafts()[p.bonus.id] ?? ''"
+            (input)="setProgressDraft(p.bonus.id, $any($event.target).value)"
+          />
+          <button class="btn btn-small" type="submit">Update</button>
+        </form>
+        <div class="buttons">
+          <button class="btn btn-small" (click)="openEdit(p.bonus)">Edit</button>
+          <button class="btn btn-small" (click)="remove(p)" aria-label="Delete bank bonus">✕</button>
+          <button class="btn btn-small" [class.btn-primary]="p.requirementMet" (click)="markEarned(p)">Mark earned</button>
+        </div>
+      </div>
+    </article>
+  } @empty {
+    @if (!formOpen()) {
+      <div class="empty-state">No bank bonuses in progress. Add a checking or savings account bonus to track its deadline.</div>
+    }
+  }
+</section>
+
+@if (history().length > 0) {
+  <section>
+    <h2 class="section-title">History</h2>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Account</th>
+            <th class="num">Bonus</th>
+            <th>Outcome</th>
+            <th>Can close</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of history(); track p.bonus.id) {
+            <tr>
+              <td>{{ getName(p.bonus) }}</td>
+              <td class="num">{{ formatCurrency(p.bonus.amount) }}</td>
+              <td>
+                @if (p.state === 'earned') {
+                  <span class="badge badge-success">Earned</span>
+                  <span class="muted">{{ formatIso(p.bonus.earnedDate) }}</span>
+                } @else {
+                  <span class="badge badge-danger">Missed</span>
+                  <span class="muted">deadline {{ formatDay(p.deadline) }}</span>
+                }
+              </td>
+              <td>
+                @if (p.daysUntilCanClose === null) {
+                  <span class="muted">—</span>
+                } @else if (p.daysUntilCanClose <= 0) {
+                  <span class="badge badge-success">Now</span>
+                } @else {
+                  {{ formatIso(p.bonus.keepOpenUntil) }}
+                  <span class="muted">({{ p.daysUntilCanClose }} {{ p.daysUntilCanClose === 1 ? 'day' : 'days' }})</span>
+                }
+              </td>
+              <td class="num nowrap">
+                @if (p.state === 'earned') {
+                  <button class="btn btn-small" (click)="undoEarned(p)">Undo</button>
+                } @else {
+                  <button class="btn btn-small" (click)="markEarned(p)">Mark earned</button>
+                }
+                <button class="btn btn-small" (click)="openEdit(p.bonus)">Edit</button>
+                <button class="btn btn-small" (click)="remove(p)" aria-label="Delete bank bonus">✕</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+}

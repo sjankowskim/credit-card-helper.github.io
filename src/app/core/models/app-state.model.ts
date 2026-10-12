@@ -1,6 +1,7 @@
 import type { RewardsProgram, UserCard } from './card.model';
 import { createDefaultRewardsState, type RewardsState } from './rewards.model';
 import { createDefaultBenefitsState, type BenefitsState, type Referral } from './benefits.model';
+import type { BankBonus } from './bank-bonus.model';
 
 export interface DashboardSettings {
   numCards: 1 | 3 | 5;
@@ -33,9 +34,10 @@ export interface AppState {
   rewards: RewardsState;
   benefits: BenefitsState;
   referrals: Referral[];
+  bankBonuses: BankBonus[];
 }
 
-export const CURRENT_SCHEMA_VERSION = 6;
+export const CURRENT_SCHEMA_VERSION = 7;
 
 export const DEFAULT_DASHBOARD_SETTINGS: DashboardSettings = {
   numCards: 3,
@@ -60,6 +62,7 @@ export function createDefaultAppState(): AppState {
     catalogSettings: { ...DEFAULT_CATALOG_SETTINGS },
     rewards: createDefaultRewardsState(),
     benefits: createDefaultBenefitsState(),
-    referrals: []
+    referrals: [],
+    bankBonuses: []
   };
 }

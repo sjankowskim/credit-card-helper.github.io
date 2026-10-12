@@ -1,0 +1,62 @@
+// Progress cards (.sub, .bar, .facts, .actions, .quick-add) come from sub-tracker.component.scss
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+
+  .section-title {
+    margin-bottom: 1rem;
+  }
+}
+
+.bonus-form {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+
+  h3 {
+    margin-bottom: 1rem;
+    font-size: 1.0625rem;
+    font-weight: 600;
+  }
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  align-items: start;
+  gap: 0.75rem 1rem;
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.quick-add .input {
+  width: 7rem;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.data-table .num .btn + .btn {
+  margin-left: 0.375rem;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
