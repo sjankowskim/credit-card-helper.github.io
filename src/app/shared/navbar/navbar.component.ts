@@ -58,6 +58,8 @@ export class NavbarComponent {
 
   /** Id of the open menu, if any */
   readonly openMenu = signal<string | null>(null);
+  /** The full-screen menu on small screens */
+  readonly mobileOpen = signal(false);
 
   private readonly url = toSignal(
     this.router.events.pipe(
@@ -74,7 +76,10 @@ export class NavbarComponent {
         filter(e => e instanceof NavigationEnd),
         takeUntilDestroyed()
       )
-      .subscribe(() => this.openMenu.set(null));
+      .subscribe(() => {
+        this.openMenu.set(null);
+        this.mobileOpen.set(false);
+      });
   }
 
   /** True when the current page is one of the menu's links */
@@ -96,11 +101,24 @@ export class NavbarComponent {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (!this.host.nativeElement.contains(event.target as Node)) this.openMenu.set(null);
+    if (!this.host.nativeElement.contains(event.target as Node)) {
+      this.openMenu.set(null);
+      this.mobileOpen.set(false);
+    }
+  }
+
+  toggleMobile(): void {
+    this.mobileOpen.update(open => !open);
+    this.openMenu.set(null);
   }
 
   @HostListener('document:keydown.escape')
   onEscape(): void {
+    if (this.mobileOpen()) {
+      this.mobileOpen.set(false);
+      this.host.nativeElement.querySelector<HTMLElement>('.mobile-toggle')?.focus();
+      return;
+    }
     const open = this.openMenu();
     if (!open) return;
     this.openMenu.set(null);

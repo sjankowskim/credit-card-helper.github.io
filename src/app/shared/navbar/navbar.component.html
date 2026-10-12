@@ -3,6 +3,16 @@
     <div class="navbar-brand">
       <a routerLink="/" class="brand-link">Credit Card Helper</a>
     </div>
+    <button
+      type="button"
+      class="mobile-toggle"
+      [attr.aria-expanded]="mobileOpen()"
+      aria-controls="mobile-menu"
+      [attr.aria-label]="mobileOpen() ? 'Close menu' : 'Open menu'"
+      (click)="toggleMobile()"
+    >
+      <span aria-hidden="true">{{ mobileOpen() ? '✕' : '☰' }}</span>
+    </button>
     <ul class="navbar-nav">
       @for (entry of entries; track entry.label) {
         <li class="nav-item">
@@ -39,4 +49,20 @@
       }
     </ul>
   </div>
+  @if (mobileOpen()) {
+    <div class="mobile-menu" id="mobile-menu">
+      @for (entry of entries; track entry.label) {
+        @if (entry.kind === 'link') {
+          <a [routerLink]="entry.path" routerLinkActive="active" class="mobile-link">{{ entry.label }}</a>
+        } @else {
+          <div class="mobile-group">
+            <div class="mobile-group-label">{{ entry.label }}</div>
+            @for (item of entry.items; track item.path) {
+              <a [routerLink]="item.path" routerLinkActive="active" class="mobile-link">{{ item.label }}</a>
+            }
+          </div>
+        }
+      }
+    </div>
+  }
 </nav>

@@ -182,3 +182,37 @@ tfoot td {
 .note {
   margin-top: 0.75rem;
 }
+
+@media (max-width: 600px) {
+  .upcoming li {
+    grid-template-columns: 1fr auto;
+
+    .upcoming-when {
+      grid-column: 1;
+    }
+
+    > .muted {
+      grid-column: 2;
+      text-align: right;
+    }
+
+    .upcoming-name {
+      grid-column: 1;
+    }
+
+    .upcoming-cost {
+      grid-column: 2;
+      text-align: right;
+    }
+  }
+
+  .breakdown-body app-donut-chart {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .legend {
+    min-width: 0;
+  }
+}
