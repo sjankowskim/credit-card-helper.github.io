@@ -4,15 +4,37 @@
       <a routerLink="/" class="brand-link">Credit Card Helper</a>
     </div>
     <ul class="navbar-nav">
-      @for (item of navItems; track item.path) {
+      @for (entry of entries; track entry.label) {
         <li class="nav-item">
-          <a
-            [routerLink]="item.path"
-            routerLinkActive="active"
-            class="nav-link"
-          >
-            {{ item.label }}
-          </a>
+          @if (entry.kind === 'link') {
+            <a [routerLink]="entry.path" routerLinkActive="active" class="nav-link">{{ entry.label }}</a>
+          } @else {
+            @let open = openMenu() === entry.id;
+            <button
+              type="button"
+              class="nav-link menu-button"
+              [id]="'menu-button-' + entry.id"
+              [class.active]="isMenuActive(entry.items)"
+              [class.open]="open"
+              aria-haspopup="true"
+              [attr.aria-expanded]="open"
+              [attr.aria-controls]="'menu-' + entry.id"
+              (click)="toggle(entry.id)"
+              (keydown.arrowdown)="openWithKeyboard(entry.id, $event)"
+            >
+              {{ entry.label }}
+              <span class="caret" aria-hidden="true">▾</span>
+            </button>
+            @if (open) {
+              <ul class="menu" [id]="'menu-' + entry.id" [attr.aria-labelledby]="'menu-button-' + entry.id">
+                @for (item of entry.items; track item.path) {
+                  <li>
+                    <a [routerLink]="item.path" routerLinkActive="active" class="menu-link">{{ item.label }}</a>
+                  </li>
+                }
+              </ul>
+            }
+          }
         </li>
       }
     </ul>
