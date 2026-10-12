@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { BenefitsService } from '../../../../core/services/benefits.service';
 import { RewardsService } from '../../../../core/services/rewards.service';
 import { UserCardsService } from '../../../../core/services/user-cards.service';
@@ -11,6 +12,7 @@ import { formatDate, parseLocalDate, toIsoDate, today } from '../../../../core/u
 
 @Component({
   selector: 'app-benefits-referrals',
+  imports: [DecimalPipe],
   templateUrl: './referrals.component.html',
   styleUrl: './referrals.component.scss'
 })
@@ -91,6 +93,11 @@ export class ReferralsComponent {
   getCardName(referral: Referral): string {
     const userCard = this.userCardsService.getById(referral.userCardId);
     return userCard ? this.rewardsService.getName(userCard) : 'Removed card';
+  }
+
+  /** Share of the yearly referral cap posted so far, capped at 100 */
+  capPercent(total: number, cap: number): number {
+    return Math.min(100, (total / cap) * 100);
   }
 
   formatBonus(amount: number, card: Card | undefined): string {

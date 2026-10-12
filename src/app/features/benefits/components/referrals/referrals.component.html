@@ -19,6 +19,7 @@
           <tr>
             <th>Card</th>
             <th class="num">Posted</th>
+            <th class="num progress-col">Toward cap</th>
             <th class="num">Yearly cap</th>
           </tr>
         </thead>
@@ -27,6 +28,26 @@
             <tr>
               <td>{{ total.name }}</td>
               <td class="num">{{ formatBonus(total.total, total.card) }}</td>
+              <td class="num progress-col">
+                @if (total.cap) {
+                  @let percent = capPercent(total.total, total.cap);
+                  <div class="cap-progress">
+                    <div
+                      class="bar"
+                      role="progressbar"
+                      [attr.aria-valuenow]="total.total"
+                      aria-valuemin="0"
+                      [attr.aria-valuemax]="total.cap"
+                      [attr.aria-label]="total.name + ' referral bonuses toward the yearly cap'"
+                    >
+                      <div class="fill" [class.near]="percent >= 80 && percent < 100" [class.full]="percent >= 100" [style.width.%]="percent"></div>
+                    </div>
+                    <span class="muted">{{ percent | number: '1.0-0' }}%</span>
+                  </div>
+                } @else {
+                  <span class="muted">—</span>
+                }
+              </td>
               <td class="num">
                 @if (total.cap) {
                   <span [class.negative]="total.total >= total.cap">{{ formatBonus(total.cap, total.card) }}</span>
