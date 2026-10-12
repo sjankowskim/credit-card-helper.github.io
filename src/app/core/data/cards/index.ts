@@ -53,14 +53,14 @@ import { UNLIMITED_CASH_REWARDS_BUSINESS } from './bank-of-america/unlimited-cas
 import { UNLIMITED_CASH_REWARDS_SECURED } from './bank-of-america/unlimited-cash-rewards-secured';
 import { UNLIMITED_CASH_REWARDS_STUDENTS } from './bank-of-america/unlimited-cash-rewards-students';
 import { UNLIMITED_CASH_REWARDS } from './bank-of-america/unlimited-cash-rewards';
-import { AADVANTAGE_AVIATOR_BLUE } from './barclays/aadvantage-aviator-blue';
-import { AADVANTAGE_AVIATOR_BUSINESS } from './barclays/aadvantage-aviator-business';
 import { AADVANTAGE_AVIATOR_RED } from './barclays/aadvantage-aviator-red';
-import { AADVANTAGE_AVIATOR_SILVER } from './barclays/aadvantage-aviator-silver';
-import { AADVANTAGE_AVIATOR } from './barclays/aadvantage-aviator';
 import { AARP_ESSENTIAL_REWARDS_MASTERCARD } from './barclays/aarp-essential-rewards-mastercard';
 import { AARP_TRAVEL_REWARDS_MASTERCARD } from './barclays/aarp-travel-rewards-mastercard';
 import { ATHLETA_ENCORE_MASTERCARD } from './barclays/athleta-encore-mastercard';
+import { AVIATOR_BLUE } from './barclays/aviator-blue';
+import { AVIATOR_BUSINESS } from './barclays/aviator-business';
+import { AVIATOR_MASTERCARD } from './barclays/aviator-mastercard';
+import { AVIATOR_SILVER } from './barclays/aviator-silver';
 import { BANANA_REPUBLIC_ENCORE_MASTERCARD } from './barclays/banana-republic-encore-mastercard';
 import { BARNES_NOBLE_MASTERCARD } from './barclays/barnes-noble-mastercard';
 import { BREEZE_EASY_VISA } from './barclays/breeze-easy-visa';
@@ -84,7 +84,7 @@ import { WYNDHAM_REWARDS_EARNER_BUSINESS } from './barclays/wyndham-rewards-earn
 import { WYNDHAM_REWARDS_EARNER_PLUS } from './barclays/wyndham-rewards-earner-plus';
 import { WYNDHAM_REWARDS_EARNER_PREMIER } from './barclays/wyndham-rewards-earner-premier';
 import { WYNDHAM_REWARDS_EARNER } from './barclays/wyndham-rewards-earner';
-import { XBOX_MASTERCARD } from './barclays/xbox-mastercard';
+import { XBOX_CARD } from './barclays/xbox-card';
 import { BASS_PRO_SHOPS_AND_CABELAS_CLUB_BUSINESS } from './capital-one/bass-pro-shops-and-cabelas-club-business';
 import { BASS_PRO_SHOPS_CLUB } from './capital-one/bass-pro-shops-club';
 import { BJS_ONE_PLUS } from './capital-one/bjs-one-plus';
@@ -122,22 +122,84 @@ import { WILLIAMS_SONOMA_KEY_REWARDS } from './capital-one/williams-sonoma-key-r
 import { BILT_BLUE } from './cardless/bilt-blue';
 import { BILT_OBSIDIAN } from './cardless/bilt-obsidian';
 import { BILT_PALLADIUM } from './cardless/bilt-palladium';
+import { AER_LINGUS } from './chase/aer-lingus';
+import { AEROPLAN } from './chase/aeroplan';
+import { AMAZON_VISA } from './chase/amazon-visa';
+import { BRITISH_AIRWAYS } from './chase/british-airways';
+import { DISNEY_INSPIRE } from './chase/disney-inspire';
+import { DISNEY_PREMIER } from './chase/disney-premier';
+import { DISNEY_VISA } from './chase/disney-visa';
+import { DOORDASH_REWARDS } from './chase/doordash-rewards';
 import { FREEDOM_FLEX } from './chase/freedom-flex';
+import { FREEDOM_RISE } from './chase/freedom-rise';
 import { FREEDOM_UNLIMITED } from './chase/freedom-unlimited';
 import { FREEDOM } from './chase/freedom';
+import { IBERIA } from './chase/iberia';
+import { IHG_ONE_REWARDS_BUSINESS } from './chase/ihg-one-rewards-business';
+import { IHG_ONE_REWARDS_PREMIER_SELECT } from './chase/ihg-one-rewards-premier-select';
+import { IHG_ONE_REWARDS_PREMIER } from './chase/ihg-one-rewards-premier';
+import { IHG_ONE_REWARDS } from './chase/ihg-one-rewards';
 import { INK_BUSINESS_CASH } from './chase/ink-business-cash';
 import { INK_BUSINESS_PREFERRED } from './chase/ink-business-preferred';
+import { INK_BUSINESS_PREMIER } from './chase/ink-business-premier';
 import { INK_BUSINESS_UNLIMITED } from './chase/ink-business-unlimited';
+import { INSTACART } from './chase/instacart';
+import { MARRIOTT_BONVOY_BOLD } from './chase/marriott-bonvoy-bold';
+import { MARRIOTT_BONVOY_BOUNDLESS } from './chase/marriott-bonvoy-boundless';
+import { MARRIOTT_BONVOY_BOUNTIFUL } from './chase/marriott-bonvoy-bountiful';
+import { PRIME_VISA } from './chase/prime-visa';
 import { SAPPHIRE_PREFERRED } from './chase/sapphire-preferred';
+import { SAPPHIRE_RESERVE_BUSINESS } from './chase/sapphire-reserve-business';
 import { SAPPHIRE_RESERVE } from './chase/sapphire-reserve';
+import { SLATE_EDGE } from './chase/slate-edge';
+import { SLATE } from './chase/slate';
+import { SOUTHWEST_PERFORMANCE_BUSINESS } from './chase/southwest-performance-business';
+import { SOUTHWEST_PLUS } from './chase/southwest-plus';
+import { SOUTHWEST_PREMIER_BUSINESS } from './chase/southwest-premier-business';
+import { SOUTHWEST_PREMIER } from './chase/southwest-premier';
+import { SOUTHWEST_PRIORITY } from './chase/southwest-priority';
+import { UNITED_BUSINESS } from './chase/united-business';
+import { UNITED_CLUB_BUSINESS } from './chase/united-club-business';
+import { UNITED_CLUB } from './chase/united-club';
+import { UNITED_EXPLORER } from './chase/united-explorer';
+import { UNITED_GATEWAY } from './chase/united-gateway';
+import { UNITED_QUEST } from './chase/united-quest';
+import { WORLD_OF_HYATT_BUSINESS } from './chase/world-of-hyatt-business';
+import { WORLD_OF_HYATT } from './chase/world-of-hyatt';
 import { AADVANTAGE_BUSINESS } from './citi/aadvantage-business';
+import { AADVANTAGE_EXECUTIVE } from './citi/aadvantage-executive';
 import { AADVANTAGE_GLOBE } from './citi/aadvantage-globe';
 import { AADVANTAGE_GOLD } from './citi/aadvantage-gold';
 import { AADVANTAGE_MILEUP } from './citi/aadvantage-mileup';
 import { AADVANTAGE_PLATINUM_SELECT } from './citi/aadvantage-platinum-select';
+import { ATT_POINTS_PLUS } from './citi/att-points-plus';
+import { BEST_BUY_CREDIT_CARD } from './citi/best-buy-credit-card';
+import { BEST_BUY_VISA } from './citi/best-buy-visa';
+import { BLOOMINGDALES_AMEX } from './citi/bloomingdales-amex';
+import { BLOOMINGDALES_CREDIT_CARD } from './citi/bloomingdales-credit-card';
 import { CITI_CUSTOM_CASH } from './citi/citi-custom-cash';
+import { COSTCO_ANYWHERE_VISA_BUSINESS } from './citi/costco-anywhere-visa-business';
+import { COSTCO_ANYWHERE_VISA } from './citi/costco-anywhere-visa';
+import { DIAMOND_PREFERRED } from './citi/diamond-preferred';
+import { DILLARDS_CREDIT_CARD } from './citi/dillards-credit-card';
+import { DILLARDS_MASTERCARD } from './citi/dillards-mastercard';
 import { DOUBLE_CASH } from './citi/double-cash';
+import { EXXON_MOBIL_SMART_CARD_PLUS } from './citi/exxon-mobil-smart-card-plus';
+import { GOODYEAR } from './citi/goodyear';
+import { HOME_DEPOT_CONSUMER } from './citi/home-depot-consumer';
+import { HOME_DEPOT_PRO_XTRA } from './citi/home-depot-pro-xtra';
+import { LLBEAN_MASTERCARD } from './citi/llbean-mastercard';
+import { MACYS_AMEX } from './citi/macys-amex';
+import { MACYS_CREDIT_CARD } from './citi/macys-credit-card';
+import { SECURED_MASTERCARD } from './citi/secured-mastercard';
+import { SIMPLICITY } from './citi/simplicity';
+import { STRATA_ELITE } from './citi/strata-elite';
 import { STRATA_PREMIER } from './citi/strata-premier';
+import { STRATA } from './citi/strata';
+import { TSC_STORE_CARD } from './citi/tsc-store-card';
+import { TSC_VISA } from './citi/tsc-visa';
+import { WAYFAIR_CREDIT_CARD } from './citi/wayfair-credit-card';
+import { WAYFAIR_MASTERCARD } from './citi/wayfair-mastercard';
 import { DISCOVER_IT_CASH_BACK } from './discover/discover-it-cash-back';
 import { CASH_PLUS } from './us-bank/cash-plus';
 import { ACTIVE_CASH } from './wells-fargo/active-cash';
@@ -194,14 +256,14 @@ export const ALL_CARDS: Card[] = [
   UNLIMITED_CASH_REWARDS_SECURED,
   UNLIMITED_CASH_REWARDS_STUDENTS,
   UNLIMITED_CASH_REWARDS,
-  AADVANTAGE_AVIATOR_BLUE,
-  AADVANTAGE_AVIATOR_BUSINESS,
   AADVANTAGE_AVIATOR_RED,
-  AADVANTAGE_AVIATOR_SILVER,
-  AADVANTAGE_AVIATOR,
   AARP_ESSENTIAL_REWARDS_MASTERCARD,
   AARP_TRAVEL_REWARDS_MASTERCARD,
   ATHLETA_ENCORE_MASTERCARD,
+  AVIATOR_BLUE,
+  AVIATOR_BUSINESS,
+  AVIATOR_MASTERCARD,
+  AVIATOR_SILVER,
   BANANA_REPUBLIC_ENCORE_MASTERCARD,
   BARNES_NOBLE_MASTERCARD,
   BREEZE_EASY_VISA,
@@ -225,7 +287,7 @@ export const ALL_CARDS: Card[] = [
   WYNDHAM_REWARDS_EARNER_PLUS,
   WYNDHAM_REWARDS_EARNER_PREMIER,
   WYNDHAM_REWARDS_EARNER,
-  XBOX_MASTERCARD,
+  XBOX_CARD,
   BASS_PRO_SHOPS_AND_CABELAS_CLUB_BUSINESS,
   BASS_PRO_SHOPS_CLUB,
   BJS_ONE_PLUS,
@@ -263,22 +325,84 @@ export const ALL_CARDS: Card[] = [
   BILT_BLUE,
   BILT_OBSIDIAN,
   BILT_PALLADIUM,
+  AER_LINGUS,
+  AEROPLAN,
+  AMAZON_VISA,
+  BRITISH_AIRWAYS,
+  DISNEY_INSPIRE,
+  DISNEY_PREMIER,
+  DISNEY_VISA,
+  DOORDASH_REWARDS,
   FREEDOM_FLEX,
+  FREEDOM_RISE,
   FREEDOM_UNLIMITED,
   FREEDOM,
+  IBERIA,
+  IHG_ONE_REWARDS_BUSINESS,
+  IHG_ONE_REWARDS_PREMIER_SELECT,
+  IHG_ONE_REWARDS_PREMIER,
+  IHG_ONE_REWARDS,
   INK_BUSINESS_CASH,
   INK_BUSINESS_PREFERRED,
+  INK_BUSINESS_PREMIER,
   INK_BUSINESS_UNLIMITED,
+  INSTACART,
+  MARRIOTT_BONVOY_BOLD,
+  MARRIOTT_BONVOY_BOUNDLESS,
+  MARRIOTT_BONVOY_BOUNTIFUL,
+  PRIME_VISA,
   SAPPHIRE_PREFERRED,
+  SAPPHIRE_RESERVE_BUSINESS,
   SAPPHIRE_RESERVE,
+  SLATE_EDGE,
+  SLATE,
+  SOUTHWEST_PERFORMANCE_BUSINESS,
+  SOUTHWEST_PLUS,
+  SOUTHWEST_PREMIER_BUSINESS,
+  SOUTHWEST_PREMIER,
+  SOUTHWEST_PRIORITY,
+  UNITED_BUSINESS,
+  UNITED_CLUB_BUSINESS,
+  UNITED_CLUB,
+  UNITED_EXPLORER,
+  UNITED_GATEWAY,
+  UNITED_QUEST,
+  WORLD_OF_HYATT_BUSINESS,
+  WORLD_OF_HYATT,
   AADVANTAGE_BUSINESS,
+  AADVANTAGE_EXECUTIVE,
   AADVANTAGE_GLOBE,
   AADVANTAGE_GOLD,
   AADVANTAGE_MILEUP,
   AADVANTAGE_PLATINUM_SELECT,
+  ATT_POINTS_PLUS,
+  BEST_BUY_CREDIT_CARD,
+  BEST_BUY_VISA,
+  BLOOMINGDALES_AMEX,
+  BLOOMINGDALES_CREDIT_CARD,
   CITI_CUSTOM_CASH,
+  COSTCO_ANYWHERE_VISA_BUSINESS,
+  COSTCO_ANYWHERE_VISA,
+  DIAMOND_PREFERRED,
+  DILLARDS_CREDIT_CARD,
+  DILLARDS_MASTERCARD,
   DOUBLE_CASH,
+  EXXON_MOBIL_SMART_CARD_PLUS,
+  GOODYEAR,
+  HOME_DEPOT_CONSUMER,
+  HOME_DEPOT_PRO_XTRA,
+  LLBEAN_MASTERCARD,
+  MACYS_AMEX,
+  MACYS_CREDIT_CARD,
+  SECURED_MASTERCARD,
+  SIMPLICITY,
+  STRATA_ELITE,
   STRATA_PREMIER,
+  STRATA,
+  TSC_STORE_CARD,
+  TSC_VISA,
+  WAYFAIR_CREDIT_CARD,
+  WAYFAIR_MASTERCARD,
   DISCOVER_IT_CASH_BACK,
   CASH_PLUS,
   ACTIVE_CASH,
@@ -338,6 +462,37 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['bofa-unlimited-cash-rewards-secured', ['images/cards/bank-of-america/unlimited-cash-rewards-secured.png']],
   ['bofa-unlimited-cash-rewards', ['images/cards/bank-of-america/unlimited-cash-rewards.png']],
   ['barclays-aadvantage-aviator-red', ['images/cards/barclays/aadvantage-aviator-red.png']],
+  ['barclays-aarp-essential-rewards-mastercard', ['images/cards/barclays/aarp-essential-rewards-mastercard.png']],
+  ['barclays-aarp-travel-rewards-mastercard', ['images/cards/barclays/aarp-travel-rewards-mastercard.png']],
+  ['barclays-athleta-encore-mastercard', ['images/cards/barclays/athleta-encore-mastercard.png']],
+  ['barclays-aadvantage-aviator-blue', ['images/cards/barclays/aviator-blue.png']],
+  ['barclays-aadvantage-aviator-business', ['images/cards/barclays/aviator-business.png']],
+  ['barclays-aadvantage-aviator', ['images/cards/barclays/aviator-mastercard.png']],
+  ['barclays-aadvantage-aviator-silver', ['images/cards/barclays/aviator-silver.png']],
+  ['barclays-banana-republic-encore-mastercard', ['images/cards/barclays/banana-republic-encore-mastercard.png']],
+  ['barclays-barnes-noble-mastercard', ['images/cards/barclays/barnes-noble-mastercard.png']],
+  ['barclays-breeze-easy-visa', ['images/cards/barclays/breeze-easy-visa.png']],
+  ['barclays-capital-vacations-world-mastercard', ['images/cards/barclays/capital-vacations-world-mastercard.png']],
+  ['barclays-carnival-rewards-mastercard', ['images/cards/barclays/carnival-rewards-mastercard.png']],
+  ['barclays-emirates-skywards-premium', ['images/cards/barclays/emirates-skywards-premium.png']],
+  ['barclays-emirates-skywards-rewards', ['images/cards/barclays/emirates-skywards-rewards.png']],
+  ['barclays-frontier-airlines-world-mastercard', ['images/cards/barclays/frontier-airlines-world-mastercard.png']],
+  ['barclays-gap-encore-mastercard', ['images/cards/barclays/gap-encore-mastercard.png']],
+  ['barclays-gm-business-mastercard', ['images/cards/barclays/gm-business-mastercard.png']],
+  ['barclays-gm-rewards-mastercard', ['images/cards/barclays/gm-rewards-mastercard.png']],
+  ['barclays-jetblue-business', ['images/cards/barclays/jetblue-business.png']],
+  ['barclays-jetblue-plus', ['images/cards/barclays/jetblue-plus.png']],
+  ['barclays-jetblue-premier', ['images/cards/barclays/jetblue-premier.png']],
+  ['barclays-jetblue', ['images/cards/barclays/jetblue.png']],
+  ['barclays-lufthansa-miles-more', ['images/cards/barclays/lufthansa-miles-more-world-elite-mastercard.png']],
+  ['barclays-old-navy-encore-mastercard', ['images/cards/barclays/old-navy-encore-mastercard.png']],
+  ['barclays-rci-elite-rewards-mastercard', ['images/cards/barclays/rci-elite-rewards-mastercard.png']],
+  ['barclays-upromise-world-mastercard', ['images/cards/barclays/upromise-world-mastercard.png']],
+  ['barclays-wyndham-rewards-earner-business', ['images/cards/barclays/wyndham-rewards-earner-business.png']],
+  ['barclays-wyndham-rewards-earner-plus', ['images/cards/barclays/wyndham-rewards-earner-plus.png']],
+  ['barclays-wyndham-rewards-earner-premier', ['images/cards/barclays/wyndham-rewards-earner-premier.png']],
+  ['barclays-wyndham-rewards-earner', ['images/cards/barclays/wyndham-rewards-earner.png']],
+  ['barclays-xbox-mastercard', ['images/cards/barclays/xbox-card.png']],
   ['capital-one-club-business-card', ['images/cards/capital-one/bass-pro-shops-and-cabelas-club-business.png']],
   ['capital-one-bass-pro-shops-club-card', ['images/cards/capital-one/bass-pro-shops-club.png']],
   ['capital-one-bjs-one-plus-mastercard', ['images/cards/capital-one/bjs-one-plus.png']],
@@ -367,13 +522,83 @@ export const CARD_IMAGE_URLS = new Map<string, string[]>([
   ['cardless-bilt-blue', ['images/cards/cardless/bilt-blue.png']],
   ['cardless-bilt-obsidian', ['images/cards/cardless/bilt-obsidian.png']],
   ['cardless-bilt-palladium', ['images/cards/cardless/bilt-palladium.png']],
+  ['chase-aer-lingus', ['images/cards/chase/aer-lingus.png']],
+  ['chase-aeroplan', ['images/cards/chase/aeroplan.png']],
+  ['chase-amazon-visa', ['images/cards/chase/amazon-visa.png']],
+  ['chase-british-airways', ['images/cards/chase/british-airways.png']],
+  ['chase-disney-inspire', ['images/cards/chase/disney-inspire.png']],
+  ['chase-disney-premier', ['images/cards/chase/disney-premier.png']],
+  ['chase-disney-visa', ['images/cards/chase/disney-visa.png']],
+  ['chase-doordash-rewards', ['images/cards/chase/doordash-rewards.png']],
   ['chase-freedom-flex', ['images/cards/chase/freedom-flex.png']],
+  ['chase-freedom-rise', ['images/cards/chase/freedom-rise.png']],
   ['chase-freedom-unlimited', ['images/cards/chase/freedom-unlimited.png']],
   ['chase-freedom', ['images/cards/chase/freedom.png']],
+  ['chase-iberia', ['images/cards/chase/iberia.png']],
+  ['chase-ihg-one-rewards-business', ['images/cards/chase/ihg-one-rewards-business.png']],
+  ['chase-ihg-one-rewards-premier-select', ['images/cards/chase/ihg-one-rewards-premier-select.png']],
+  ['chase-ihg-one-rewards-premier', ['images/cards/chase/ihg-one-rewards-premier.png']],
+  ['chase-ihg-one-rewards', ['images/cards/chase/ihg-one-rewards.png']],
   ['chase-ink-business-cash', ['images/cards/chase/ink-business-cash.png']],
   ['chase-ink-business-preferred', ['images/cards/chase/ink-business-preferred.png']],
+  ['chase-ink-business-premier', ['images/cards/chase/ink-business-premier.png']],
+  ['chase-ink-business-unlimited', ['images/cards/chase/ink-business-unlimited.png']],
+  ['chase-instacart', ['images/cards/chase/instacart.png']],
+  ['chase-marriott-bonvoy-bold', ['images/cards/chase/marriott-bonvoy-bold.png']],
+  ['chase-marriott-bonvoy-boundless', ['images/cards/chase/marriott-bonvoy-boundless.png']],
+  ['chase-marriott-bonvoy-bountiful', ['images/cards/chase/marriott-bonvoy-bountiful.png']],
+  ['chase-prime-visa', ['images/cards/chase/prime-visa.png']],
+  ['chase-sapphire-preferred', ['images/cards/chase/sapphire-preferred.png']],
+  ['chase-sapphire-reserve-business', ['images/cards/chase/sapphire-reserve-business.png']],
+  ['chase-sapphire-reserve', ['images/cards/chase/sapphire-reserve.png']],
+  ['chase-slate-edge', ['images/cards/chase/slate-edge.png']],
+  ['chase-slate', ['images/cards/chase/slate.png']],
+  ['chase-southwest-performance-business', ['images/cards/chase/southwest-performance-business.png']],
+  ['chase-southwest-plus', ['images/cards/chase/southwest-plus.png']],
+  ['chase-southwest-premier-business', ['images/cards/chase/southwest-premier-business.png']],
+  ['chase-southwest-premier', ['images/cards/chase/southwest-premier.png']],
+  ['chase-southwest-priority', ['images/cards/chase/southwest-priority.png']],
+  ['chase-united-business', ['images/cards/chase/united-business.png']],
+  ['chase-united-club-business', ['images/cards/chase/united-club-business.png']],
+  ['chase-united-club', ['images/cards/chase/united-club.png']],
+  ['chase-united-explorer', ['images/cards/chase/united-explorer.png']],
+  ['chase-united-gateway', ['images/cards/chase/united-gateway.png']],
+  ['chase-united-quest', ['images/cards/chase/united-quest.png']],
+  ['chase-world-of-hyatt-business', ['images/cards/chase/world-of-hyatt-business.png']],
+  ['chase-world-of-hyatt', ['images/cards/chase/world-of-hyatt.png']],
+  ['citi-aadvantage-business', ['images/cards/citi/aadvantage-business.png']],
+  ['citi-aadvantage-executive', ['images/cards/citi/aadvantage-executive.png']],
+  ['citi-aadvantage-globe', ['images/cards/citi/aadvantage-globe.png']],
+  ['citi-aadvantage-mileup', ['images/cards/citi/aadvantage-mileup.png']],
   ['citi-aadvantage-platinum-select', ['images/cards/citi/aadvantage-platinum-select.png']],
+  ['citi-att-points-plus', ['images/cards/citi/att-points-plus.png']],
+  ['citi-best-buy-credit-card', ['images/cards/citi/best-buy-credit-card.png']],
+  ['citi-best-buy-visa', ['images/cards/citi/best-buy-visa.png']],
+  ['citi-bloomingdales-amex', ['images/cards/citi/bloomingdales-amex.png']],
+  ['citi-bloomingdales-credit-card', ['images/cards/citi/bloomingdales-credit-card.png']],
   ['citi-custom-cash', ['images/cards/citi/citi-custom-cash.png']],
+  ['citi-costco-anywhere-visa-business', ['images/cards/citi/costco-anywhere-visa-business.png']],
+  ['citi-costco-anywhere-visa', ['images/cards/citi/costco-anywhere-visa.png']],
+  ['citi-diamond-preferred', ['images/cards/citi/diamond-preferred.png']],
+  ['citi-dillards-credit-card', ['images/cards/citi/dillards-credit-card.png']],
+  ['citi-dillards-mastercard', ['images/cards/citi/dillards-mastercard.png']],
+  ['citi-double-cash', ['images/cards/citi/double-cash.png']],
+  ['citi-exxon-mobil-smart-card-plus', ['images/cards/citi/exxon-mobil-smart-card-plus.png']],
+  ['citi-goodyear', ['images/cards/citi/goodyear.png']],
+  ['citi-home-depot-consumer', ['images/cards/citi/home-depot-consumer.png']],
+  ['citi-home-depot-pro-xtra', ['images/cards/citi/home-depot-pro-xtra.png']],
+  ['citi-llbean-mastercard', ['images/cards/citi/llbean-mastercard.png']],
+  ['citi-macys-amex', ['images/cards/citi/macys-amex.png']],
+  ['citi-macys-credit-card', ['images/cards/citi/macys-credit-card.png']],
+  ['citi-secured-mastercard', ['images/cards/citi/secured-mastercard.png']],
+  ['citi-simplicity', ['images/cards/citi/simplicity.png']],
+  ['citi-strata-elite', ['images/cards/citi/strata-elite.png']],
+  ['citi-strata-premier', ['images/cards/citi/strata-premier.png']],
+  ['citi-strata', ['images/cards/citi/strata.png']],
+  ['citi-tsc-store-card', ['images/cards/citi/tsc-store-card.png']],
+  ['citi-tsc-visa', ['images/cards/citi/tsc-visa.png']],
+  ['citi-wayfair-credit-card', ['images/cards/citi/wayfair-credit-card.png']],
+  ['citi-wayfair-mastercard', ['images/cards/citi/wayfair-mastercard.png']],
   ['discover-it-cash-back', ['images/cards/discover/discover-it-cash-back.png']],
   ['us-bank-cash-plus', ['images/cards/us-bank/cash-plus.png']],
   ['wells-fargo-bilt-mastercard', ['images/cards/wells-fargo/bilt-mastercard.png']],

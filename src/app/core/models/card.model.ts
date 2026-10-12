@@ -181,11 +181,13 @@ export type CardStatus = typeof CardStatus[keyof typeof CardStatus];
 // ============================================================================
 // 7. STATIC CARD BLUEPRINT
 // ============================================================================
+/** STORE is a store card that only works at its retailer (and sometimes its partners) */
 export type CardNetwork =
   | 'VISA'
   | 'MASTERCARD'
   | 'AMEX'
-  | 'DISCOVER';
+  | 'DISCOVER'
+  | 'STORE';
 
 export interface Card {
   /** Permanent string slug for the card (e.g., 'us-bank-cash-plus') */
