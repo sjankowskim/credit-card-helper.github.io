@@ -1,0 +1,205 @@
+<div class="page-container">
+  <h1>Subscriptions</h1>
+  <p>Recurring charges, what they cost you per year, and when they renew</p>
+
+  <section class="stat-tiles summary">
+    <div class="stat-tile">
+      <span class="stat-value">{{ formatMoney(stats().monthly) }}</span>
+      <span class="stat-label">Per month</span>
+      <span class="muted">{{ stats().count }} active</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-value">{{ formatWhole(stats().annual) }}</span>
+      <span class="stat-label">Per year</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-value">{{ formatMoney(stats().next30) }}</span>
+      <span class="stat-label">Next 30 days</span>
+      <span class="muted">{{ stats().next30Count }} {{ stats().next30Count === 1 ? 'charge' : 'charges' }}</span>
+    </div>
+  </section>
+
+  @if (slices().length > 0) {
+    <section class="breakdown">
+      <div class="breakdown-header">
+        <h2 class="section-title">Yearly breakdown</h2>
+        <div class="segmented" role="group" aria-label="Break down by">
+          @for (b of breakdowns; track b.id) {
+            <button type="button" [class.active]="breakdown() === b.id" [attr.aria-pressed]="breakdown() === b.id" (click)="breakdown.set(b.id)">
+              {{ b.label }}
+            </button>
+          }
+        </div>
+      </div>
+      <div class="breakdown-body">
+        <app-donut-chart [slices]="slices()" [format]="formatWhole" centerLabel="per year" ariaLabel="Yearly subscription cost breakdown" />
+        <ul class="legend">
+          @for (slice of slices(); track slice.key) {
+            <li>
+              <span class="swatch" [style.background]="slice.color" aria-hidden="true"></span>
+              <span class="legend-label">{{ slice.label }}</span>
+              <span class="legend-value">{{ formatWhole(slice.value) }}/yr</span>
+              <span class="legend-share muted">{{ percentOf(slice.value) }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+    </section>
+  }
+
+  @if (upcoming().length > 0) {
+    <section>
+      <h2 class="section-title">Upcoming</h2>
+      <ul class="upcoming">
+        @for (v of upcoming(); track v.sub.id) {
+          <li>
+            <span class="upcoming-when">{{ formatDay(v.next) }}</span>
+            <span class="muted">{{ describeDaysUntil(v.daysUntil) }}</span>
+            <span class="upcoming-name">{{ v.sub.name }}</span>
+            <span class="upcoming-cost">{{ formatMoney(v.sub.cost) }}</span>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+
+  <section>
+    <div class="section-header">
+      <h2 class="section-title">All subscriptions</h2>
+      @if (!formOpen()) {
+        <button class="btn btn-primary btn-small" (click)="openAdd()">Add subscription</button>
+      }
+    </div>
+
+    @if (formOpen()) {
+      @let d = draft();
+      <form class="sub-form" (submit)="save($event)">
+        <h3>{{ editingId() ? 'Edit subscription' : 'Add a subscription' }}</h3>
+        <div class="fields">
+          <label class="form-field">
+            <span>Name</span>
+            <input class="input" type="text" placeholder="e.g. Netflix" [value]="d.name" (input)="setField('name', $any($event.target).value)" />
+          </label>
+          <label class="form-field">
+            <span>Cost ($)</span>
+            <input class="input" type="number" min="0" step="any" [value]="d.cost" (input)="setField('cost', $any($event.target).value)" />
+          </label>
+          <div class="form-field">
+            <span id="cadence-label">Renews every</span>
+            <div class="cadence">
+              <input
+                class="input cadence-value"
+                type="number"
+                min="1"
+                step="1"
+                aria-labelledby="cadence-label"
+                [value]="d.cadenceValue"
+                (input)="setField('cadenceValue', $any($event.target).value)"
+              />
+              <select class="input" aria-label="Cadence unit" [value]="d.cadenceUnit" (change)="setField('cadenceUnit', $any($event.target).value)">
+                @for (unit of cadenceUnits; track unit.id) {
+                  <option [value]="unit.id" [selected]="unit.id === d.cadenceUnit">{{ unit.label }}</option>
+                }
+              </select>
+            </div>
+            @if (draftAnnual() !== null) {
+              <small class="muted">{{ formatMoney(draftAnnual()!) }} per year</small>
+            }
+          </div>
+          <label class="form-field">
+            <span>Payment date (optional)</span>
+            <input class="input" type="date" [value]="d.paymentDate" (input)="setField('paymentDate', $any($event.target).value)" />
+            <small class="muted">Any past or upcoming charge date; later ones are projected</small>
+          </label>
+          <label class="form-field">
+            <span>Category (optional)</span>
+            <input
+              class="input"
+              type="text"
+              list="subscription-categories"
+              placeholder="e.g. Streaming"
+              [value]="d.category"
+              (input)="setField('category', $any($event.target).value)"
+            />
+            <datalist id="subscription-categories">
+              @for (category of categorySuggestions(); track category) {
+                <option [value]="category"></option>
+              }
+            </datalist>
+          </label>
+        </div>
+        <div class="form-actions">
+          <button class="btn" type="button" (click)="closeForm()">Cancel</button>
+          <button class="btn btn-primary" type="submit" [disabled]="!canSave()">{{ editingId() ? 'Save changes' : 'Add' }}</button>
+        </div>
+      </form>
+    }
+
+    @if (views().length > 0) {
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Subscription</th>
+              <th class="num">Cost</th>
+              <th>Cadence</th>
+              <th class="num">Per year</th>
+              <th class="num">Per month</th>
+              <th>Next payment</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (v of views(); track v.sub.id) {
+              <tr [class.inactive]="!v.sub.active">
+                <td>
+                  <div class="sub-name">{{ v.sub.name }}</div>
+                  @if (v.sub.category) {
+                    <div class="muted">{{ v.sub.category }}</div>
+                  }
+                </td>
+                <td class="num">{{ formatMoney(v.sub.cost) }}</td>
+                <td class="nowrap">{{ describeCadence(v.sub) }}</td>
+                <td class="num">{{ formatMoney(v.annual) }}</td>
+                <td class="num">{{ formatMoney(v.monthly) }}</td>
+                <td class="nowrap">
+                  @if (!v.sub.active) {
+                    <span class="badge badge-warning">Paused</span>
+                  } @else if (v.next) {
+                    {{ formatDay(v.next) }}
+                    <div class="muted">{{ describeDaysUntil(v.daysUntil) }}</div>
+                  } @else {
+                    <span class="muted">—</span>
+                  }
+                </td>
+                <td class="num nowrap">
+                  @if (v.sub.active) {
+                    <button class="btn btn-small" (click)="setActive(v, false)">Pause</button>
+                  } @else {
+                    <button class="btn btn-small" (click)="setActive(v, true)">Resume</button>
+                  }
+                  <button class="btn btn-small" (click)="openEdit(v.sub)">Edit</button>
+                  <button class="btn btn-small" (click)="remove(v)" [attr.aria-label]="'Delete ' + v.sub.name">✕</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>Active total</th>
+              <td></td>
+              <td></td>
+              <td class="num"><strong>{{ formatMoney(stats().annual) }}</strong></td>
+              <td class="num"><strong>{{ formatMoney(stats().monthly) }}</strong></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <p class="muted note">Paused subscriptions stay listed but aren't counted in totals, the chart, or upcoming charges.</p>
+    } @else if (!formOpen()) {
+      <div class="empty-state">No subscriptions yet. Add streaming, software, memberships, or any other recurring charge.</div>
+    }
+  </section>
+</div>

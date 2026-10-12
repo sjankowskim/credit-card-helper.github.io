@@ -1,0 +1,29 @@
+<div class="donut">
+  <svg [attr.viewBox]="'0 0 ' + size + ' ' + size" role="img" [attr.aria-label]="ariaLabel()">
+    @for (arc of arcs(); track arc.key) {
+      <path
+        class="slice"
+        [attr.d]="arc.path"
+        [attr.fill]="arc.color"
+        [class.dimmed]="hovered() !== null && hovered() !== arc.key"
+        fill-rule="evenodd"
+        tabindex="0"
+        [attr.aria-label]="arc.label + ': ' + format()(arc.value) + ', ' + arc.percent.toFixed(0) + '%'"
+        (mouseenter)="hovered.set(arc.key)"
+        (mouseleave)="hovered.set(null)"
+        (focus)="hovered.set(arc.key)"
+        (blur)="hovered.set(null)"
+      />
+    }
+  </svg>
+  <div class="center" aria-hidden="true">
+    @if (active(); as arc) {
+      <span class="center-value">{{ format()(arc.value) }}</span>
+      <span class="center-label">{{ arc.label }}</span>
+      <span class="center-label">{{ arc.percent.toFixed(1) }}%</span>
+    } @else {
+      <span class="center-value">{{ format()(total()) }}</span>
+      <span class="center-label">{{ centerLabel() }}</span>
+    }
+  </div>
+</div>

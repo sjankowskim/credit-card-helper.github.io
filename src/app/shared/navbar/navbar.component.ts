@@ -18,6 +18,7 @@ export class NavbarComponent {
     { path: '/new-accounts', label: 'New Accounts' },
     { path: '/contributions', label: 'Contributions' },
     { path: '/loans', label: 'Loans' },
+    { path: '/subscriptions', label: 'Subscriptions' },
     { path: '/settings', label: 'Settings' }
   ];
 }

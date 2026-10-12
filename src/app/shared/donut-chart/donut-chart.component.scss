@@ -1,0 +1,59 @@
+:host {
+  display: block;
+}
+
+.donut {
+  position: relative;
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 1;
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.slice {
+  // 2px gap between slices in the surface color
+  stroke: var(--background);
+  stroke-width: 2px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &.dimmed {
+    opacity: 0.35;
+  }
+
+  &:focus-visible {
+    outline: none;
+    stroke: var(--text-primary);
+  }
+}
+
+// The hovered slice's details replace the total in the middle of the ring
+.center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 28%;
+  text-align: center;
+  pointer-events: none;
+}
+
+.center-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.center-label {
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
