@@ -3,7 +3,7 @@ import type { Card } from '../../../models/card.model';
 // The welcome offer is a discount on approval with no spend requirement, so no default sign-up bonus is listed
 export const DILLARDS_MASTERCARD: Card = {
   id: 'citi-dillards-mastercard',
-  name: 'Dillard\'s Mastercard',
+  name: "Dillard's Mastercard",
   issuer: 'Citi',
   rewardsProgram: 'Store Rewards',
   rewardsCurrency: 'Cashback',
@@ -26,11 +26,11 @@ export const DILLARDS_MASTERCARD: Card = {
     },
     {
       id: 'dillards-mastercard-dillards',
-      name: 'Dillard\'s',
+      name: "Dillard's",
       rewardRate: 1.33,
       behavior: { type: 'AUTOMATIC' },
       eligibleCategories: ['department-stores'],
-      onlyWhen: 'Dillard\'s purchases'
+      onlyWhen: "Dillard's purchases"
     }
   ]
 };

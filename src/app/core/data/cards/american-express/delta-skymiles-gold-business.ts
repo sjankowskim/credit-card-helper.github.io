@@ -1,9 +1,9 @@
 import type { Card } from '../../../models/card.model';
 
 // Amex welcome offers vary by applicant, so no default sign-up bonus is listed.
-export const PLATINUM_DELTA_SKYMILES_BUSINESS: Card = {
-  id: 'amex-delta-skymiles-platinum-business',
-  name: 'Delta SkyMiles Platinum Business American Express Card',
+export const DELTA_SKYMILES_GOLD_BUSINESS: Card = {
+  id: 'amex-delta-skymiles-gold-business',
+  name: 'Delta SkyMiles Gold Business American Express Card',
   issuer: 'American Express',
   rewardsProgram: 'Delta SkyMiles',
   rewardsCurrency: 'SkyMiles',
@@ -11,23 +11,23 @@ export const PLATINUM_DELTA_SKYMILES_BUSINESS: Card = {
   hasForeignTransactionFee: false,
   hasTravelPartnerAccess: true,
   affectsChase524: false,
-  annualFee: 350,
+  // $0 the first year
+  annualFee: 150,
   isBusiness: true,
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
   rewardTiers: [
     {
-      id: 'delta-platinum-business-hotels',
-      name: 'Hotels',
-      rewardRate: 3.0,
+      id: 'delta-gold-business-2x',
+      name: 'Restaurants, U.S. Advertising & U.S. Shipping',
+      rewardRate: 2.0,
       behavior: { type: 'AUTOMATIC' },
-      eligibleCategories: ['hotels'],
-      note: 'Booked directly with the hotel.'
+      eligibleCategories: ['dining', 'advertising', 'shipping']
     },
     {
-      id: 'delta-platinum-business-delta',
+      id: 'delta-gold-business-delta',
       name: 'Delta',
-      rewardRate: 3.0,
+      rewardRate: 2.0,
       behavior: { type: 'AUTOMATIC' },
       eligibleCategories: ['airfare'],
       onlyWhen: 'Delta purchases'

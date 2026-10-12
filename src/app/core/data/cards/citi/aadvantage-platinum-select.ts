@@ -2,7 +2,7 @@ import type { Card } from '../../../models/card.model';
 
 export const AADVANTAGE_PLATINUM_SELECT: Card = {
   id: 'citi-aadvantage-platinum-select',
-  name: 'Citi AAdvantage Platinum Select',
+  name: 'Citi / AAdvantage Platinum Select World Elite Mastercard',
   issuer: 'Citi',
   rewardsProgram: 'American Airlines AAdvantage',
   rewardsCurrency: 'AAdvantage Miles',

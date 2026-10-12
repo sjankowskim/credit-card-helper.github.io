@@ -8,7 +8,7 @@ export const AADVANTAGE_GOLD: Card = {
   rewardsProgram: 'American Airlines AAdvantage',
   rewardsCurrency: 'AAdvantage Miles',
   network: 'MASTERCARD',
-  hasForeignTransactionFee: false,
+  hasForeignTransactionFee: true,
   hasTravelPartnerAccess: true,
   affectsChase524: true,
   annualFee: 50,
@@ -16,6 +16,6 @@ export const AADVANTAGE_GOLD: Card = {
   baseRewardRate: 1.0,
   discontinued: true,
   termsCheckedOn: '2026-10-11',
-  note: 'Not open to new applicants; it holds accounts moved from the Barclays Aviator Blue. Includes discounts on inflight food and drinks.',
+  note: 'Not open to new applicants; it holds accounts moved from the Barclays Aviator Blue. 25% off eligible inflight food and drinks.',
   rewardTiers: []
 };

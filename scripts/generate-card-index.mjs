@@ -11,36 +11,37 @@ const imagesDir = path.join(__dirname, '../public/images/cards');
 const indexFile = path.join(cardsDir, 'index.ts');
 
 /**
- * Recursively find files with the given extension
+ * Recursively find files with any of the given extensions
  */
-function getFiles(dir, extension) {
+function getFiles(dir, extensions) {
   return fs.readdirSync(dir).flatMap((file) => {
     const filePath = path.join(dir, file);
-    if (fs.statSync(filePath).isDirectory()) return getFiles(filePath, extension);
-    return file.endsWith(extension) ? [filePath] : [];
+    if (fs.statSync(filePath).isDirectory()) return getFiles(filePath, extensions);
+    return extensions.some((extension) => file.endsWith(extension)) ? [filePath] : [];
   });
 }
 
-const allFiles = getFiles(cardsDir, '.ts').filter((file) => path.basename(file) !== 'index.ts');
+/** Card artwork can be any of these; the extension must match the file's real format */
+const IMAGE_EXTENSIONS = ['.png', '.webp', '.avif', '.jpg'];
+
+const allFiles = getFiles(cardsDir, ['.ts']).filter((file) => path.basename(file) !== 'index.ts');
 
 const imports = [];
 const exports = [];
 const seenVarNames = new Map();
 const seenCardIds = new Map();
 /**
- * Card artwork mirrors the card files: cards/chase/freedom.ts -> public/images/cards/chase/freedom.png.
- * Alternate designs add a number: freedom-2.png, freedom-3.png. The plain file is the default design.
+ * Card artwork mirrors the card files: cards/chase/freedom.ts -> public/images/cards/chase/freedom.png
+ * (or .webp, .avif, .jpg). Alternate designs add a number: freedom-2.png, freedom-3.webp. The plain
+ * file is the default design.
  * imagesByCardPath maps 'chase/freedom' to its image URLs, default first.
  */
 const imagesByCardPath = new Map();
-for (const image of getFiles(imagesDir, '.png')) {
-  const relativeImage = path
-    .relative(imagesDir, image)
-    .replace(/\\/g, '/')
-    .replace(/\.png$/, '');
-  const [, base, variant] = /^(.*?)(?:-(\d+))?$/.exec(relativeImage);
+for (const image of getFiles(imagesDir, IMAGE_EXTENSIONS)) {
+  const relativeImage = path.relative(imagesDir, image).replace(/\\/g, '/');
+  const [, base, variant] = /^(.*?)(?:-(\d+))?\.\w+$/.exec(relativeImage);
   const images = imagesByCardPath.get(base) ?? [];
-  images.push({ order: variant ? Number(variant) : 1, url: `images/cards/${relativeImage}.png` });
+  images.push({ order: variant ? Number(variant) : 1, url: `images/cards/${relativeImage}` });
   imagesByCardPath.set(base, images);
 }
 

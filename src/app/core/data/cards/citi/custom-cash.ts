@@ -1,6 +1,6 @@
 import type { Card } from '../../../models/card.model';
 
-export const CITI_CUSTOM_CASH: Card = {
+export const CUSTOM_CASH: Card = {
   id: 'citi-custom-cash',
   name: 'Citi Custom Cash',
   issuer: 'Citi',

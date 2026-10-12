@@ -1,7 +1,7 @@
 import type { Card } from '../../../models/card.model';
 
 /** Closed to new applicants in October 2025; Citi began moving cardholders to its AAdvantage cards in April 2026 */
-export const AADVANTAGE_AVIATOR_RED: Card = {
+export const AVIATOR_RED: Card = {
   id: 'barclays-aadvantage-aviator-red',
   name: 'AAdvantage Aviator Red',
   issuer: 'Barclays',

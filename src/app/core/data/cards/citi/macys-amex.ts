@@ -3,7 +3,7 @@ import type { Card } from '../../../models/card.model';
 // The welcome offer is a discount on approval with no spend requirement, so no default sign-up bonus is listed
 export const MACYS_AMEX: Card = {
   id: 'citi-macys-amex',
-  name: 'Macy\'s American Express Card',
+  name: "Macy's American Express Card",
   issuer: 'Citi',
   rewardsProgram: 'Store Rewards',
   rewardsCurrency: 'Cashback',
@@ -15,7 +15,7 @@ export const MACYS_AMEX: Card = {
   isBusiness: false,
   baseRewardRate: 1.0,
   termsCheckedOn: '2026-10-11',
-  note: 'Silver level shown; Gold ($500+ a year at Macy\'s) earns 3% at Macy\'s and Platinum ($1,200+) earns 5%. Rewards are Star Money (1,000 points = $10) for Macy\'s merchandise.',
+  note: "Silver level shown; Gold ($500+ a year at Macy's) earns 3% at Macy's and Platinum ($1,200+) earns 5%. Rewards are Star Money (1,000 points = $10) for Macy's merchandise.",
   rewardTiers: [
     {
       id: 'macys-amex-gas-grocery',
@@ -34,11 +34,11 @@ export const MACYS_AMEX: Card = {
     },
     {
       id: 'macys-amex-macys',
-      name: 'Macy\'s',
+      name: "Macy's",
       rewardRate: 2.0,
       behavior: { type: 'AUTOMATIC' },
       eligibleCategories: ['department-stores'],
-      onlyWhen: 'Macy\'s, Macy\'s Backstage, and macys.com'
+      onlyWhen: "Macy's, Macy's Backstage, and macys.com"
     }
   ]
 };
