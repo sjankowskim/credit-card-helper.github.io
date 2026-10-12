@@ -15,7 +15,7 @@ export const FREEDOM: Card = {
   isBusiness: false,
   creditNeeded: 'good',
   baseRewardRate: 1.0,
-  discontinued: true,
+  discontinued: 'product-change-only',
   termsCheckedOn: '2026-10-11',
   rewardTiers: [
     {

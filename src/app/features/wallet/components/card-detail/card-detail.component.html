@@ -246,8 +246,13 @@
     <h3>Card details</h3>
     @if (transitionedTo(); as to) {
       <p class="discontinued">No longer offered. Accounts moved to the {{ to.name }} starting {{ to.startedOn }}.</p>
-    } @else if (card().discontinued) {
-      <p class="discontinued">No longer offered to new applicants. Existing cards keep working.</p>
+    } @else if (card().discontinued === 'product-change-only') {
+      <p class="discontinued">
+        No longer offered to new applicants, but you can still get it by product changing another {{ card().issuer }} card.
+        Existing cards keep working.
+      </p>
+    } @else if (card().discontinued === 'retired') {
+      <p class="discontinued">No longer available to anyone, by application or product change. Existing cards keep working.</p>
     }
     @for (from of transitionedFrom(); track from.name) {
       <p class="muted card-note">{{ from.name }} accounts were moved to this card starting {{ from.startedOn }}.</p>

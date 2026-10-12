@@ -5,6 +5,7 @@ import {
   formatCurrency,
   formatRate,
   formatSignUpBonus,
+  getAvailabilityBadge,
   getBestRate,
   getCardImageUrls,
   getEarnUnit
@@ -31,6 +32,7 @@ export class CardTableComponent {
 
   readonly formatCurrency = formatCurrency;
   readonly formatSignUpBonus = formatSignUpBonus;
+  readonly getAvailabilityBadge = getAvailabilityBadge;
 
   getThumbnail(card: Card): string | undefined {
     return getCardImageUrls(card)[0];

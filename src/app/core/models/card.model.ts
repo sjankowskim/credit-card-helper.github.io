@@ -221,6 +221,9 @@ export type NetworkTier =
  */
 export type CreditLevel = 'excellent' | 'good' | 'fair' | 'rebuilding';
 
+/** How a card that no longer takes applications can still be gotten; see Card.discontinued */
+export type CardAvailability = 'product-change-only' | 'retired';
+
 export interface Card {
   /** Permanent string slug for the card (e.g., 'us-bank-cash-plus') */
   id: string;
@@ -276,8 +279,12 @@ export interface Card {
   /** Most referral bonus the issuer pays per calendar year, in the card's rewards currency */
   referralCapPerYear?: number;
 
-  /** True when the issuer no longer accepts new applications (existing cards still work) */
-  discontinued?: boolean;
+  /**
+   * Set when the issuer no longer accepts new applications (existing cards still work):
+   * - product-change-only: you can still get it by product changing another card from the issuer
+   * - retired: no one can get it anymore, e.g. its accounts moved to another card
+   */
+  discontinued?: CardAvailability;
 
   /** When these terms were last checked against the issuer (ISO date) */
   termsCheckedOn?: string;

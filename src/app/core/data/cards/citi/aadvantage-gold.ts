@@ -16,7 +16,8 @@ export const AADVANTAGE_GOLD: Card = {
   creditNeeded: 'good',
   networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
-  discontinued: true,
+  // Unconfirmed whether other Citi AAdvantage cards can still product change into it
+  discontinued: 'retired',
   termsCheckedOn: '2026-10-11',
   note: 'Not open to new applicants; it holds accounts moved from the Barclays Aviator Blue. 25% off eligible inflight food and drinks.',
   rewardTiers: []

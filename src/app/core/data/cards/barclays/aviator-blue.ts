@@ -16,7 +16,7 @@ export const AVIATOR_BLUE: Card = {
   creditNeeded: 'good',
   networkTier: 'World Elite Mastercard',
   baseRewardRate: 1.0,
-  discontinued: true,
+  discontinued: 'retired',
   transitionedTo: { cardId: 'citi-aadvantage-gold', startedOn: '2026-04-24' },
   termsCheckedOn: '2026-10-11',
   rewardTiers: [

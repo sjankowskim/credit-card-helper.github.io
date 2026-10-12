@@ -15,7 +15,7 @@ export const BILT_MASTERCARD: Card = {
   isBusiness: false,
   creditNeeded: 'good',
   baseRewardRate: 1.0,
-  discontinued: true,
+  discontinued: 'retired',
   termsCheckedOn: '2026-10-11',
   rewardTiers: [
     {

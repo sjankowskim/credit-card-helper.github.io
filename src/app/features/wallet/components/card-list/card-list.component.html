@@ -59,8 +59,10 @@
         @if (item.card.isBusiness) {
           <span class="badge">Business</span>
         }
-        @if (mode() === 'catalog' && item.card.discontinued) {
-          <span class="badge">No longer offered</span>
+        @if (mode() !== 'wallet') {
+          @if (getAvailabilityBadge(item.card); as availability) {
+            <span class="badge" [class]="availability.class" [title]="availability.title">{{ availability.label }}</span>
+          }
         }
       </div>
 

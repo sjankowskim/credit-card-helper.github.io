@@ -14,8 +14,8 @@ export const CUSTOM_CASH: Card = {
   isBusiness: false,
   creditNeeded: 'good',
   baseRewardRate: 1.0,
-  // Closed to new applicants on 2026-05-28
-  discontinued: true,
+  // Closed to new applicants on 2026-05-28; product changes into it were still reported working in July 2026
+  discontinued: 'product-change-only',
   termsCheckedOn: '2026-10-11',
   rewardTiers: [
     {

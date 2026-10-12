@@ -2,6 +2,7 @@ import { Component, inject, input, output, signal } from '@angular/core';
 import { UserCardsService } from '../../../../core/services/user-cards.service';
 import { CardStatus, type Card, type UserCard } from '../../../../core/models/card.model';
 import {
+  getAvailabilityBadge,
   getCardDisplayName,
   getCardImageUrls,
   getDisplayInstanceNumber,
@@ -50,6 +51,8 @@ export class CardListComponent {
   readonly open = output<CardListItem>();
   readonly add = output<CardListItem>();
   readonly toggleWishlist = output<CardListItem>();
+
+  readonly getAvailabilityBadge = getAvailabilityBadge;
 
   getDisplayName(item: CardListItem): string {
     return item.userCard ? getCardDisplayName(item.userCard, item.card.name) : item.card.name;

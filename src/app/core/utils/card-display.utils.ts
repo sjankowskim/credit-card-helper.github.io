@@ -100,6 +100,22 @@ export function getBestRate(card: Card): number {
   return Math.max(card.baseRewardRate, ...card.rewardTiers.filter(t => !t.onlyWhen).map(t => t.rewardRate));
 }
 
+/** Badge for a card that no longer takes applications, or undefined for one that does */
+export function getAvailabilityBadge(card: Card): { label: string; class: string; title: string } | undefined {
+  switch (card.discontinued) {
+    case 'product-change-only':
+      return {
+        label: 'Product change only',
+        class: 'badge-warning',
+        title: `Not open to new applicants. You can still get it by product changing another ${card.issuer} card.`
+      };
+    case 'retired':
+      return { label: 'No longer available', class: 'badge-danger', title: 'No one can get this card anymore.' };
+    default:
+      return undefined;
+  }
+}
+
 /** '60,000 Ultimate Rewards after $4,000 in 3 mo' or '$200 after $500 in 3 mo' */
 export function formatSignUpBonus(bonus: SignUpBonus): string {
   const amount = bonus.currency === 'Cashback' ? formatCurrency(bonus.amount) : `${bonus.amount.toLocaleString('en-US')} ${bonus.currency}`;
