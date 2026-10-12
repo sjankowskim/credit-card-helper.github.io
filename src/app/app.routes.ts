@@ -12,21 +12,22 @@ import { ContributionsComponent } from './features/contributions/contributions.c
 import { LoansComponent } from './features/loans/loans.component';
 import { SubscriptionsComponent } from './features/subscriptions/subscriptions.component';
 
+/** Each page's `title` becomes the browser tab text (see AppTitleStrategy); Home shows just the app name */
 export const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: 'wallet', component: WalletComponent },
+  { path: 'wallet', component: WalletComponent, title: 'Wallet' },
   { path: 'portfolio', redirectTo: '/wallet' },
-  { path: 'cards', component: CardsComponent },
-  { path: 'best-card', component: DashboardComponent },
+  { path: 'cards', component: CardsComponent, title: 'Cards' },
+  { path: 'best-card', component: DashboardComponent, title: 'Best Card by Category' },
   { path: 'dashboard', redirectTo: '/best-card' },
-  { path: 'sub-tracker', component: SubTrackerComponent },
-  { path: 'rewards', component: RewardsComponent },
-  { path: 'benefits', component: BenefitsComponent },
-  { path: 'new-accounts', component: NewAccountsComponent },
+  { path: 'sub-tracker', component: SubTrackerComponent, title: 'SUB Tracker' },
+  { path: 'rewards', component: RewardsComponent, title: 'Rewards' },
+  { path: 'benefits', component: BenefitsComponent, title: 'Benefits & Bonuses' },
+  { path: 'new-accounts', component: NewAccountsComponent, title: 'New Accounts' },
   { path: 'account-tracker', redirectTo: '/new-accounts' },
-  { path: 'contributions', component: ContributionsComponent },
-  { path: 'loans', component: LoansComponent },
-  { path: 'subscriptions', component: SubscriptionsComponent },
-  { path: 'settings', component: SettingsComponent },
+  { path: 'contributions', component: ContributionsComponent, title: 'Contributions' },
+  { path: 'loans', component: LoansComponent, title: 'Loans' },
+  { path: 'subscriptions', component: SubscriptionsComponent, title: 'Subscriptions' },
+  { path: 'settings', component: SettingsComponent, title: 'Settings' },
   { path: '**', redirectTo: '' }
 ];
