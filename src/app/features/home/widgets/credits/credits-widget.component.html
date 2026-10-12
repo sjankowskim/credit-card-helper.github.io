@@ -1,0 +1,28 @@
+<div class="figures">
+  <div class="figure">
+    <span class="value">{{ formatCurrency(remaining()) }}</span>
+    <span class="label">Left to use this period</span>
+  </div>
+  <div class="figure">
+    <span class="value">{{ unused().length }}</span>
+    <span class="label">{{ unused().length === 1 ? 'Credit' : 'Credits' }} with money left</span>
+  </div>
+</div>
+@if (unused().length > 0) {
+  <ul class="list">
+    @for (credit of shown(); track credit.userCard.id + credit.benefit.id) {
+      <li class="item">
+        <div class="item-main">
+          <span class="name">{{ credit.benefit.name }}</span>
+          <span class="detail">{{ cardName(credit.userCard) }} · resets {{ formatEnd(credit.period.end) }}</span>
+        </div>
+        <span class="side strong">{{ formatCurrency(credit.remaining) }}</span>
+      </li>
+    }
+  </ul>
+  @if (hiddenCount() > 0) {
+    <p class="detail">+ {{ hiddenCount() }} more on the Benefits page</p>
+  }
+} @else {
+  <p class="empty">No credits left to use right now.</p>
+}

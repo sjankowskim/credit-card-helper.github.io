@@ -22,6 +22,7 @@ export class NavbarComponent {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   readonly entries: NavEntry[] = [
+    { kind: 'link', path: '/', label: 'Home' },
     {
       kind: 'menu',
       id: 'cards',
@@ -29,7 +30,7 @@ export class NavbarComponent {
       items: [
         { path: '/cards', label: 'Cards' },
         { path: '/wallet', label: 'Wallet' },
-        { path: '/dashboard', label: 'Dashboard' },
+        { path: '/best-card', label: 'Best Card by Category' },
         { path: '/new-accounts', label: 'New Accounts' }
       ]
     },

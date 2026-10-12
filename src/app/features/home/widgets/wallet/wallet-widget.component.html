@@ -1,0 +1,21 @@
+<div class="figures">
+  <div class="figure">
+    <span class="value">{{ stats().active }}</span>
+    <span class="label">Active cards</span>
+  </div>
+  <div class="figure">
+    <span class="value">{{ formatCurrency(stats().fees) }}</span>
+    <span class="label">Annual fees per year</span>
+  </div>
+  <div class="figure">
+    <span class="value">{{ stats().creditLimit > 0 ? formatCurrency(stats().creditLimit) : '—' }}</span>
+    <span class="label">Total credit</span>
+  </div>
+  <div class="figure">
+    <span class="value">{{ stats().churning }}</span>
+    <span class="label">Churning</span>
+  </div>
+</div>
+<p class="detail">
+  {{ stats().history }} closed or product changed · {{ stats().wishlist }} on your wishlist
+</p>

@@ -1,0 +1,25 @@
+<div class="figures">
+  <div class="figure">
+    <span class="value">{{ formatWhole(annual() / 12) }}</span>
+    <span class="label">Per month</span>
+  </div>
+  <div class="figure">
+    <span class="value">{{ formatWhole(annual()) }}</span>
+    <span class="label">Per year</span>
+  </div>
+</div>
+@if (next().length > 0) {
+  <ul class="list">
+    @for (item of next(); track item.sub.id) {
+      <li class="item">
+        <div class="item-main">
+          <span class="name">{{ item.sub.name }}</span>
+          <span class="detail">{{ formatDay(item.date) }}</span>
+        </div>
+        <span class="side strong">{{ formatMoney(item.sub.cost) }}</span>
+      </li>
+    }
+  </ul>
+} @else {
+  <p class="empty">No active subscriptions with a charge date.</p>
+}

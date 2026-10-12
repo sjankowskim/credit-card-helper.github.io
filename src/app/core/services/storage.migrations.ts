@@ -4,6 +4,7 @@ import {
   DEFAULT_CATALOG_SETTINGS,
   DEFAULT_DASHBOARD_SETTINGS,
   DEFAULT_WALLET_SETTINGS,
+  createDefaultHomeSettings,
   createDefaultAppState
 } from '../models/app-state.model';
 import { createDefaultRewardsState } from '../models/rewards.model';
@@ -103,6 +104,13 @@ const MIGRATIONS: Record<number, (state: RawState) => RawState> = {
     ...state,
     schemaVersion: 12,
     walletSettings: { ...DEFAULT_WALLET_SETTINGS }
+  }),
+
+  // v12 -> v13: Home page widgets
+  12: (state) => ({
+    ...state,
+    schemaVersion: 13,
+    homeSettings: createDefaultHomeSettings()
   })
 };
 

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { HomeComponent } from './features/home/home.component';
 import { WalletComponent } from './features/wallet/wallet.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { SubTrackerComponent } from './features/sub-tracker/sub-tracker.component';
@@ -12,10 +13,12 @@ import { LoansComponent } from './features/loans/loans.component';
 import { SubscriptionsComponent } from './features/subscriptions/subscriptions.component';
 
 export const routes: Routes = [
+  { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'wallet', component: WalletComponent },
   { path: 'portfolio', redirectTo: '/wallet' },
   { path: 'cards', component: CardsComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  { path: 'best-card', component: DashboardComponent },
+  { path: 'dashboard', redirectTo: '/best-card' },
   { path: 'sub-tracker', component: SubTrackerComponent },
   { path: 'rewards', component: RewardsComponent },
   { path: 'benefits', component: BenefitsComponent },
@@ -25,6 +28,5 @@ export const routes: Routes = [
   { path: 'loans', component: LoansComponent },
   { path: 'subscriptions', component: SubscriptionsComponent },
   { path: 'settings', component: SettingsComponent },
-  { path: '', redirectTo: '/cards', pathMatch: 'full' },
-  { path: '**', redirectTo: '/cards' }
+  { path: '**', redirectTo: '' }
 ];

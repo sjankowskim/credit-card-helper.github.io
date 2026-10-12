@@ -1,0 +1,17 @@
+@if (rows().length > 0) {
+  <ul class="list">
+    @for (row of rows(); track row.label) {
+      <li class="item">
+        <div class="item-main">
+          <span class="detail">{{ row.label }}</span>
+          <span class="name">{{ row.best ? cardName(row.best.userCard) : '—' }}</span>
+        </div>
+        @if (row.best; as best) {
+          <span class="side strong">{{ formatRate(best.rewardRate, best.unit) }}</span>
+        }
+      </li>
+    }
+  </ul>
+} @else {
+  <p class="empty">Add active cards to your wallet to see which to use.</p>
+}

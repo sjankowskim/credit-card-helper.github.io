@@ -1,0 +1,23 @@
+@if (progress().length > 0) {
+  <ul class="list">
+    @for (row of progress(); track row.tracker.id) {
+      <li class="item">
+        <div class="item-main">
+          <span class="name">{{ row.label }}</span>
+          <span class="detail">
+            {{ formatCurrency(row.contributed) }} of {{ formatCurrency(row.contributed + row.remaining) }}
+            @if (row.remaining === 0) {
+              · maxed out
+            }
+          </span>
+          <div class="bar"><div class="fill" [style.width.%]="row.percent"></div></div>
+        </div>
+        @if (row.behindPace) {
+          <span class="side detail warning">Behind pace</span>
+        }
+      </li>
+    }
+  </ul>
+} @else {
+  <p class="empty">No contribution trackers for {{ year }}.</p>
+}

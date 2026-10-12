@@ -7,6 +7,7 @@ import type { Loan } from './loan.model';
 import type { Subscription } from './subscription.model';
 import type { WalletColumnId, WalletTableKind } from '../data/wallet-columns';
 import type { CatalogColumnId } from '../data/catalog-columns';
+import { DEFAULT_HOME_WIDGETS, type HomeWidgetId } from '../data/home-widgets';
 
 export interface DashboardSettings {
   numCards: 1 | 3 | 5;
@@ -33,6 +34,11 @@ export interface WalletSettings {
   columns?: Partial<Record<WalletTableKind, WalletColumnId[]>>;
 }
 
+export interface HomeSettings {
+  /** Widgets on the Home page, in order */
+  widgets: HomeWidgetId[];
+}
+
 /**
  * Everything the app persists, stored under a single localStorage key.
  * Bump CURRENT_SCHEMA_VERSION and add a step in storage.migrations.ts
@@ -45,6 +51,7 @@ export interface AppState {
   dashboardSettings: DashboardSettings;
   catalogSettings: CatalogSettings;
   walletSettings: WalletSettings;
+  homeSettings: HomeSettings;
   rewards: RewardsState;
   benefits: BenefitsState;
   referrals: Referral[];
@@ -54,7 +61,7 @@ export interface AppState {
   subscriptions: Subscription[];
 }
 
-export const CURRENT_SCHEMA_VERSION = 12;
+export const CURRENT_SCHEMA_VERSION = 13;
 
 export const DEFAULT_DASHBOARD_SETTINGS: DashboardSettings = {
   numCards: 3,
@@ -74,6 +81,10 @@ export const DEFAULT_WALLET_SETTINGS: WalletSettings = {
   view: 'grid'
 };
 
+export function createDefaultHomeSettings(): HomeSettings {
+  return { widgets: [...DEFAULT_HOME_WIDGETS] };
+}
+
 export function createDefaultAppState(): AppState {
   return {
     schemaVersion: CURRENT_SCHEMA_VERSION,
@@ -82,6 +93,7 @@ export function createDefaultAppState(): AppState {
     dashboardSettings: { ...DEFAULT_DASHBOARD_SETTINGS },
     catalogSettings: { ...DEFAULT_CATALOG_SETTINGS },
     walletSettings: { ...DEFAULT_WALLET_SETTINGS },
+    homeSettings: createDefaultHomeSettings(),
     rewards: createDefaultRewardsState(),
     benefits: createDefaultBenefitsState(),
     referrals: [],

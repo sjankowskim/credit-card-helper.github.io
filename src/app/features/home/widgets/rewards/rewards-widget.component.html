@@ -1,0 +1,24 @@
+<div class="figures">
+  <div class="figure">
+    <span class="value">{{ formatCurrency(total()) }}</span>
+    <span class="label">Estimated value of your balances</span>
+  </div>
+</div>
+@if (rows().length > 0) {
+  <ul class="list">
+    @for (row of shown(); track row.label) {
+      <li class="item">
+        <div class="item-main">
+          <span class="name">{{ row.label }}</span>
+          <span class="detail">{{ row.balance }}</span>
+        </div>
+        <span class="side strong">{{ formatCurrency(row.value) }}</span>
+      </li>
+    }
+  </ul>
+  @if (hiddenCount() > 0) {
+    <p class="detail">+ {{ hiddenCount() }} more on the Rewards page</p>
+  }
+} @else {
+  <p class="empty">No balances yet. Enter them on the Rewards page.</p>
+}

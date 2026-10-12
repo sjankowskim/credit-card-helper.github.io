@@ -1,0 +1,77 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Home</h1>
+      <p>Your cards, bonuses, and money at a glance</p>
+    </div>
+    <button class="btn" [class.btn-primary]="editing()" (click)="editing.set(!editing())">
+      {{ editing() ? 'Done' : 'Customize' }}
+    </button>
+  </div>
+
+  @if (!hasCards()) {
+    <div class="welcome">
+      <strong>Welcome!</strong> Start by adding the cards you have from the <a routerLink="/cards">Cards</a> page. The widgets
+      below fill in as you add cards, bonuses, and balances.
+    </div>
+  }
+
+  @if (widgets().length > 0) {
+    <div class="widget-grid">
+      @for (widget of widgets(); track widget.id; let index = $index, first = $first, last = $last) {
+        <section class="widget" [class.editing]="editing()">
+          <header class="widget-header">
+            <h2>{{ widget.title }}</h2>
+            @if (editing()) {
+              <div class="edit-buttons">
+                <button class="icon-button" [disabled]="first" (click)="move(index, -1)" [attr.aria-label]="'Move ' + widget.title + ' up'" title="Move up">↑</button>
+                <button class="icon-button" [disabled]="last" (click)="move(index, 1)" [attr.aria-label]="'Move ' + widget.title + ' down'" title="Move down">↓</button>
+                <button class="icon-button" (click)="remove(widget.id)" [attr.aria-label]="'Remove ' + widget.title" title="Remove">✕</button>
+              </div>
+            } @else {
+              <a class="widget-link" [routerLink]="widget.link.path">{{ widget.link.label }} →</a>
+            }
+          </header>
+          @switch (widget.id) {
+            @case ('upcoming') { <app-upcoming-widget /> }
+            @case ('wallet') { <app-wallet-widget /> }
+            @case ('sign-up-bonuses') { <app-sign-up-bonuses-widget /> }
+            @case ('rewards') { <app-rewards-widget /> }
+            @case ('credits') { <app-credits-widget /> }
+            @case ('application-rules') { <app-application-rules-widget /> }
+            @case ('best-cards') { <app-best-cards-widget /> }
+            @case ('subscriptions') { <app-subscriptions-widget /> }
+            @case ('loans') { <app-loans-widget /> }
+            @case ('contributions') { <app-contributions-widget /> }
+          }
+        </section>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">No widgets on your Home page. Click Customize to add some.</div>
+  }
+
+  @if (editing()) {
+    <section class="add-section">
+      <div class="add-header">
+        <h2 class="section-title">Add a widget</h2>
+        <button class="btn btn-small" [disabled]="isDefaultLayout()" (click)="reset()">Reset to default layout</button>
+      </div>
+      @if (available().length > 0) {
+        <ul class="add-list">
+          @for (widget of available(); track widget.id) {
+            <li class="add-item">
+              <div>
+                <div class="add-title">{{ widget.title }}</div>
+                <p class="muted">{{ widget.description }}</p>
+              </div>
+              <button class="btn btn-small" (click)="add(widget.id)">+ Add</button>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="muted">Every widget is already on your Home page.</p>
+      }
+    </section>
+  }
+</div>

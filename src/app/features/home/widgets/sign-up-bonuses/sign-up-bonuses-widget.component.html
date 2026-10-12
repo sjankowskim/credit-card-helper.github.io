@@ -1,0 +1,38 @@
+@if (rows().length > 0) {
+  <div class="figures">
+    <div class="figure">
+      <span class="value">{{ rows().length }}</span>
+      <span class="label">In progress</span>
+    </div>
+    <div class="figure">
+      <span class="value">{{ formatCurrency(spendRemaining()) }}</span>
+      <span class="label">Card spend left</span>
+    </div>
+  </div>
+  <ul class="list">
+    @for (row of shown(); track $index) {
+      <li class="item">
+        <div class="item-main">
+          <span class="name">{{ row.name }}</span>
+          <span class="detail">{{ row.detail }}</span>
+          <div class="bar"><div class="fill" [style.width.%]="row.percent"></div></div>
+        </div>
+        <div class="side">
+          @if (row.daysLeft !== null) {
+            <span class="strong" [class.warning]="row.behindPace">{{ row.daysLeft }} days left</span>
+          } @else {
+            <span class="detail">Add an open date</span>
+          }
+          @if (row.behindPace) {
+            <div class="detail warning">Behind pace</div>
+          }
+        </div>
+      </li>
+    }
+  </ul>
+  @if (hiddenCount() > 0) {
+    <p class="detail">+ {{ hiddenCount() }} more on the SUB Tracker</p>
+  }
+} @else {
+  <p class="empty">No bonuses in progress.</p>
+}

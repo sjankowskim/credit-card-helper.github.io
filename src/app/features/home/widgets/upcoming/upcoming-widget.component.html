@@ -1,0 +1,29 @@
+@if (events().length > 0) {
+  <ul class="list">
+    @for (event of shown(); track $index) {
+      <li>
+        <a class="item" [routerLink]="event.link">
+          <div class="when">
+            <span class="strong">{{ formatDay(event.date) }}</span>
+            <span class="detail">{{ describeDaysLeft(event.daysLeft) }}</span>
+          </div>
+          <div class="item-main">
+            <span class="name">{{ event.title }}</span>
+            @if (event.detail) {
+              <span class="detail">{{ event.detail }}</span>
+            }
+          </div>
+          <span class="badge side kind" [class]="badges[event.kind].class">{{ badges[event.kind].label }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+  @if (events().length > shown().length || showAll()) {
+    <button class="more" (click)="showAll.set(!showAll())">
+      {{ showAll() ? 'Show fewer' : 'Show ' + hiddenCount() + ' more' }}
+    </button>
+  }
+} @else {
+  <p class="empty">Nothing due in the next {{ upcomingDays }} days.</p>
+}
+<p class="empty">Monthly payments, credits, and charges show {{ recurringDays }} days ahead; everything else {{ upcomingDays }} days ahead.</p>

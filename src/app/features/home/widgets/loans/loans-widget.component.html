@@ -1,0 +1,18 @@
+@if (stats().count > 0) {
+  <div class="figures">
+    <div class="figure">
+      <span class="value">{{ formatWhole(stats().balance) }}</span>
+      <span class="label">Owed across {{ stats().count }} {{ stats().count === 1 ? 'loan' : 'loans' }}</span>
+    </div>
+    <div class="figure">
+      <span class="value">{{ formatWhole(stats().monthly) }}</span>
+      <span class="label">Monthly payments</span>
+    </div>
+    <div class="figure">
+      <span class="value">{{ stats().apr.toFixed(2) }}%</span>
+      <span class="label">Average APR</span>
+    </div>
+  </div>
+} @else {
+  <p class="empty">No open loans.</p>
+}
