@@ -1,42 +1,154 @@
-@if (pools().length > 0) {
-  <div class="table-scroll">
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Rewards</th>
-          <th class="num">Balance</th>
-          <th class="num">Value</th>
-          <th class="num">Updated</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (pool of pools(); track pool.key) {
+<section>
+  <h2 class="section-title">Card rewards</h2>
+  @if (pools().length > 0) {
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
           <tr>
-            <td>
-              <div class="pool-name">{{ pool.label }}</div>
-              @if (!pool.isCash) {
-                <div class="muted">{{ pool.cardNames.join(', ') || 'No active cards' }}</div>
-              }
-            </td>
-            <td class="num">
-              <app-inline-edit-field
-                [type]="pool.isCash ? 'currency' : 'number'"
-                [min]="0"
-                [value]="pool.balance?.balance"
-                emptyLabel="Add balance"
-                (saved)="setBalance(pool, $event)"
-              />
-            </td>
-            <td class="num">{{ pool.balance ? formatCurrency(pool.value) : '' }}</td>
-            <td class="num muted">{{ formatDate(pool.balance?.asOf) }}</td>
+            <th>Rewards</th>
+            <th class="num">Balance</th>
+            <th class="num">Value</th>
+            <th class="num">Updated</th>
           </tr>
+        </thead>
+        <tbody>
+          @for (pool of pools(); track pool.key) {
+            <tr>
+              <td>
+                <div class="pool-name">{{ pool.label }}</div>
+                @if (!pool.isCash) {
+                  <div class="muted">{{ pool.cardNames.join(', ') || 'No active cards' }}</div>
+                }
+              </td>
+              <td class="num">
+                <app-inline-edit-field
+                  [type]="pool.isCash ? 'currency' : 'number'"
+                  [min]="0"
+                  [value]="pool.balance?.balance"
+                  emptyLabel="Add balance"
+                  (saved)="setBalance(pool, $event)"
+                />
+              </td>
+              <td class="num">{{ pool.balance ? formatCurrency(pool.value) : '' }}</td>
+              <td class="num muted">{{ formatDate(pool.balance?.asOf) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="muted note">
+      Points are valued at your CPP settings (Dashboard → CPP Settings). Cards in the same points program share one balance.
+    </p>
+  } @else {
+    <div class="empty-state">Add active cards to your Wallet to track their balances.</div>
+  }
+</section>
+
+<section>
+  <h2 class="section-title">Airline miles</h2>
+  @if (loyaltyAccounts().length > 0) {
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Program</th>
+            <th class="num">Balance</th>
+            <th class="num">All-time earned</th>
+            <th class="num">¢ per mile</th>
+            <th class="num">Value</th>
+            <th class="num">All-time value</th>
+            <th class="num">Updated</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of loyaltyAccounts(); track row.account.id) {
+            <tr>
+              <td>
+                <div class="pool-name">{{ row.account.name }}</div>
+                <app-inline-edit-field
+                  [value]="row.account.note"
+                  emptyLabel="Add note"
+                  placeholder="e.g. Transfers to American Airlines"
+                  (saved)="update(row, 'note', $event)"
+                />
+                @if (row.duplicatesCardPool) {
+                  <div class="muted">Also tracked under Card rewards; not added to the total</div>
+                }
+              </td>
+              <td class="num">
+                <app-inline-edit-field type="number" [min]="0" [value]="row.account.balance" (saved)="update(row, 'balance', $event)" />
+              </td>
+              <td class="num">
+                <app-inline-edit-field type="number" [min]="0" [value]="row.account.allTimeEarned" emptyLabel="Add" (saved)="update(row, 'allTimeEarned', $event)" />
+              </td>
+              <td class="num">
+                <app-inline-edit-field type="number" [min]="0" [value]="row.account.cpp" (saved)="update(row, 'cpp', $event)" />
+              </td>
+              <td class="num">{{ formatCurrency(row.value) }}</td>
+              <td class="num">{{ row.allTimeValue === undefined ? '' : formatCurrency(row.allTimeValue) }}</td>
+              <td class="num muted">{{ formatDate(row.account.asOf) }}</td>
+              <td class="num">
+                <button class="btn btn-small" (click)="remove(row)" [attr.aria-label]="'Remove ' + row.account.name">✕</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Total</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="num"><strong>{{ formatCurrency(loyaltyTotals().value) }}</strong></td>
+            <td class="num"><strong>{{ formatCurrency(loyaltyTotals().allTimeValue) }}</strong></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  } @else {
+    <div class="empty-state">Track airline miles you hold outside your cards' programs, like miles earned from flying.</div>
+  }
+
+  <form class="add-form" (submit)="add($event)">
+    <label class="form-field">
+      <span>Program</span>
+      <input
+        class="input"
+        type="text"
+        list="airline-programs"
+        placeholder="e.g. United MileagePlus"
+        [value]="draftName()"
+        (input)="setDraftName($any($event.target).value)"
+      />
+      <datalist id="airline-programs">
+        @for (program of airlinePrograms; track program) {
+          <option [value]="program"></option>
         }
-      </tbody>
-    </table>
-  </div>
+      </datalist>
+    </label>
+    <label class="form-field">
+      <span>Balance</span>
+      <input class="input" type="number" min="0" step="1" [value]="draftBalance()" (input)="draftBalance.set($any($event.target).value)" />
+    </label>
+    <label class="form-field">
+      <span>All-time earned (optional)</span>
+      <input class="input" type="number" min="0" step="1" [value]="draftAllTime()" (input)="draftAllTime.set($any($event.target).value)" />
+    </label>
+    <label class="form-field">
+      <span>¢ per mile</span>
+      <input class="input" type="number" min="0" step="0.01" [value]="draftCpp()" (input)="draftCpp.set($any($event.target).value)" />
+    </label>
+    <label class="form-field">
+      <span>Note (optional)</span>
+      <input class="input" type="text" placeholder="e.g. Transfers to Delta" [value]="draftNote()" (input)="draftNote.set($any($event.target).value)" />
+    </label>
+    <button class="btn btn-primary" type="submit" [disabled]="!canAdd()">Add</button>
+  </form>
   <p class="muted note">
-    Points are valued at your CPP settings (Dashboard → CPP Settings). Cards in the same points program share one balance.
+    Picking a known program fills in its ¢ per mile from your CPP settings; you can change it per program. Log miles you earn on the Earned
+    tab and redemptions on the Redemptions tab; both update the balance.
   </p>
-} @else {
-  <div class="empty-state">Add active cards to your Wallet to track their balances.</div>
-}
+</section>

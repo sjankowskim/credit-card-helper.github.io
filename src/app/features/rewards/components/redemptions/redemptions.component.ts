@@ -23,9 +23,11 @@ export class RedemptionsComponent {
   readonly redemptions = this.rewardsService.redemptions;
   readonly programCpps = this.rewardsService.programCpps;
   readonly programs = this.rewardsService.pointsPrograms;
+  readonly airlineAccounts = computed(() => this.rewardsService.loyaltyAccounts().map(a => a.account));
 
   // ---- Add form ----
-  readonly draftProgram = signal<RewardsProgram | ''>('');
+  /** 'program:<RewardsProgram>' for a card points program, 'account:<id>' for airline miles */
+  readonly draftSource = signal('');
   readonly draftDate = signal(toIsoDate(today()));
   readonly draftPoints = signal('');
   readonly draftValue = signal('');
@@ -39,15 +41,22 @@ export class RedemptionsComponent {
   });
 
   readonly canAdd = computed(
-    () => !!this.draftProgram() && Number(this.draftPoints()) > 0 && Number(this.draftValue()) >= 0 && this.draftValue() !== ''
+    () => !!this.draftSource() && Number(this.draftPoints()) > 0 && Number(this.draftValue()) >= 0 && this.draftValue() !== ''
   );
+
+  /** Miles left on the chosen airline account, shown while choosing */
+  readonly draftAccount = computed(() => {
+    const source = this.draftSource();
+    return source.startsWith('account:') ? this.rewardsService.getLoyaltyAccount(source.slice('account:'.length)) : undefined;
+  });
 
   add(event: Event): void {
     event.preventDefault();
-    const program = this.draftProgram();
-    if (!this.canAdd() || !program) return;
+    const source = this.draftSource();
+    if (!this.canAdd() || !source) return;
+    const [kind, id] = [source.slice(0, source.indexOf(':')), source.slice(source.indexOf(':') + 1)];
     this.rewardsService.addRedemption({
-      program,
+      ...(kind === 'account' ? { loyaltyAccountId: id } : { program: id as RewardsProgram }),
       date: this.draftDate(),
       points: Number(this.draftPoints()),
       cashValue: Number(this.draftValue()),
@@ -56,11 +65,15 @@ export class RedemptionsComponent {
     this.draftPoints.set('');
     this.draftValue.set('');
     this.draftDescription.set('');
-    this.toastService.success('Redemption logged');
+    this.toastService.success(kind === 'account' ? 'Redemption logged and taken off your miles balance' : 'Redemption logged');
   }
 
   remove(redemption: Redemption): void {
     this.rewardsService.removeRedemption(redemption.id);
+  }
+
+  getSource(redemption: Redemption): string {
+    return this.rewardsService.getRedemptionSource(redemption);
   }
 
   getCpp(redemption: Redemption): number {
@@ -71,14 +84,18 @@ export class RedemptionsComponent {
     return `${value.toFixed(2)}¢`;
   }
 
-  currentCpp(program: RewardsProgram): number {
-    return this.cppSettingsService.getCppValuation(program);
+  /** The valuation in use: your CPP setting for a card program, or the airline account's own ¢ per mile */
+  currentCpp(summary: ProgramCpp): number | undefined {
+    if (summary.loyaltyAccountId) return this.rewardsService.getLoyaltyAccount(summary.loyaltyAccountId)?.cpp;
+    return summary.program ? this.cppSettingsService.getCppValuation(summary.program) : undefined;
   }
 
   useAsCpp(summary: ProgramCpp): void {
     const rounded = Math.round(summary.cpp * 100) / 100;
-    this.cppSettingsService.setCppValuation(summary.program, rounded);
-    this.toastService.success(`${summary.program} now valued at ${this.formatCpp(rounded)} per point`);
+    if (summary.loyaltyAccountId) this.rewardsService.updateLoyaltyAccount(summary.loyaltyAccountId, { cpp: rounded });
+    else if (summary.program) this.cppSettingsService.setCppValuation(summary.program, rounded);
+    else return;
+    this.toastService.success(`${summary.label} now valued at ${this.formatCpp(rounded)} per point`);
   }
 }
 

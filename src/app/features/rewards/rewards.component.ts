@@ -28,12 +28,12 @@ export class RewardsComponent {
 
   readonly totalBalance = this.rewardsService.totalBalanceValue;
 
-  readonly earnedThisYear = computed(() =>
-    this.rewardsService
-      .earnedRows()
-      .filter(row => parseLocalDate(row.date)?.getFullYear() === this.year)
-      .reduce((sum, row) => sum + row.value, 0)
-  );
+  readonly earnedThisYear = computed(() => {
+    const inYear = (date: string) => parseLocalDate(date)?.getFullYear() === this.year;
+    const cards = this.rewardsService.earnedRows().filter(row => inYear(row.date)).reduce((sum, row) => sum + row.value, 0);
+    const miles = this.rewardsService.loyaltyEarnedRows().filter(row => inYear(row.entry.date)).reduce((sum, row) => sum + row.value, 0);
+    return cards + miles;
+  });
 
   readonly netThisYear = computed(() =>
     this.rewardsService.getCardValues(this.year).reduce((sum, c) => sum + c.net, 0)

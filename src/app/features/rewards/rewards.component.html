@@ -11,7 +11,7 @@
     <div class="stat-tile">
       <span class="stat-value">{{ formatWhole(earnedThisYear()) }}</span>
       <span class="stat-label">Earned in {{ year }}</span>
-      <span class="muted">Incl. bonuses, referrals, retention</span>
+      <span class="muted">Incl. bonuses, referrals, retention, miles</span>
     </div>
     <div class="stat-tile">
       <span class="stat-value" [class.positive]="netThisYear() >= 0" [class.negative]="netThisYear() < 0">

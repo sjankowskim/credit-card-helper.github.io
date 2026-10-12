@@ -46,14 +46,25 @@
 
 <section>
   <h2 class="section-title">Log rewards</h2>
-  @if (cardOptions().length > 0) {
+  @if (cardOptions().length > 0 || airlineOptions().length > 0) {
     <form class="add-form" (submit)="add($event)">
       <label class="form-field card-field">
-        <span>Card</span>
-        <select class="input" [value]="draftCardId()" (change)="draftCardId.set($any($event.target).value)">
-          <option value="">Choose a card</option>
-          @for (option of cardOptions(); track option.id) {
-            <option [value]="option.id">{{ option.name }}</option>
+        <span>Earned on</span>
+        <select class="input" [value]="draftTarget()" (change)="draftTarget.set($any($event.target).value)">
+          <option value="">Choose a card or program</option>
+          @if (cardOptions().length > 0) {
+            <optgroup label="Cards">
+              @for (option of cardOptions(); track option.id) {
+                <option [value]="'card:' + option.id">{{ option.name }}</option>
+              }
+            </optgroup>
+          }
+          @if (airlineOptions().length > 0) {
+            <optgroup label="Airline miles">
+              @for (option of airlineOptions(); track option.id) {
+                <option [value]="'account:' + option.id">{{ option.name }}</option>
+              }
+            </optgroup>
           }
         </select>
       </label>
@@ -67,11 +78,17 @@
       </label>
       <label class="form-field">
         <span>Source</span>
-        <select class="input" [value]="draftSource()" (change)="draftSource.set($any($event.target).value)">
-          @for (source of sources; track source) {
-            <option [value]="source">{{ sourceLabels[source] }}</option>
-          }
-        </select>
+        @if (draftAccountId()) {
+          <select class="input" disabled>
+            <option>Airline miles</option>
+          </select>
+        } @else {
+          <select class="input" [value]="draftSource()" (change)="draftSource.set($any($event.target).value)">
+            @for (source of sources; track source) {
+              <option [value]="source">{{ sourceLabels[source] }}</option>
+            }
+          </select>
+        }
       </label>
       <label class="form-field note-field">
         <span>Note (optional)</span>
@@ -79,9 +96,12 @@
       </label>
       <button class="btn btn-primary" type="submit" [disabled]="!canAdd()">Add</button>
     </form>
-    <p class="muted note">Tip: log what each statement earned. Sign-up bonuses, posted referrals, and accepted retention offers are added automatically.</p>
+    <p class="muted note">
+      Tip: log what each statement earned. Sign-up bonuses, posted referrals, and accepted retention offers are added automatically. Airline
+      miles you log also add to that program's balance.
+    </p>
   } @else {
-    <div class="empty-state">Add cards to your Wallet to log rewards.</div>
+    <div class="empty-state">Add cards to your Wallet, or airline miles under Balances, to log rewards.</div>
   }
 </section>
 
@@ -93,7 +113,7 @@
         <thead>
           <tr>
             <th>Date</th>
-            <th>Card</th>
+            <th>Card or program</th>
             <th>Source</th>
             <th class="num">Amount</th>
             <th class="num">Value</th>
@@ -101,23 +121,23 @@
           </tr>
         </thead>
         <tbody>
-          @for (row of rows(); track $index) {
+          @for (row of rows(); track row.key) {
             <tr>
               <td class="nowrap">{{ formatDate(row.date) }}</td>
               <td>
-                {{ getName(row) }}
-                @if (row.note && row.source !== 'sub') {
+                {{ row.name }}
+                @if (row.note) {
                   <div class="muted">{{ row.note }}</div>
                 }
               </td>
-              <td>{{ sourceLabels[row.source] }}</td>
-              <td class="num">{{ formatAmount(row) }}</td>
+              <td>{{ row.sourceLabel }}</td>
+              <td class="num">{{ row.amountLabel }}</td>
               <td class="num">{{ formatCurrency(row.value) }}</td>
               <td class="num">
-                @if (row.entryId) {
-                  <button class="btn btn-small" (click)="remove(row)" aria-label="Delete entry">✕</button>
+                @if (row.remove) {
+                  <button class="btn btn-small" (click)="row.remove()" aria-label="Delete entry">✕</button>
                 } @else {
-                  <span class="muted">{{ describeOrigin(row) }}</span>
+                  <span class="muted">{{ row.origin }}</span>
                 }
               </td>
             </tr>

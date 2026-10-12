@@ -37,7 +37,7 @@ export interface AppState {
   bankBonuses: BankBonus[];
 }
 
-export const CURRENT_SCHEMA_VERSION = 7;
+export const CURRENT_SCHEMA_VERSION = 8;
 
 export const DEFAULT_DASHBOARD_SETTINGS: DashboardSettings = {
   numCards: 3,

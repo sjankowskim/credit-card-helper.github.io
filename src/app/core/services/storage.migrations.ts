@@ -67,6 +67,13 @@ const MIGRATIONS: Record<number, (state: RawState) => RawState> = {
     ...state,
     schemaVersion: 7,
     bankBonuses: []
+  }),
+
+  // v7 -> v8: airline miles entered by hand, with earned miles
+  7: (state) => ({
+    ...state,
+    schemaVersion: 8,
+    rewards: { ...(isObject(state['rewards']) ? state['rewards'] : createDefaultRewardsState()), loyaltyAccounts: [], loyaltyEarned: [] }
   })
 };
 

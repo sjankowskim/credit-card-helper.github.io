@@ -14,13 +14,14 @@
           </tr>
         </thead>
         <tbody>
-          @for (summary of programCpps(); track summary.program) {
+          @for (summary of programCpps(); track summary.key) {
+            @let current = currentCpp(summary);
             <tr>
-              <td>{{ summary.program }}</td>
+              <td>{{ summary.label }}</td>
               <td class="num">{{ summary.points.toLocaleString('en-US') }}</td>
               <td class="num">{{ formatCurrency(summary.cashValue) }}</td>
               <td class="num strong">{{ formatCpp(summary.cpp) }}</td>
-              <td class="num">{{ formatCpp(currentCpp(summary.program)) }}</td>
+              <td class="num">{{ current === undefined ? '—' : formatCpp(current) }}</td>
               <td class="num">
                 <button class="btn btn-small" (click)="useAsCpp(summary)">Use as my CPP</button>
               </td>
@@ -29,22 +30,36 @@
         </tbody>
       </table>
     </div>
-    <p class="muted note">Your CPP setting values points on the Dashboard and in your balances.</p>
+    <p class="muted note">Your CPP setting values points on the Dashboard and in your balances. For airline miles it sets that program's ¢ per mile.</p>
   </section>
 }
 
 <section>
   <h2 class="section-title">Log a redemption</h2>
-  @if (programs().length > 0) {
+  @if (programs().length > 0 || airlineAccounts().length > 0) {
     <form class="add-form" (submit)="add($event)">
       <label class="form-field">
         <span>Program</span>
-        <select class="input" [value]="draftProgram()" (change)="draftProgram.set($any($event.target).value)">
+        <select class="input" [value]="draftSource()" (change)="draftSource.set($any($event.target).value)">
           <option value="">Choose a program</option>
-          @for (program of programs(); track program.id) {
-            <option [value]="program.id">{{ program.name }}</option>
+          @if (programs().length > 0) {
+            <optgroup label="Card points">
+              @for (program of programs(); track program.id) {
+                <option [value]="'program:' + program.id">{{ program.name }}</option>
+              }
+            </optgroup>
+          }
+          @if (airlineAccounts().length > 0) {
+            <optgroup label="Airline miles">
+              @for (account of airlineAccounts(); track account.id) {
+                <option [value]="'account:' + account.id">{{ account.name }}</option>
+              }
+            </optgroup>
           }
         </select>
+        @if (draftAccount(); as account) {
+          <small class="muted">{{ account.balance.toLocaleString('en-US') }} miles available</small>
+        }
       </label>
       <label class="form-field">
         <span>Date</span>
@@ -72,9 +87,12 @@
         Add{{ draftCpp() !== null ? ' · ' + formatCpp(draftCpp()!) : '' }}
       </button>
     </form>
-    <p class="muted note">Cash value is what you'd have paid in cash for the same thing (flight, hotel, statement credit).</p>
+    <p class="muted note">
+      Cash value is what you'd have paid in cash for the same thing (flight, hotel, statement credit). Airline miles redemptions also come off
+      that program's balance.
+    </p>
   } @else {
-    <div class="empty-state">Redemptions are for points programs. Add a points-earning card to your Wallet first.</div>
+    <div class="empty-state">Redemptions are for points and miles. Add a points-earning card to your Wallet, or airline miles under Balances.</div>
   }
 </section>
 
@@ -99,7 +117,7 @@
               <td class="nowrap">{{ formatDate(redemption.date) }}</td>
               <td>
                 {{ redemption.description || 'Redemption' }}
-                <div class="muted">{{ redemption.program }}</div>
+                <div class="muted">{{ getSource(redemption) }}</div>
               </td>
               <td class="num">{{ redemption.points.toLocaleString('en-US') }}</td>
               <td class="num">{{ formatCurrency(redemption.cashValue) }}</td>
