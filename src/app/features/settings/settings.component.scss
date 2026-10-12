@@ -37,3 +37,30 @@
     background: var(--surface-hover);
   }
 }
+
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+
+  button {
+    padding: 0.5rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+
+    & + button {
+      border-left: 1px solid var(--border);
+    }
+
+    &:hover:not(.active) {
+      background: var(--surface-hover);
+    }
+
+    &.active {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+  }
+}

@@ -92,7 +92,7 @@ h3 {
 
 .warning {
   font-size: 0.875rem;
-  color: #b45309;
+  color: var(--warning-text);
 }
 
 .tiers {
@@ -128,13 +128,13 @@ h3 {
 .only-when {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 .discontinued {
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
-  color: #b45309;
+  color: var(--warning-text);
 }
 
 .card-note {

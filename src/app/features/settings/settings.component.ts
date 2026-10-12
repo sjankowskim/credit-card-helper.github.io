@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { StorageService } from '../../core/services/storage.service';
 import { ToastService } from '../../core/services/toast.service';
+import { ThemeService, type ThemePreference } from '../../core/services/theme.service';
 import { toIsoDate, today } from '../../core/utils/date.utils';
 
 @Component({
@@ -11,6 +12,18 @@ import { toIsoDate, today } from '../../core/utils/date.utils';
 export class SettingsComponent {
   private readonly storage = inject(StorageService);
   private readonly toastService = inject(ToastService);
+  private readonly themeService = inject(ThemeService);
+
+  readonly theme = this.themeService.preference;
+  readonly themes: { id: ThemePreference; label: string }[] = [
+    { id: 'system', label: 'System' },
+    { id: 'light', label: 'Light' },
+    { id: 'dark', label: 'Dark' }
+  ];
+
+  setTheme(theme: ThemePreference): void {
+    this.themeService.set(theme);
+  }
 
   readonly cardCount = computed(() => this.storage.state().userCards.length);
 

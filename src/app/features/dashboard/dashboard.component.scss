@@ -31,7 +31,7 @@
     
     &.active {
       background: var(--accent);
-      color: white;
+      color: var(--on-primary);
       border-color: var(--accent);
     }
   }

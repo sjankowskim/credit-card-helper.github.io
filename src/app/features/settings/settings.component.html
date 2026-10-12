@@ -1,6 +1,18 @@
 <div class="page-container">
   <h1>Settings</h1>
-  <p>Back up and restore your data</p>
+  <p>Appearance, and backing up and restoring your data</p>
+
+  <section class="settings-section">
+    <h2>Appearance</h2>
+    <p class="section-description">System follows your device's light or dark setting. Saved on this device only.</p>
+    <div class="segmented" role="radiogroup" aria-label="Theme">
+      @for (t of themes; track t.id) {
+        <button type="button" role="radio" [attr.aria-checked]="theme() === t.id" [class.active]="theme() === t.id" (click)="setTheme(t.id)">
+          {{ t.label }}
+        </button>
+      }
+    </div>
+  </section>
 
   <section class="settings-section">
     <h2>Backup</h2>

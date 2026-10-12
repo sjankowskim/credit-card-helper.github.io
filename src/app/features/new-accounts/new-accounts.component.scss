@@ -12,15 +12,15 @@ section {
   color: var(--text-tertiary);
 
   &.counts {
-    color: #b45309;
+    color: var(--warning-text);
   }
 }
 
 .missing {
   padding: 1.25rem;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  border: 1px solid var(--warning-border);
   border-radius: 12px;
-  background: rgba(245, 158, 11, 0.08);
+  background: var(--warning-faint);
 
   .section-title {
     font-size: 1.125rem;

@@ -49,10 +49,10 @@ td {
   position: relative;
 
   &.warning {
-    background: #fef3c7;
+    background: var(--highlight-bg);
 
     .reward-rate {
-      color: #d97706;
+      color: var(--highlight-text);
     }
   }
 
