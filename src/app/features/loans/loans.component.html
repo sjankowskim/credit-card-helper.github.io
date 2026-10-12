@@ -1,0 +1,295 @@
+<div class="page-container">
+  <h1>Loans</h1>
+  <p>Student loans and other debt: balances, payoff dates, and how extra payments help</p>
+
+  <section class="stat-tiles summary">
+    <div class="stat-tile">
+      <span class="stat-value">{{ formatCurrency(stats().balance) }}</span>
+      <span class="stat-label">Total owed</span>
+      <span class="muted">{{ stats().count }} open {{ stats().count === 1 ? 'loan' : 'loans' }}</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-value">{{ formatCurrency(stats().monthly) }}</span>
+      <span class="stat-label">Monthly payments</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-value">{{ formatPercent(stats().apr) }}</span>
+      <span class="stat-label">Average APR</span>
+      <span class="muted">Weighted by balance</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-value">{{ plan().current.payoffDate ? formatMonth(plan().current.payoffDate) : '—' }}</span>
+      <span class="stat-label">Debt-free</span>
+      @if (stats().count > 0 && plan().current.months === null) {
+        <span class="muted negative">Payments don't cover the interest</span>
+      } @else if (plan().current.months !== null) {
+        <span class="muted">{{ formatDuration(plan().current.months) }} at current payments</span>
+      }
+    </div>
+  </section>
+
+  @if (stats().count > 0) {
+    <section class="planner">
+      <h2 class="section-title">Payoff planner</h2>
+      <div class="planner-inputs">
+        <label class="form-field">
+          <span>Extra per month ($)</span>
+          <input class="input" type="number" min="0" step="any" placeholder="0" [value]="extra()" (input)="extra.set($any($event.target).value)" />
+        </label>
+        <label class="form-field">
+          <span>Extra goes to</span>
+          <select class="input" [value]="strategy()" (change)="strategy.set($any($event.target).value)">
+            <option value="avalanche" [selected]="strategy() === 'avalanche'">Highest APR first (avalanche)</option>
+            <option value="snowball" [selected]="strategy() === 'snowball'">Smallest balance first (snowball)</option>
+          </select>
+        </label>
+      </div>
+      @if (plan().hasExtra) {
+        @if (plan().withExtra.months !== null) {
+          <p class="planner-result">
+            Debt-free <strong>{{ formatMonth(plan().withExtra.payoffDate) }}</strong> ({{ formatDuration(plan().withExtra.months) }}),
+            paying <strong>{{ formatCurrency(plan().withExtra.interest!) }}</strong> in interest.
+            @if (plan().monthsSaved !== null && plan().interestSaved !== null) {
+              That's {{ formatDuration(plan().monthsSaved) }} sooner and
+              <span class="positive">{{ formatCurrency(plan().interestSaved!) }} less interest</span>.
+            }
+          </p>
+        } @else {
+          <p class="planner-result negative">Even with the extra, payments don't cover the interest.</p>
+        }
+      } @else if (plan().current.interest !== null) {
+        <p class="planner-result muted">
+          At current payments you'll pay {{ formatCurrency(plan().current.interest!) }} more in interest. Enter an extra amount to see what it saves.
+        </p>
+      }
+      <p class="muted note">Each paid-off loan's payment rolls into the next one. Projections assume fixed rates and on-time payments.</p>
+    </section>
+  }
+
+  <section>
+    <div class="section-header">
+      <h2 class="section-title">Your loans</h2>
+      @if (!formOpen()) {
+        <button class="btn btn-primary btn-small" (click)="formOpen.set(true)">Add loan</button>
+      }
+    </div>
+
+    @if (formOpen()) {
+      @let d = draft();
+      <form class="loan-form" (submit)="addLoan($event)">
+        <h3>Add a loan</h3>
+        <div class="fields">
+          <label class="form-field">
+            <span>Name</span>
+            <input class="input" type="text" placeholder="e.g. Grad PLUS" [value]="d.name" (input)="setField('name', $any($event.target).value)" />
+          </label>
+          <label class="form-field">
+            <span>Lender or servicer (optional)</span>
+            <input class="input" type="text" placeholder="e.g. Nelnet" [value]="d.lender" (input)="setField('lender', $any($event.target).value)" />
+          </label>
+          <label class="form-field">
+            <span>Type</span>
+            <select class="input" [value]="d.type" (change)="setField('type', $any($event.target).value)">
+              @for (type of loanTypes; track type) {
+                <option [value]="type" [selected]="type === d.type">{{ typeLabels[type] }}</option>
+              }
+            </select>
+          </label>
+          <label class="form-field">
+            <span>Current balance ($)</span>
+            <input class="input" type="number" min="0" step="any" [value]="d.balance" (input)="setField('balance', $any($event.target).value)" />
+          </label>
+          <label class="form-field">
+            <span>APR (%)</span>
+            <input class="input" type="number" min="0" step="any" placeholder="e.g. 6.54" [value]="d.apr" (input)="setField('apr', $any($event.target).value)" />
+          </label>
+          <label class="form-field">
+            <span>Monthly payment ($)</span>
+            <input class="input" type="number" min="0" step="any" [value]="d.monthlyPayment" (input)="setField('monthlyPayment', $any($event.target).value)" />
+          </label>
+          <label class="form-field">
+            <span>Original amount (optional)</span>
+            <input class="input" type="number" min="0" step="any" [value]="d.originalAmount" (input)="setField('originalAmount', $any($event.target).value)" />
+          </label>
+          <label class="form-field">
+            <span>Start date (optional)</span>
+            <input class="input" type="date" [value]="d.startDate" (input)="setField('startDate', $any($event.target).value)" />
+          </label>
+        </div>
+        <div class="form-actions">
+          <button class="btn" type="button" (click)="formOpen.set(false)">Cancel</button>
+          <button class="btn btn-primary" type="submit" [disabled]="!canAdd()">Add</button>
+        </div>
+      </form>
+    }
+
+    @for (view of views(); track view.loan.id) {
+      @let loan = view.loan;
+      @let paidOff = loan.balance <= 0;
+      @let underwater = !paidOff && view.payoff.months === null;
+      <article class="loan" [class.paid]="paidOff" [class.underwater]="underwater">
+        <header>
+          <div>
+            <app-inline-edit-field class="name" [value]="loan.name" (saved)="update(view, 'name', $event)" />
+            <div class="muted">
+              {{ typeLabels[loan.type] }}
+              @if (loan.lender) {
+                · {{ loan.lender }}
+              }
+              @if (loan.startDate) {
+                · since {{ formatIso(loan.startDate) }}
+              }
+            </div>
+          </div>
+          @if (paidOff) {
+            <span class="badge badge-success">Paid off</span>
+          } @else if (underwater) {
+            <span class="badge badge-danger">Payment doesn't cover interest</span>
+          } @else {
+            <span class="badge badge-info">{{ formatMonth(view.payoff.payoffDate) }}</span>
+          }
+        </header>
+
+        @if (view.paidPercent !== null) {
+          <div class="bar" role="progressbar" [attr.aria-valuenow]="view.paidPercent" aria-valuemin="0" aria-valuemax="100" aria-label="Share paid off">
+            <div class="fill" [style.width.%]="view.paidPercent"></div>
+          </div>
+        }
+
+        <dl class="figures">
+          <div>
+            <dt>Balance</dt>
+            <dd>
+              <app-inline-edit-field type="currency" [min]="0" [value]="loan.balance" (saved)="update(view, 'balance', $event)" />
+              <span class="muted">as of {{ formatIso(loan.balanceAsOf) }}</span>
+            </dd>
+          </div>
+          <div>
+            <dt>APR</dt>
+            <dd><app-inline-edit-field type="number" [min]="0" [value]="loan.apr" (saved)="update(view, 'apr', $event)" /> %</dd>
+          </div>
+          <div>
+            <dt>Monthly payment</dt>
+            <dd><app-inline-edit-field type="currency" [min]="0" [value]="loan.monthlyPayment" (saved)="update(view, 'monthlyPayment', $event)" /></dd>
+          </div>
+          <div>
+            <dt>Original amount</dt>
+            <dd>
+              <app-inline-edit-field type="currency" [min]="0" [value]="loan.originalAmount" emptyLabel="Add" (saved)="update(view, 'originalAmount', $event)" />
+              @if (view.paidPercent !== null) {
+                <span class="muted">{{ view.paidPercent.toFixed(0) }}% paid off</span>
+              }
+            </dd>
+          </div>
+        </dl>
+
+        @if (!paidOff) {
+          <div class="facts">
+            @if (view.payoff.months !== null) {
+              <span>
+                Paid off <strong>{{ formatMonth(view.payoff.payoffDate) }}</strong> · {{ view.payoff.months }} payments ·
+                {{ formatCurrency(view.payoff.interest!) }} interest left
+              </span>
+            } @else {
+              <span class="negative">
+                At {{ formatCurrency(loan.monthlyPayment) }}/month the balance won't go down; interest is about {{ formatCurrency(view.nextInterest) }}/month.
+              </span>
+            }
+            <span class="muted">About {{ formatCurrency(view.nextInterest) }} of next month's payment is interest</span>
+          </div>
+        }
+
+        <div class="actions">
+          @if (!paidOff) {
+            @let pd = getPaymentDraft(loan.id);
+            @let estimate = estimatePrincipal(view);
+            <form class="payment-form" (submit)="logPayment(view, $event)">
+              <span class="prefix">Paid $</span>
+              <input
+                class="input amount"
+                type="number"
+                min="0"
+                step="any"
+                placeholder="Amount"
+                aria-label="Payment amount"
+                [value]="pd.amount"
+                (input)="setPaymentDraft(loan.id, 'amount', $any($event.target).value)"
+              />
+              <input
+                class="input amount"
+                type="number"
+                min="0"
+                step="any"
+                [placeholder]="estimate === null ? 'Principal' : 'Principal ' + estimate"
+                aria-label="Toward principal"
+                title="Part of the payment that went to principal. Leave blank to use the estimate."
+                [value]="pd.principal"
+                (input)="setPaymentDraft(loan.id, 'principal', $any($event.target).value)"
+              />
+              <input
+                class="input"
+                type="date"
+                aria-label="Payment date"
+                [value]="pd.date"
+                (input)="setPaymentDraft(loan.id, 'date', $any($event.target).value)"
+              />
+              <input
+                class="input note-input"
+                type="text"
+                placeholder="Note (optional)"
+                aria-label="Payment note"
+                [value]="pd.note"
+                (input)="setPaymentDraft(loan.id, 'note', $any($event.target).value)"
+              />
+              <button class="btn btn-small" type="submit">Log payment</button>
+            </form>
+          }
+          <div class="buttons">
+            @if (loan.payments.length > 0) {
+              <button class="btn btn-small" (click)="toggleExpanded(loan.id)">
+                {{ expanded().has(loan.id) ? 'Hide' : 'Show' }} {{ loan.payments.length }} {{ loan.payments.length === 1 ? 'payment' : 'payments' }}
+              </button>
+            }
+            <button class="btn btn-small" (click)="remove(view)" aria-label="Delete loan">✕</button>
+          </div>
+        </div>
+
+        @if (expanded().has(loan.id)) {
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Note</th>
+                  <th class="num">Paid</th>
+                  <th class="num">Principal</th>
+                  <th class="num">Interest</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (payment of sortedPayments(view); track payment.id) {
+                  <tr>
+                    <td class="nowrap">{{ formatIso(payment.date) }}</td>
+                    <td>{{ payment.note || '—' }}</td>
+                    <td class="num">{{ formatCurrency(payment.amount) }}</td>
+                    <td class="num">{{ formatCurrency(payment.principal) }}</td>
+                    <td class="num">{{ formatCurrency(interestOf(payment)) }}</td>
+                    <td class="num">
+                      <button class="btn btn-small" (click)="removePayment(view, payment.id)" aria-label="Delete payment and restore its principal">✕</button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <p class="muted">Deleting a payment puts its principal back on the balance.</p>
+        }
+      </article>
+    } @empty {
+      @if (!formOpen()) {
+        <div class="empty-state">No loans yet. Add a student loan, car loan, or any other debt to see its payoff date.</div>
+      }
+    }
+  </section>
+</div>

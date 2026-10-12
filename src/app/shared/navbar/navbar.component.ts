@@ -17,6 +17,7 @@ export class NavbarComponent {
     { path: '/benefits', label: 'Benefits & Bonuses' },
     { path: '/new-accounts', label: 'New Accounts' },
     { path: '/contributions', label: 'Contributions' },
+    { path: '/loans', label: 'Loans' },
     { path: '/settings', label: 'Settings' }
   ];
 }

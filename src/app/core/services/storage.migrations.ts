@@ -81,6 +81,13 @@ const MIGRATIONS: Record<number, (state: RawState) => RawState> = {
     ...state,
     schemaVersion: 9,
     contributions: []
+  }),
+
+  // v9 -> v10: loans
+  9: (state) => ({
+    ...state,
+    schemaVersion: 10,
+    loans: []
   })
 };
 
