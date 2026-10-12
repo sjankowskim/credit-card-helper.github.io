@@ -17,6 +17,18 @@
   }
 }
 
+.danger-zone {
+  border-color: var(--danger);
+
+  h2 {
+    color: var(--danger);
+  }
+}
+
+.reset-hint {
+  margin-top: 0.75rem;
+}
+
 .actions {
   display: flex;
   gap: 0.75rem;

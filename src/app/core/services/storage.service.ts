@@ -37,6 +37,21 @@ export class StorageService {
     this.save();
   }
 
+  /**
+   * Deletes everything this app saved in this browser (app data, theme, unreadable-data copies,
+   * and pre-v2 keys) and starts over with empty data. Only this app's keys are removed: other
+   * sites on the same domain share localStorage, so it isn't cleared wholesale.
+   */
+  resetAll(): void {
+    const legacyKeys: readonly string[] = Object.values(LEGACY_KEYS);
+    for (const key of Object.keys(localStorage)) {
+      if (key === STORAGE_KEY || key.startsWith(`${STORAGE_KEY}.`) || legacyKeys.includes(key)) {
+        localStorage.removeItem(key);
+      }
+    }
+    this.appState.set(migrate(null));
+  }
+
   private load(): AppState {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);

@@ -1,6 +1,6 @@
 <div class="page-container">
   <h1>Settings</h1>
-  <p>Appearance, and backing up and restoring your data</p>
+  <p>Appearance, backups, and deleting your data</p>
 
   <section class="settings-section">
     <h2>Appearance</h2>
@@ -28,4 +28,29 @@
       </label>
     </div>
   </section>
+
+  <section class="settings-section danger-zone">
+    <h2>Danger zone</h2>
+    <p class="section-description">
+      Delete everything this app has saved in this browser: your cards, bonuses, balances, credits, loans,
+      subscriptions, layout, and settings. You'll start over as if it were your first visit.
+    </p>
+    <button class="btn btn-danger" (click)="confirmingReset.set(true)">Delete all data</button>
+  </section>
+
+  @if (confirmingReset()) {
+    <app-modal title="Delete all data?" (closed)="confirmingReset.set(false)">
+      <p>
+        This permanently deletes everything saved in this browser{{
+          cardCount() > 0 ? ', including your ' + cardCount() + (cardCount() === 1 ? ' card' : ' cards') : ''
+        }}. It can't be undone.
+      </p>
+      <p class="muted reset-hint">Export a backup first if you might want any of it back.</p>
+      <div modal-actions class="modal-actions">
+        <button class="btn" (click)="onExport()">Export a backup</button>
+        <button class="btn" (click)="confirmingReset.set(false)">Cancel</button>
+        <button class="btn btn-danger" (click)="resetAll()">Delete everything</button>
+      </div>
+    </app-modal>
+  }
 </div>
