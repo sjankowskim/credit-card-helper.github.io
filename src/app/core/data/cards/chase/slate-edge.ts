@@ -14,10 +14,8 @@ export const SLATE_EDGE: Card = {
   isBusiness: false,
   creditNeeded: 'fair',
   baseRewardRate: 0.0,
-  // Replaced by the relaunched Chase Slate around January 2026. Reports call it a rebrand, but none
-  // confirm whether existing Slate Edge accounts became Slate cards, so there's no transitionedTo.
-  discontinued: 'retired',
-  termsCheckedOn: '2026-10-12',
+  // Still open to applicants alongside the relaunched Chase Slate (checked on Chase's site)
+  termsCheckedOn: '2026-10-15',
   note: 'No rewards; a card for building fair credit.',
   rewardTiers: []
 };
