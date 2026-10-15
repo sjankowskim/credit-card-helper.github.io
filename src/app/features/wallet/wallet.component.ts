@@ -29,6 +29,7 @@ import {
   getNextAnniversary
 } from '../../core/utils/card-display.utils';
 import { formatDate, toIsoDate } from '../../core/utils/date.utils';
+import { getAccountChain } from '../../core/utils/card-history.utils';
 
 interface WalletGroup {
   title: string;
@@ -108,6 +109,14 @@ export class WalletComponent {
   readonly selected = signal<CardListItem | null>(null);
   readonly adding = signal<CardListItem | null>(null);
   readonly removing = signal<CardListItem | null>(null);
+  /** Cards linked by product change to the one being removed, which are removed with it */
+  readonly removingLinked = computed(() => {
+    const userCard = this.removing()?.userCard;
+    if (!userCard) return [];
+    return getAccountChain(userCard.id, this.userCardsService.cards())
+      .filter(c => c.id !== userCard.id)
+      .map(c => getCardDisplayName(c, CARD_MAP.get(c.cardId)?.name ?? c.cardId));
+  });
 
   /** Every instance with its catalog card, sorted by name then instance number */
   private readonly resolved = computed(() =>
@@ -173,7 +182,10 @@ export class WalletComponent {
     const data = userCard.userData;
     const lines: string[] = [];
 
-    if (data.accountStartDate) lines.push(`Opened ${formatDate(data.accountStartDate)}`);
+    // A card from a product change wasn't opened itself; the account was, as an earlier card
+    if (data.accountStartDate) {
+      lines.push(`${data.productChangedFromId ? 'Account opened' : 'Opened'} ${formatDate(data.accountStartDate)}`);
+    }
 
     switch (data.status) {
       case CardStatus.ACTIVE: {
@@ -224,7 +236,9 @@ export class WalletComponent {
   }
 
   onRemove(item: CardListItem): void {
-    if (item.userCard && this.userCardsService.hasUserData(item.userCard)) {
+    const userCard = item.userCard;
+    const linked = userCard ? getAccountChain(userCard.id, this.userCardsService.cards()).length > 1 : false;
+    if (userCard && (linked || this.userCardsService.hasUserData(userCard))) {
       this.removing.set(item);
     } else {
       this.remove(item);
@@ -233,8 +247,13 @@ export class WalletComponent {
 
   remove(item: CardListItem): void {
     if (!item.userCard) return;
-    this.userCardsService.remove(item.userCard.id);
-    this.toastService.info(`Removed ${item.card.name} from your ${item.userCard.isWishlist ? 'wishlist' : 'wallet'}`);
+    const removed = this.userCardsService.removeAccount(item.userCard.id);
+    const where = item.userCard.isWishlist ? 'wishlist' : 'wallet';
+    this.toastService.info(
+      removed.length > 1
+        ? `Removed ${item.card.name} and ${removed.length - 1} linked ${removed.length === 2 ? 'card' : 'cards'} from your ${where}`
+        : `Removed ${item.card.name} from your ${where}`
+    );
     this.removing.set(null);
   }
 }

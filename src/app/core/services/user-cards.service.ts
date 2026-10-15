@@ -2,13 +2,29 @@ import { Injectable, computed, inject } from '@angular/core';
 import type { UserCard, UserCardData, UserSignUpBonus } from '../models/card.model';
 import { CardStatus } from '../models/card.model';
 import { StorageService } from './storage.service';
+import { getAccountChain } from '../utils/card-history.utils';
 
 type UserDataPatch = Partial<UserCardData> | ((userData: UserCardData) => Partial<UserCardData>);
+
+/** A past product change that a card entering the wallet came from */
+export interface ProductChangeOrigin {
+  /** An instance already in the wallet, or a catalog card to record as the original */
+  from: { userCardId: string } | { cardId: string };
+  /** When the product change happened (ISO date) */
+  date?: string;
+  reason?: string;
+  /** For a catalog card: the sign-up bonus earned on it, when it's the card that was applied for */
+  signUpBonus?: UserSignUpBonus;
+  /** For a catalog card in a longer history: the product change that card came from */
+  earlier?: ProductChangeOrigin;
+}
 
 /** Details for a card entering the wallet */
 export interface WalletEntry {
   status?: CardStatus;
   userData?: Partial<UserCardData>;
+  /** Set when the card came from product-changing another one */
+  productChange?: ProductChangeOrigin;
 }
 
 @Injectable({
@@ -24,7 +40,7 @@ export class UserCardsService {
    * `userData` fields (open date, label, sign-up bonus, ...) are merged in.
    */
   addCard(cardId: string, options: WalletEntry & { isWishlist?: boolean } = {}): UserCard {
-    const { isWishlist = false, status = CardStatus.ACTIVE, userData = {} } = options;
+    const { isWishlist = false, status = CardStatus.ACTIVE, userData = {}, productChange } = options;
     const sameCardInstances = this.cards().filter(c => c.cardId === cardId);
     const nextInstanceNumber = Math.max(0, ...sameCardInstances.map(c => c.instanceNumber)) + 1;
 
@@ -41,11 +57,23 @@ export class UserCardsService {
     };
 
     this.storage.update('userCards', cards => [...cards, newUserCard]);
-    return newUserCard;
+    if (productChange && !isWishlist) this.linkProductChangeOrigin(newUserCard.id, productChange);
+    return this.getById(newUserCard.id) ?? newUserCard;
   }
 
   remove(userCardId: string): void {
     this.storage.update('userCards', cards => cards.filter(c => c.id !== userCardId));
+  }
+
+  /**
+   * Removes a card along with every card linked to it by product change, since together
+   * they're one account's history. Returns the cards removed.
+   */
+  removeAccount(userCardId: string): UserCard[] {
+    const chain = getAccountChain(userCardId, this.cards());
+    const ids = new Set(chain.map(c => c.id));
+    this.storage.update('userCards', cards => cards.filter(c => !ids.has(c.id)));
+    return chain;
   }
 
   /** Replaces one card instance with the result of `recipe`. */
@@ -65,6 +93,17 @@ export class UserCardsService {
     }));
   }
 
+  /**
+   * Sets account-wide fields (open date, authorized user) on a card and every card linked
+   * to it by product change, since a product change keeps the same account.
+   */
+  patchAccount(userCardId: string, patch: Pick<Partial<UserCardData>, 'accountStartDate' | 'isAuthorizedUser'>): void {
+    const ids = new Set(getAccountChain(userCardId, this.cards()).map(c => c.id));
+    this.storage.update('userCards', cards =>
+      cards.map(c => (ids.has(c.id) ? { ...c, userData: { ...c.userData, ...patch } } : c))
+    );
+  }
+
   /** Merges fields into a card's sign-up bonus; does nothing if it has none. */
   patchSignUpBonus(userCardId: string, patch: Partial<UserSignUpBonus>): void {
     this.patchUserData(userCardId, d => (d.signUpBonus ? { signUpBonus: { ...d.signUpBonus, ...patch } } : {}));
@@ -81,7 +120,7 @@ export class UserCardsService {
   }
 
   /** Moves a wishlist instance into the wallet, merging in the given details. */
-  moveToWallet(userCardId: string, { status = CardStatus.ACTIVE, userData = {} }: WalletEntry = {}): void {
+  moveToWallet(userCardId: string, { status = CardStatus.ACTIVE, userData = {}, productChange }: WalletEntry = {}): void {
     this.update(userCardId, c => ({
       ...c,
       isWishlist: false,
@@ -92,6 +131,44 @@ export class UserCardsService {
         ...userData
       }
     }));
+    if (productChange) this.linkProductChangeOrigin(userCardId, productChange);
+  }
+
+  /**
+   * Links a card entering the wallet to the card it was product-changed from. A wallet
+   * instance is marked product-changed; a catalog card is added as a product-changed
+   * instance sharing the new card's open date, since it's the same account, and linked
+   * in turn to any `earlier` card.
+   */
+  private linkProductChangeOrigin(
+    newUserCardId: string,
+    { from, date, reason, signUpBonus, earlier }: ProductChangeOrigin
+  ): void {
+    const newCard = this.getById(newUserCardId);
+    if (!newCard) return;
+    const productChangedData = { productChangeDate: date, productChangedToCardId: newCard.cardId, reason };
+
+    let originalId: string;
+    if ('userCardId' in from) {
+      if (!this.getById(from.userCardId)) return;
+      originalId = from.userCardId;
+      this.setStatus(originalId, CardStatus.PRODUCT_CHANGED);
+      this.patchUserData(originalId, { productChangedData });
+    } else {
+      originalId = this.addCard(from.cardId, {
+        status: CardStatus.PRODUCT_CHANGED,
+        userData: { accountStartDate: newCard.userData.accountStartDate, productChangedData, signUpBonus },
+        productChange: earlier
+      }).id;
+    }
+    this.patchUserData(newUserCardId, { productChangedFromId: originalId });
+
+    // One account: whichever card had the open date or authorized user setting, all of them get it
+    const original = this.getById(originalId);
+    this.patchAccount(newUserCardId, {
+      accountStartDate: newCard.userData.accountStartDate ?? original?.userData.accountStartDate,
+      isAuthorizedUser: newCard.userData.isAuthorizedUser || original?.userData.isAuthorizedUser || undefined
+    });
   }
 
   toggleWishlist(userCardId: string): void {

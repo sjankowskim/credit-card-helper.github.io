@@ -7,7 +7,6 @@ import { ALL_CARDS, CARD_MAP } from '../../../../core/data/cards';
 import { ModalComponent } from '../../../../shared/modal/modal.component';
 import { OfferHistoryChartComponent } from '../../../../shared/offer-history-chart/offer-history-chart.component';
 import { OFFER_HISTORY } from '../../../../core/data/offer-history';
-import { InlineEditFieldComponent } from '../../../../shared/inline-edit-field/inline-edit-field.component';
 import {
   formatCurrency,
   formatRate,
@@ -21,8 +20,10 @@ import { formatDate, toIsoDate, today } from '../../../../core/utils/date.utils'
 import { CREDIT_LEVEL_LABELS } from '../../../../core/utils/card-filters.utils';
 import { getQuarter } from '../../../../core/utils/reward-rate.utils';
 import { createSignUpBonus } from '../../../../core/utils/sub.utils';
+import { getAccountChain, getCardHistory } from '../../../../core/utils/card-history.utils';
+import { getProductChangeTargets } from '../../../../core/utils/product-change.utils';
 
-type InlineValue = string | number | undefined;
+type FieldValue = string | number | undefined;
 
 /**
  * Card details in a modal. With a `userCardId` it also shows and edits the user's
@@ -30,7 +31,7 @@ type InlineValue = string | number | undefined;
  */
 @Component({
   selector: 'app-card-detail',
-  imports: [ModalComponent, InlineEditFieldComponent, OfferHistoryChartComponent],
+  imports: [ModalComponent, OfferHistoryChartComponent],
   templateUrl: './card-detail.component.html',
   styleUrl: './card-detail.component.scss'
 })
@@ -105,14 +106,20 @@ export class CardDetailComponent {
 
   // ---- Product change ----
 
-  /** Product changes stay within the issuer */
-  readonly productChangeOptions = computed(() =>
-    ALL_CARDS.filter(c => c.issuer === this.card().issuer && c.id !== this.card().id)
-  );
+  /** The issuer's other cards, plus the card its accounts were moved to if the issuer transitioned it */
+  readonly productChangeOptions = computed(() => getProductChangeTargets(this.card()));
 
   readonly productChangedTo = computed(() => {
     const id = this.userData().productChangedData?.productChangedToCardId;
     return id ? CARD_MAP.get(id) : undefined;
+  });
+
+  /** The wallet card this one was product-changed into, once linked; it can't be swapped from here */
+  readonly linkedCardName = computed(() => {
+    const id = this.userCardId();
+    const linked = id ? this.userCardsService.getProductChangedTo(id) : undefined;
+    const card = linked && CARD_MAP.get(linked.cardId);
+    return linked && card ? getCardDisplayName(linked, card.name) : undefined;
   });
 
   /** The card this one's accounts were moved to, if the issuer transitioned it */
@@ -130,6 +137,23 @@ export class CardDetailComponent {
     }))
   );
 
+  /** The card this one was product-changed from, for the date it became this card */
+  readonly productChangedFromCard = computed(() => {
+    const fromId = this.userData().productChangedFromId;
+    return fromId ? this.userCardsService.getById(fromId) : undefined;
+  });
+
+  /** The card the account was opened as, and its open date, when this card came from a product change */
+  readonly openedAs = computed(() => {
+    const id = this.userCardId();
+    if (!id || !this.userData().productChangedFromId) return undefined;
+    const first = getAccountChain(id, this.userCardsService.cards())[0];
+    const card = first && CARD_MAP.get(first.cardId);
+    return first && card
+      ? { name: getCardDisplayName(first, card.name), date: first.userData.accountStartDate }
+      : undefined;
+  });
+
   readonly productChangedFrom = computed(() => {
     const fromId = this.userData().productChangedFromId;
     const from = fromId ? this.userCardsService.getById(fromId) : undefined;
@@ -137,61 +161,117 @@ export class CardDetailComponent {
     return from && card ? getCardDisplayName(from, card.name) : undefined;
   });
 
+  /** Another card in this account's history that holds its sign-up bonus, e.g. the card applied for before a product change */
+  readonly bonusTrackedOn = computed(() => {
+    const id = this.userCardId();
+    if (!id) return undefined;
+    const holder = getAccountChain(id, this.userCardsService.cards()).find(c => c.id !== id && c.userData.signUpBonus);
+    const card = holder && CARD_MAP.get(holder.cardId);
+    return holder && card ? getCardDisplayName(holder, card.name) : undefined;
+  });
+
+  /** The account's life across product changes, for owned cards */
+  readonly history = computed(() => {
+    const id = this.userCardId();
+    if (!id || !this.isOwned()) return [];
+    return getCardHistory(
+      id,
+      this.userCardsService.cards(),
+      userCard => getCardDisplayName(userCard, CARD_MAP.get(userCard.cardId)?.name ?? userCard.cardId),
+      cardId => CARD_MAP.get(cardId)
+    );
+  });
+
   // ---- Editing ----
+
+  /** A text or date input's value for saving; empty clears the field */
+  text(event: Event): string | undefined {
+    return (event.target as HTMLInputElement).value.trim() || undefined;
+  }
+
+  /**
+   * A number input's value for saving; empty clears the field. Out-of-range values are
+   * pulled into range (and shown that way), so a typo like 45 for a due day saves as 31.
+   */
+  number(event: Event, min?: number, max?: number): number | undefined {
+    const input = event.target as HTMLInputElement;
+    if (input.value.trim() === '') return undefined;
+    let value = Number(input.value);
+    if (!Number.isFinite(value)) value = min ?? 0;
+    if (min !== undefined) value = Math.max(min, value);
+    if (max !== undefined) value = Math.min(max, value);
+    input.value = String(value);
+    return value;
+  }
 
   private patch(patch: Partial<UserCardData> | ((d: UserCardData) => Partial<UserCardData>)): void {
     const id = this.userCardId();
     if (id) this.userCardsService.patchUserData(id, patch);
   }
 
-  setLabel(value: InlineValue): void {
+  setLabel(value: FieldValue): void {
     this.patch({ customLabel: value === undefined ? undefined : String(value) });
   }
 
-  setOpenDate(value: InlineValue): void {
-    this.patch({ accountStartDate: value === undefined ? undefined : String(value) });
+  setOpenDate(value: FieldValue): void {
+    const id = this.userCardId();
+    if (id) this.userCardsService.patchAccount(id, { accountStartDate: value === undefined ? undefined : String(value) });
   }
 
-  setPlannedCloseDate(value: InlineValue): void {
+  /** On a card from a product change, the date is stored on the card it was changed from */
+  setBecameThisCardDate(value: FieldValue): void {
+    const fromId = this.userData().productChangedFromId;
+    if (!fromId) return;
+    this.userCardsService.patchUserData(fromId, d => ({
+      productChangedData: { ...d.productChangedData, productChangeDate: value === undefined ? undefined : String(value) }
+    }));
+  }
+
+  setPlannedCloseDate(value: FieldValue): void {
     this.patch({ plannedCloseDate: value === undefined ? undefined : String(value) });
   }
 
-  setAnnualFeeOverride(value: InlineValue): void {
+  setAnnualFeeOverride(value: FieldValue): void {
     this.patch({ annualFeeOverride: value === undefined ? undefined : Number(value) });
   }
 
-  setActiveField(field: 'paymentDueDate' | 'creditLimit', value: InlineValue): void {
+  setActiveField(field: 'paymentDueDate' | 'creditLimit', value: FieldValue): void {
     this.patch(d => ({ activeData: { ...d.activeData, [field]: value === undefined ? undefined : Number(value) } }));
   }
 
-  setLastCliRequestDate(value: InlineValue): void {
+  setLastCliRequestDate(value: FieldValue): void {
     this.patch(d => ({
       activeData: { ...d.activeData, lastCliRequestDate: value === undefined ? undefined : String(value) }
     }));
   }
 
-  setClosedDate(value: InlineValue): void {
+  setClosedDate(value: FieldValue): void {
     this.patch(d => ({ closedData: { ...d.closedData, closedDate: value === undefined ? undefined : String(value) } }));
   }
 
-  setProductChangeDate(value: InlineValue): void {
+  setProductChangeDate(value: FieldValue): void {
     this.patch(d => ({
       productChangedData: { ...d.productChangedData, productChangeDate: value === undefined ? undefined : String(value) }
     }));
   }
 
-  setClosedReason(value: InlineValue): void {
+  setClosedReason(value: FieldValue): void {
     this.patch(d => ({ closedData: { ...d.closedData, reason: value === undefined ? undefined : String(value) } }));
   }
 
-  setProductChangeReason(value: InlineValue): void {
+  setProductChangeReason(value: FieldValue): void {
     this.patch(d => ({
       productChangedData: { ...d.productChangedData, reason: value === undefined ? undefined : String(value) }
     }));
   }
 
   toggle(field: 'isChurnCard' | 'isAuthorizedUser'): void {
-    this.patch(d => ({ [field]: !d[field] }));
+    const id = this.userCardId();
+    if (!id) return;
+    const value = !this.userData()[field] || undefined;
+    // Authorized user is about the account, so it follows through product changes
+    if (field === 'isAuthorizedUser') this.userCardsService.patchAccount(id, { isAuthorizedUser: value });
+    else this.patch({ [field]: value });
   }
 
   startBonus(): void {
@@ -203,7 +283,7 @@ export class CardDetailComponent {
   }
 
   /** Cleared fields fall back to a safe value; "spent" can be cleared */
-  setBonusField(field: 'amount' | 'spendRequired' | 'windowMonths' | 'spent', value: InlineValue): void {
+  setBonusField(field: 'amount' | 'spendRequired' | 'windowMonths' | 'spent', value: FieldValue): void {
     const id = this.userCardId();
     if (!id) return;
     const number = value === undefined ? undefined : Number(value);
@@ -212,7 +292,34 @@ export class CardDetailComponent {
     this.userCardsService.patchSignUpBonus(id, patch);
   }
 
-  setBonusEarnedDate(value: InlineValue): void {
+  /** Where the tracked bonus stands, for the "Bonus status" field */
+  readonly bonusOutcome = computed(() => {
+    const bonus = this.userData().signUpBonus;
+    return bonus?.earnedDate ? 'earned' : bonus?.notEarned ? 'not-earned' : 'in-progress';
+  });
+
+  /** Earned and didn't-get-it start on today; the date or reason can be changed after */
+  setBonusOutcome(outcome: string): void {
+    const id = this.userCardId();
+    if (!id) return;
+    const date = toIsoDate(today());
+    this.userCardsService.patchSignUpBonus(id, {
+      earnedDate: outcome === 'earned' ? date : undefined,
+      notEarned: outcome === 'not-earned' ? { date } : undefined
+    });
+  }
+
+  setNotEarnedReason(value: FieldValue): void {
+    const id = this.userCardId();
+    const notEarned = this.userData().signUpBonus?.notEarned;
+    if (id && notEarned) {
+      this.userCardsService.patchSignUpBonus(id, {
+        notEarned: { ...notEarned, reason: value === undefined ? undefined : String(value) }
+      });
+    }
+  }
+
+  setBonusEarnedDate(value: FieldValue): void {
     const id = this.userCardId();
     if (id) this.userCardsService.patchSignUpBonus(id, { earnedDate: value === undefined ? undefined : String(value) });
   }

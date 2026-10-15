@@ -2,8 +2,11 @@
   <form id="add-card-form" class="add-form" (submit)="submit($event)">
     <div class="row">
       <label class="form-field">
-        <span>Opened</span>
-        <input class="input" type="date" [max]="maxDate" [value]="openDate()" (input)="openDate.set($any($event.target).value)" />
+        <span>Got it by</span>
+        <select class="input" [value]="origin()" (change)="setOrigin($any($event.target).value)">
+          <option value="new">Applying (new account)</option>
+          <option value="product-change">Product change</option>
+        </select>
       </label>
       <label class="form-field">
         <span>Status</span>
@@ -14,13 +17,94 @@
       </label>
     </div>
 
+    @if (origin() === 'product-change') {
+      <fieldset class="sub">
+        @for (view of stepViews(); track view.step.key) {
+          <div class="step" [class.earlier]="view.index > 0">
+            <div class="form-field">
+              <div class="step-header">
+                <span>{{ view.index === 0 ? 'Changed from' : 'Before that, changed from' }}</span>
+                @if (view.index > 0) {
+                  <button type="button" class="link-button" (click)="removeStep(view.index)">Remove</button>
+                }
+              </div>
+              <app-searchable-select
+                [label]="view.index === 0 ? 'Changed from' : 'Before ' + view.newerName + ', changed from'"
+                [groups]="view.groups"
+                [value]="view.step.from"
+                placeholder="Search cards"
+                (valueChange)="setStepCard(view.index, $event)"
+              />
+            </div>
+            <div class="row">
+              <label class="form-field">
+                <span>Changed on</span>
+                <input
+                  class="input"
+                  type="date"
+                  [max]="maxDate"
+                  [value]="view.date"
+                  (input)="setStepDate(view.index, $any($event.target).value)"
+                />
+              </label>
+              <label class="form-field">
+                <span>Reason (optional)</span>
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="e.g. Wanted the dining category"
+                  [value]="view.step.reason"
+                  (input)="setStepReason(view.index, $any($event.target).value)"
+                />
+              </label>
+            </div>
+          </div>
+        }
+
+        <div class="step-actions">
+          @if (canAddEarlier()) {
+            <button type="button" class="btn btn-small" (click)="addEarlierStep()">+ Add an earlier card</button>
+          }
+          <label class="checkbox small">
+            <input type="checkbox" [checked]="anyIssuer()" (change)="setAnyIssuer($any($event.target).checked)" />
+            <span>Include other issuers' cards</span>
+          </label>
+        </div>
+
+        <label class="form-field">
+          <span>Account opened</span>
+          <input
+            class="input"
+            type="date"
+            [max]="maxDate"
+            [value]="openDate()"
+            [disabled]="openDateLocked()"
+            (input)="setOpenDate($any($event.target).value)"
+          />
+        </label>
+        <p class="hint">
+          @if (openDateLocked()) {
+            The open date comes from your card, since a product change keeps the same account.
+          } @else {
+            A product change keeps the same account, so enter when you opened the first card.
+          }
+          Cards that aren't in your wallet are added to your history as product changed.
+        </p>
+      </fieldset>
+    } @else {
+      <label class="form-field">
+        <span>Opened</span>
+        <input class="input" type="date" [max]="maxDate" [value]="openDate()" (input)="setOpenDate($any($event.target).value)" />
+      </label>
+    }
+
     @if (status() === 'closed') {
       <label class="form-field">
         <span>Closed</span>
         <input
           class="input"
           type="date"
-          [min]="openDate()"
+          [min]="closedMin()"
           [max]="maxDate"
           [value]="closedDate()"
           (input)="closedDate.set($any($event.target).value)"
@@ -39,31 +123,80 @@
       />
     </label>
 
-    <fieldset class="sub">
-      <label class="checkbox">
-        <input type="checkbox" [checked]="trackSub()" (change)="setTrackSub($any($event.target).checked)" />
-        <span>Track a sign-up bonus</span>
-      </label>
-      @if (trackSub()) {
-        @if (card().defaultSignUpBonus) {
-          <p class="hint">Prefilled from the current public offer. Change it if yours was different.</p>
+    @if (bonusCard(); as bonusCard) {
+      <fieldset class="sub">
+        <label class="checkbox">
+          <input type="checkbox" [checked]="trackSub()" (change)="editSub('track', $any($event.target).checked)" />
+          <span>
+            Track a sign-up bonus{{ origin() === 'product-change' ? ' on the ' + bonusCard.name : '' }}
+          </span>
+        </label>
+        @if (origin() === 'product-change' && !trackSub()) {
+          <p class="hint">
+            Bonuses go with the card you applied for, so it's tracked on the {{ bonusCard.name }}. Getting a card by
+            product change usually rules out its bonus.
+          </p>
         }
-        <div class="row three">
-          <label class="form-field">
-            <span>Bonus ({{ subCurrency() }})</span>
-            <input class="input" type="number" min="0" [value]="subAmount()" (input)="editSub('amount', $any($event.target).value)" />
-          </label>
-          <label class="form-field">
-            <span>Spend required ($)</span>
-            <input class="input" type="number" min="0" step="100" [value]="subSpend()" (input)="editSub('spendRequired', $any($event.target).value)" />
-          </label>
-          <label class="form-field">
-            <span>Within (months)</span>
-            <input class="input" type="number" min="1" [value]="subWindow()" (input)="editSub('windowMonths', $any($event.target).value)" />
-          </label>
-        </div>
-      }
-    </fieldset>
+        @if (trackSub()) {
+          @if (bonusCard.defaultSignUpBonus) {
+            <p class="hint">Prefilled from the current public offer. Change it if yours was different.</p>
+          }
+          <div class="row three">
+            <label class="form-field">
+              <span>Bonus ({{ subCurrency() }})</span>
+              <input class="input" type="number" min="0" [value]="subAmount()" (input)="editSub('amount', $any($event.target).value)" />
+            </label>
+            <label class="form-field">
+              <span>Spend required ($)</span>
+              <input class="input" type="number" min="0" step="100" [value]="subSpend()" (input)="editSub('spendRequired', $any($event.target).value)" />
+            </label>
+            <label class="form-field">
+              <span>Within (months)</span>
+              <input class="input" type="number" min="1" [value]="subWindow()" (input)="editSub('windowMonths', $any($event.target).value)" />
+            </label>
+          </div>
+          <div class="row">
+            <label class="form-field">
+              <span>Bonus status</span>
+              <select class="input" [value]="subOutcome()" (change)="editSub('outcome', $any($event.target).value)">
+                <option value="in-progress">Working on it</option>
+                <option value="earned">Earned</option>
+                <option value="not-earned">Didn't get it</option>
+              </select>
+            </label>
+            @switch (subOutcome()) {
+              @case ('earned') {
+                <label class="form-field">
+                  <span>Earned on</span>
+                  <input
+                    class="input"
+                    type="date"
+                    [min]="openDate()"
+                    [max]="maxDate"
+                    [value]="subEarnedDate()"
+                    (input)="editSub('earnedDate', $any($event.target).value)"
+                  />
+                </label>
+              }
+              @case ('not-earned') {
+                <label class="form-field">
+                  <span>Why (optional)</span>
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="e.g. Didn't hit the spend"
+                    [value]="subNotEarnedReason()"
+                    (input)="editSub('notEarnedReason', $any($event.target).value)"
+                  />
+                </label>
+              }
+            }
+          </div>
+        }
+      </fieldset>
+    } @else if (walletOriginName()) {
+      <p class="hint">The sign-up bonus for this account is tracked on your {{ walletOriginName() }}.</p>
+    }
 
     @if (error()) {
       <p class="error">{{ error() }}</p>

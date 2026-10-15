@@ -55,7 +55,9 @@ There's no account to create and no server: everything you enter is saved in you
   rewards type, and bonus category. Grid, compact, and table views, with columns you pick.
 - 👛 **Wallet**: your cards grouped into Active, Churning, and Closed & product changed. Track open
   dates, credit limits, payment due days, last credit limit increase requests, annual fee overrides,
-  and why a card was closed or product changed. Tables with totals, like your spreadsheet.
+  and why a card was closed or product changed. Add cards you got by product change, and see each
+  account's history (opened, bonus earned, product changes, closed) in its details. Tables with
+  totals, like your spreadsheet.
 - 🏆 **Best card by category**: ranks your cards for every spending category, including rotating
   and pick-your-own categories, optionally valuing points at your own cents-per-point.
 - 📋 **New accounts**: every account you've opened and where you stand with each issuer's application

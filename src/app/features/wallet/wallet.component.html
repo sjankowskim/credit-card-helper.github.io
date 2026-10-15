@@ -92,9 +92,20 @@
         This deletes everything you've saved for <strong>{{ item.card.name }}</strong>, including its open date,
         bonus category picks, and sign-up bonus. This can't be undone.
       </p>
+      @if (removingLinked().length > 0) {
+        <p class="linked-note">
+          It's linked by product change to
+          @for (name of removingLinked(); track $index) {
+            <strong>{{ name }}</strong>{{ $last ? '' : $index === removingLinked().length - 2 ? ' and ' : ', ' }}
+          }
+          as one account's history, so {{ removingLinked().length === 1 ? 'that card is' : 'those cards are' }} removed too.
+        </p>
+      }
       <div modal-actions class="modal-actions">
         <button class="btn" (click)="removing.set(null)">Cancel</button>
-        <button class="btn btn-danger" (click)="remove(item)">Remove card</button>
+        <button class="btn btn-danger" (click)="remove(item)">
+          {{ removingLinked().length > 0 ? 'Remove ' + (removingLinked().length + 1) + ' cards' : 'Remove card' }}
+        </button>
       </div>
     </app-modal>
   }

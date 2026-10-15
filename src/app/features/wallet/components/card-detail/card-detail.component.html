@@ -9,169 +9,274 @@
   @if (userCard(); as userCard) {
     <section>
       <h3>{{ userCard.isWishlist ? 'Wishlist' : 'Your card' }}</h3>
-      <div class="rows">
+      <!-- Fields save when they lose focus (or on Enter), like a form that's always open -->
+      <div class="fields">
         @if (isOwned()) {
-          <div class="row">
-            <span class="label">Status</span>
-            <select class="input" [value]="status() ?? ''" (change)="onStatusChange($any($event.target).value)">
-              <option value="active">Active</option>
-              <option value="closed">Closed</option>
-              <option value="product-changed">Product changed</option>
-            </select>
-          </div>
+          @if (linkedCardName()) {
+            <!-- Changing it would unlink (and could delete) the card it became -->
+            <div class="form-field">
+              <span>Status</span>
+              <div class="static-value">Product changed</div>
+            </div>
+          } @else {
+            <label class="form-field">
+              <span>Status</span>
+              <select class="input" [value]="status() ?? ''" (change)="onStatusChange($any($event.target).value)">
+                <option value="active">Active</option>
+                <option value="closed">Closed</option>
+                <option value="product-changed">Product changed</option>
+              </select>
+            </label>
+          }
         }
-        <div class="row">
-          <span class="label">Nickname</span>
-          <app-inline-edit-field [value]="userData().customLabel" placeholder="e.g. Grocery card" (saved)="setLabel($event)" />
-        </div>
+        <label class="form-field" [class.full]="!isOwned()">
+          <span>Nickname</span>
+          <input class="input" type="text" placeholder="e.g. Grocery card" [value]="userData().customLabel ?? ''" (change)="setLabel(text($event))" />
+        </label>
 
         @if (isOwned()) {
-          <div class="row">
-            <span class="label">Opened</span>
-            <app-inline-edit-field type="date" [value]="userData().accountStartDate" (saved)="setOpenDate($event)" />
-          </div>
-          <div class="row">
-            <span class="label">Authorized user</span>
-            <button class="btn btn-small" (click)="toggle('isAuthorizedUser')">{{ userData().isAuthorizedUser ? 'Yes' : 'No' }}</button>
-          </div>
-          @if (productChangedFrom(); as from) {
-            <div class="row">
-              <span class="label">Product changed from</span>
-              <span class="value">{{ from }} <span class="muted">(same account, not a new one for 5/24)</span></span>
+          @if (openedAs(); as openedAs) {
+            <!-- The account was opened as an earlier card; its open date is edited there -->
+            <div class="form-field">
+              <span>Account opened</span>
+              <div class="static-value">{{ openedAs.date ? formatDate(openedAs.date) : 'Not set' }}</div>
+              <span class="field-hint">
+                @if (openedAs.date) {
+                  From your {{ openedAs.name }}, where you can change it
+                } @else {
+                  Add it on your {{ openedAs.name }}
+                }
+              </span>
             </div>
+            <label class="form-field">
+              <span>Changed to this card on</span>
+              <input
+                class="input"
+                type="date"
+                [value]="productChangedFromCard()?.userData?.productChangedData?.productChangeDate ?? ''"
+                (change)="setBecameThisCardDate(text($event))"
+              />
+            </label>
+          } @else {
+            <label class="form-field">
+              <span>Opened</span>
+              <input class="input" type="date" [value]="userData().accountStartDate ?? ''" (change)="setOpenDate(text($event))" />
+            </label>
           }
 
           @switch (status()) {
             @case (CardStatus.ACTIVE) {
-              <div class="row">
-                <span class="label">Annual fee</span>
-                <app-inline-edit-field
-                  type="currency"
-                  [min]="0"
-                  [value]="userData().annualFeeOverride"
-                  [emptyLabel]="formatCurrency(card().annualFee) + ' (standard)'"
-                  (saved)="setAnnualFeeOverride($event)"
-                />
-              </div>
+              <!-- A no-fee card can't cost less, so the field only shows for cards with a fee (or an old override) -->
+              @if (card().annualFee > 0 || userData().annualFeeOverride !== undefined) {
+                <label class="form-field">
+                  <span>Your annual fee ($)</span>
+                  <input
+                    class="input"
+                    type="number"
+                    min="0"
+                    [placeholder]="card().annualFee + ' (standard)'"
+                    [value]="userData().annualFeeOverride ?? ''"
+                    (change)="setAnnualFeeOverride(number($event, 0))"
+                  />
+                  <span class="field-hint">
+                    Leave empty to use the standard {{ formatCurrency(card().annualFee) }}. Fill in if you pay less, e.g. a
+                    retention offer or first-year waiver.
+                  </span>
+                </label>
+              }
               @if (nextAnnualFeeDate()) {
-                <div class="row">
-                  <span class="label">Next annual fee</span>
-                  <span class="value">{{ nextAnnualFeeDate() }}</span>
+                <div class="form-field">
+                  <span>Next annual fee</span>
+                  <div class="static-value">{{ nextAnnualFeeDate() }}</div>
                 </div>
               }
-              <div class="row">
-                <span class="label">Payment due (day of month)</span>
-                <app-inline-edit-field
+              <label class="form-field">
+                <span>Credit limit ($)</span>
+                <input class="input" type="number" min="0" [value]="userData().activeData?.creditLimit ?? ''" (change)="setActiveField('creditLimit', number($event, 0))" />
+              </label>
+              <label class="form-field">
+                <span>Payment due (day of month)</span>
+                <input
+                  class="input"
                   type="number"
-                  [min]="1"
-                  [max]="31"
-                  [value]="userData().activeData?.paymentDueDate"
-                  (saved)="setActiveField('paymentDueDate', $event)"
+                  min="1"
+                  max="31"
+                  [value]="userData().activeData?.paymentDueDate ?? ''"
+                  (change)="setActiveField('paymentDueDate', number($event, 1, 31))"
                 />
-              </div>
-              <div class="row">
-                <span class="label">Credit limit</span>
-                <app-inline-edit-field
-                  type="currency"
-                  [min]="0"
-                  [value]="userData().activeData?.creditLimit"
-                  (saved)="setActiveField('creditLimit', $event)"
-                />
-              </div>
-              <div class="row">
-                <span class="label">Last credit limit increase request</span>
-                <app-inline-edit-field
-                  type="date"
-                  [value]="userData().activeData?.lastCliRequestDate"
-                  emptyLabel="Never"
-                  (saved)="setLastCliRequestDate($event)"
-                />
-              </div>
-              <div class="row">
-                <span class="label">Churn card</span>
-                <button class="btn btn-small" (click)="toggle('isChurnCard')">{{ userData().isChurnCard ? 'Yes' : 'No' }}</button>
-              </div>
+              </label>
+              <label class="form-field">
+                <span>Last credit limit increase request</span>
+                <input class="input" type="date" [value]="userData().activeData?.lastCliRequestDate ?? ''" (change)="setLastCliRequestDate(text($event))" />
+              </label>
               @if (userData().isChurnCard) {
-                <div class="row">
-                  <span class="label">Planned close</span>
-                  <app-inline-edit-field type="date" [value]="userData().plannedCloseDate" (saved)="setPlannedCloseDate($event)" />
-                </div>
+                <label class="form-field">
+                  <span>Planned close</span>
+                  <input class="input" type="date" [value]="userData().plannedCloseDate ?? ''" (change)="setPlannedCloseDate(text($event))" />
+                </label>
               }
             }
             @case (CardStatus.CLOSED) {
-              <div class="row">
-                <span class="label">Closed</span>
-                <app-inline-edit-field type="date" [value]="userData().closedData?.closedDate" (saved)="setClosedDate($event)" />
-              </div>
-              <div class="row">
-                <span class="label">Reason</span>
-                <app-inline-edit-field
-                  [value]="userData().closedData?.reason"
+              <label class="form-field">
+                <span>Closed</span>
+                <input class="input" type="date" [value]="userData().closedData?.closedDate ?? ''" (change)="setClosedDate(text($event))" />
+              </label>
+              <label class="form-field full">
+                <span>Reason</span>
+                <input
+                  class="input"
+                  type="text"
                   placeholder="e.g. Annual fee not worth it"
-                  (saved)="setClosedReason($event)"
+                  [value]="userData().closedData?.reason ?? ''"
+                  (change)="setClosedReason(text($event))"
                 />
-              </div>
+              </label>
             }
             @case (CardStatus.PRODUCT_CHANGED) {
-              <div class="row">
-                <span class="label">Changed on</span>
-                <app-inline-edit-field
+              <label class="form-field">
+                <span>Changed on</span>
+                <input
+                  class="input"
                   type="date"
-                  [value]="userData().productChangedData?.productChangeDate"
-                  (saved)="setProductChangeDate($event)"
+                  [value]="userData().productChangedData?.productChangeDate ?? ''"
+                  (change)="setProductChangeDate(text($event))"
                 />
-              </div>
-              <div class="row">
-                <span class="label">Changed to</span>
-                <select class="input" [value]="productChangedTo()?.id ?? ''" (change)="onProductChangeSelect($any($event.target).value)">
-                  <option value="">Choose a {{ card().issuer }} card</option>
-                  @for (option of productChangeOptions(); track option.id) {
-                    <option [value]="option.id">{{ option.name }}</option>
-                  }
-                </select>
-              </div>
-              <div class="row">
-                <span class="label">Reason</span>
-                <app-inline-edit-field
-                  [value]="userData().productChangedData?.reason"
+              </label>
+              @if (linkedCardName(); as linkedName) {
+                <!-- Linked when added; removing either card removes the account's history -->
+                <div class="form-field">
+                  <span>Changed to</span>
+                  <div class="static-value">{{ linkedName }}</div>
+                </div>
+              } @else {
+                <label class="form-field">
+                  <span>Changed to</span>
+                  <!-- [selected] on each option, since a [value] on the select is set before the options exist -->
+                  <select class="input" (change)="onProductChangeSelect($any($event.target).value)">
+                    <option value="" [selected]="!productChangedTo()">Choose the new card</option>
+                    @for (option of productChangeOptions(); track option.id) {
+                      <option [value]="option.id" [selected]="option.id === productChangedTo()?.id">{{ option.name }}</option>
+                    }
+                  </select>
+                </label>
+              }
+              <label class="form-field full">
+                <span>Reason</span>
+                <input
+                  class="input"
+                  type="text"
                   placeholder="e.g. Downgraded to avoid the fee"
-                  (saved)="setProductChangeReason($event)"
+                  [value]="userData().productChangedData?.reason ?? ''"
+                  (change)="setProductChangeReason(text($event))"
                 />
-              </div>
+              </label>
             }
           }
 
+          @if (productChangedFrom(); as from) {
+            <div class="form-field full">
+              <span>Product changed from</span>
+              <div class="static-value">{{ from }} <span class="muted">(same account, not a new one for 5/24)</span></div>
+            </div>
+          }
         }
       </div>
+
+      @if (isOwned()) {
+        <div class="toggles">
+          <label class="checkbox">
+            <input type="checkbox" [checked]="!!userData().isAuthorizedUser" (change)="toggle('isAuthorizedUser')" />
+            Authorized user
+          </label>
+          @if (status() === CardStatus.ACTIVE) {
+            <label class="checkbox">
+              <input type="checkbox" [checked]="!!userData().isChurnCard" (change)="toggle('isChurnCard')" />
+              Churn card (opened for the bonus, planning to close)
+            </label>
+          }
+        </div>
+      }
     </section>
+
+    @if (history().length > 0) {
+      <section>
+        <h3>History</h3>
+        <ol class="timeline">
+          @for (event of history(); track $index) {
+            <li [class]="'event ' + event.kind" [class.other]="!event.userCardIds.includes(userCard.id)">
+              <span class="dot" aria-hidden="true"></span>
+              <div class="event-text">
+                <span class="event-date">{{ event.date ? formatDate(event.date) : 'Date not set' }}</span>
+                <span class="event-title">{{ event.title }}</span>
+                @if (event.detail) {
+                  <span class="muted">{{ event.detail }}</span>
+                }
+              </div>
+            </li>
+          }
+        </ol>
+      </section>
+    }
 
     @if (isOwned()) {
       <section>
         <h3>Sign-up bonus</h3>
         @if (userData().signUpBonus; as sub) {
-          <div class="rows">
-            <div class="row">
-              <span class="label">Bonus ({{ sub.currency }})</span>
-              <app-inline-edit-field type="number" [min]="0" [value]="sub.amount" (saved)="setBonusField('amount', $event)" />
-            </div>
-            <div class="row">
-              <span class="label">Spend required</span>
-              <app-inline-edit-field type="currency" [min]="0" [value]="sub.spendRequired" (saved)="setBonusField('spendRequired', $event)" />
-            </div>
-            <div class="row">
-              <span class="label">Months to spend it</span>
-              <app-inline-edit-field type="number" [min]="1" [value]="sub.windowMonths" (saved)="setBonusField('windowMonths', $event)" />
-            </div>
-            <div class="row">
-              <span class="label">Spent so far</span>
-              <app-inline-edit-field type="currency" [min]="0" [value]="sub.spent" emptyLabel="$0" (saved)="setBonusField('spent', $event)" />
-            </div>
-            <div class="row">
-              <span class="label">Earned on</span>
-              <app-inline-edit-field type="date" [value]="sub.earnedDate" emptyLabel="Not yet" (saved)="setBonusEarnedDate($event)" />
-            </div>
+          <div class="fields three">
+            <label class="form-field">
+              <span>Bonus ({{ sub.currency }})</span>
+              <input class="input" type="number" min="0" [value]="sub.amount" (change)="setBonusField('amount', number($event, 0))" />
+            </label>
+            <label class="form-field">
+              <span>Spend required ($)</span>
+              <input class="input" type="number" min="0" step="100" [value]="sub.spendRequired" (change)="setBonusField('spendRequired', number($event, 0))" />
+            </label>
+            <label class="form-field">
+              <span>Within (months)</span>
+              <input class="input" type="number" min="1" [value]="sub.windowMonths" (change)="setBonusField('windowMonths', number($event, 1))" />
+            </label>
+            <label class="form-field">
+              <span>Spent so far ($)</span>
+              <input class="input" type="number" min="0" placeholder="0" [value]="sub.spent ?? ''" (change)="setBonusField('spent', number($event, 0))" />
+            </label>
+            <label class="form-field">
+              <span>Bonus status</span>
+              <select class="input" [value]="bonusOutcome()" (change)="setBonusOutcome($any($event.target).value)">
+                <option value="in-progress">Working on it</option>
+                <option value="earned">Earned</option>
+                <option value="not-earned">Didn't get it</option>
+              </select>
+            </label>
+            @switch (bonusOutcome()) {
+              @case ('earned') {
+                <label class="form-field">
+                  <span>Earned on</span>
+                  <input class="input" type="date" [value]="sub.earnedDate ?? ''" (change)="setBonusEarnedDate(text($event))" />
+                </label>
+              }
+              @case ('not-earned') {
+                <label class="form-field">
+                  <span>Why</span>
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="e.g. Had the card in the last 4 years"
+                    [value]="sub.notEarned?.reason ?? ''"
+                    (change)="setNotEarnedReason(text($event))"
+                  />
+                </label>
+              }
+            }
           </div>
           <button class="btn btn-small stop-tracking" (click)="removeBonus()">Stop tracking this bonus</button>
+        } @else if (productChangedFrom()) {
+          <p class="muted bonus-note">
+            You got this card by product change, which usually rules out its sign-up bonus.
+            @if (bonusTrackedOn(); as holder) {
+              This account's bonus is tracked on your {{ holder }}.
+            }
+          </p>
+          <button class="btn btn-small" (click)="startBonus()">+ Track a bonus on this card anyway</button>
         } @else {
           <button class="btn btn-small" (click)="startBonus()">+ Track a sign-up bonus</button>
         }
@@ -188,10 +293,11 @@
               <span>{{ tier.name }} · {{ formatTierRate(tier) }}</span>
               <span class="muted">{{ describeBehavior(tier) }}</span>
             </div>
-            <select class="input" [value]="userData().autoTopSpendCategory ?? ''" (change)="onAutoTopSpendChange($any($event.target).value)">
-              <option value="">Pick your top category</option>
+            <!-- [selected] on each option, since a [value] on the select is set before the options exist -->
+            <select class="input" (change)="onAutoTopSpendChange($any($event.target).value)">
+              <option value="" [selected]="!userData().autoTopSpendCategory">Pick your top category</option>
               @for (categoryId of tier.eligibleCategories; track categoryId) {
-                <option [value]="categoryId">{{ getCategoryName(categoryId) }}</option>
+                <option [value]="categoryId" [selected]="categoryId === userData().autoTopSpendCategory">{{ getCategoryName(categoryId) }}</option>
               }
             </select>
             @if (!userData().autoTopSpendCategory) {
