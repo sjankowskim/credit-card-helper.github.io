@@ -90,7 +90,10 @@
                 />
                 <button class="btn btn-small" type="submit">Add</button>
               </form>
-              <button class="btn btn-small" [class.btn-primary]="met" (click)="markEarned(sub)">Mark earned</button>
+              <div class="outcome-buttons">
+                <button class="btn btn-small" (click)="startMarkingNotEarned(sub)">Didn't get it</button>
+                <button class="btn btn-small" [class.btn-primary]="met" (click)="markEarned(sub)">Mark earned</button>
+              </div>
             </div>
           </article>
         } @empty {
@@ -122,6 +125,9 @@
                       @if (sub.state === 'earned') {
                         <span class="badge badge-success">Earned</span>
                         <span class="muted">{{ formatIso(sub.bonus.earnedDate) }}</span>
+                      } @else if (sub.bonus.notEarned; as notEarned) {
+                        <span class="badge badge-danger">Didn't get it</span>
+                        <span class="muted">{{ notEarned.reason ?? formatIso(notEarned.date) }}</span>
                       } @else {
                         <span class="badge badge-danger">Missed</span>
                         <span class="muted">deadline {{ formatDay(sub.deadline) }}</span>
@@ -130,6 +136,8 @@
                     <td class="num">
                       @if (sub.state === 'earned') {
                         <button class="btn btn-small" (click)="undoEarned(sub)">Undo</button>
+                      } @else if (sub.bonus.notEarned) {
+                        <button class="btn btn-small" (click)="undoNotEarned(sub)">Undo</button>
                       } @else {
                         <button class="btn btn-small" (click)="markEarned(sub)">Mark earned</button>
                       }
@@ -145,6 +153,28 @@
     @case ('banks') {
       <app-bank-bonuses />
     }
+  }
+
+  @if (markingNotEarned(); as sub) {
+    <app-modal [title]="'Didn\'t get the ' + sub.card.name + ' bonus'" (closed)="markingNotEarned.set(null)">
+      <form id="not-earned-form" class="not-earned-form" (submit)="confirmNotEarned($event)">
+        <p>It moves to your bonus history as not earned. You can undo this there.</p>
+        <label class="form-field">
+          <span>Why (optional)</span>
+          <input
+            class="input"
+            type="text"
+            placeholder="e.g. Had the card in the last 4 years"
+            [value]="notEarnedReason()"
+            (input)="notEarnedReason.set($any($event.target).value)"
+          />
+        </label>
+      </form>
+      <div modal-actions class="modal-actions">
+        <button type="button" class="btn" (click)="markingNotEarned.set(null)">Cancel</button>
+        <button type="submit" form="not-earned-form" class="btn btn-primary">Mark as not earned</button>
+      </div>
+    </app-modal>
   }
 
   @if (selected(); as item) {

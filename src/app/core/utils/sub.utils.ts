@@ -1,6 +1,7 @@
 import type { Card, UserCard, UserSignUpBonus } from '../models/card.model';
 import { addMonths, daysBetween, parseLocalDate, today } from './date.utils';
 
+/** 'missed' covers a deadline that passed short of the spend and a bonus marked as not earned */
 export type SubState = 'in-progress' | 'earned' | 'missed';
 
 export interface SubProgress {
@@ -37,7 +38,7 @@ export function getSubProgress(userCard: UserCard, card: Card, bonus: UserSignUp
 
   let state: SubState = 'in-progress';
   if (bonus.earnedDate) state = 'earned';
-  else if (daysLeft !== null && daysLeft < 0 && remaining > 0) state = 'missed';
+  else if (bonus.notEarned || (daysLeft !== null && daysLeft < 0 && remaining > 0)) state = 'missed';
 
   let expectedSpent: number | null = null;
   if (opened && deadline) {

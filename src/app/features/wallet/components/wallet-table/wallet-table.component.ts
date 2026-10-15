@@ -1,6 +1,7 @@
 import { Component, computed, input, output } from '@angular/core';
 import type { CardListItem } from '../card-list/card-list.component';
 import type { WalletColumn, WalletColumnId, WalletTableKind } from '../../../../core/data/wallet-columns';
+import { getSubProgress, type SubState } from '../../../../core/utils/sub.utils';
 import { CARD_MAP } from '../../../../core/data/cards';
 import { CardStatus, type UserCard } from '../../../../core/models/card.model';
 import {
@@ -138,11 +139,10 @@ export class WalletTableComponent {
     return years > 0 ? `${years}y ${months % 12}m` : `${months}m`;
   }
 
-  /** 'Earned', 'In progress', or '' when no bonus is tracked */
-  describeBonus(item: CardListItem): string {
+  /** The bonus's state, or undefined when no bonus is tracked */
+  getBonusState(item: CardListItem): SubState | undefined {
     const bonus = item.userCard?.userData.signUpBonus;
-    if (!bonus) return '';
-    return bonus.earnedDate ? 'Earned' : 'In progress';
+    return item.userCard && bonus ? getSubProgress(item.userCard, item.card, bonus).state : undefined;
   }
 
   /** When a closed or product-changed card left the wallet (ISO date) */

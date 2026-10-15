@@ -84,6 +84,17 @@ section {
   gap: 0.75rem;
 }
 
+.outcome-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.not-earned-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .quick-add {
   display: flex;
   align-items: center;

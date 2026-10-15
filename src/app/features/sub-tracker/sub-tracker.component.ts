@@ -5,6 +5,7 @@ import { ToastService } from '../../core/services/toast.service';
 import { CARD_MAP } from '../../core/data/cards';
 import type { Card, UserCard } from '../../core/models/card.model';
 import { CardDetailComponent } from '../wallet/components/card-detail/card-detail.component';
+import { ModalComponent } from '../../shared/modal/modal.component';
 import { BankBonusesComponent } from './components/bank-bonuses/bank-bonuses.component';
 import { formatCurrency, getCardDisplayName, getDisplayInstanceNumber } from '../../core/utils/card-display.utils';
 import { formatDate, parseLocalDate, toIsoDate, today } from '../../core/utils/date.utils';
@@ -14,7 +15,7 @@ type SubTrackerTab = 'cards' | 'banks';
 
 @Component({
   selector: 'app-sub-tracker',
-  imports: [CardDetailComponent, BankBonusesComponent],
+  imports: [CardDetailComponent, BankBonusesComponent, ModalComponent],
   templateUrl: './sub-tracker.component.html',
   styleUrl: './sub-tracker.component.scss'
 })
@@ -33,6 +34,9 @@ export class SubTrackerComponent {
   readonly tab = signal<SubTrackerTab>('cards');
 
   readonly selected = signal<{ card: Card; userCard: UserCard } | null>(null);
+  /** The bonus being marked as not earned, and the reason typed so far */
+  readonly markingNotEarned = signal<SubProgress | null>(null);
+  readonly notEarnedReason = signal('');
   /** Quick-add spend amounts being typed, by UserCard.id */
   readonly spendDrafts = signal<Partial<Record<string, string>>>({});
 
@@ -93,7 +97,7 @@ export class SubTrackerComponent {
 
   /** Earned date, or the deadline for a missed bonus, as an ISO date */
   getOutcomeDate(sub: SubProgress): string {
-    return sub.bonus.earnedDate ?? (sub.deadline ? toIsoDate(sub.deadline) : '');
+    return sub.bonus.earnedDate ?? sub.bonus.notEarned?.date ?? (sub.deadline ? toIsoDate(sub.deadline) : '');
   }
 
   open(sub: SubProgress): void {
@@ -123,5 +127,25 @@ export class SubTrackerComponent {
 
   undoEarned(sub: SubProgress): void {
     this.userCardsService.patchSignUpBonus(sub.userCard.id, { earnedDate: undefined });
+  }
+
+  startMarkingNotEarned(sub: SubProgress): void {
+    this.notEarnedReason.set('');
+    this.markingNotEarned.set(sub);
+  }
+
+  confirmNotEarned(event: Event): void {
+    event.preventDefault();
+    const sub = this.markingNotEarned();
+    if (!sub) return;
+    this.userCardsService.patchSignUpBonus(sub.userCard.id, {
+      notEarned: { date: toIsoDate(today()), reason: this.notEarnedReason().trim() || undefined }
+    });
+    this.toastService.info(`Marked the ${sub.card.name} bonus as not earned`);
+    this.markingNotEarned.set(null);
+  }
+
+  undoNotEarned(sub: SubProgress): void {
+    this.userCardsService.patchSignUpBonus(sub.userCard.id, { notEarned: undefined });
   }
 }

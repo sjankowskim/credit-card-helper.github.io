@@ -158,6 +158,14 @@ export interface UserSignUpBonus extends SignUpBonus {
 
   /** Date the bonus was earned (ISO date string) */
   earnedDate?: string;
+
+  /** Set when the user marked that they didn't get the bonus, e.g. they weren't eligible */
+  notEarned?: {
+    /** When it was marked (ISO date string) */
+    date: string;
+    /** Why, e.g. "Had the card in the last 4 years" */
+    reason?: string;
+  };
 }
 
 export interface Benefit {

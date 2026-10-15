@@ -62,12 +62,15 @@
                   }
                 }
                 @case ('signUpBonus') {
-                  @switch (describeBonus(item)) {
-                    @case ('Earned') {
+                  @switch (getBonusState(item)) {
+                    @case ('earned') {
                       <span class="badge badge-success">Earned</span>
                     }
-                    @case ('In progress') {
+                    @case ('in-progress') {
                       <span class="badge badge-warning">In progress</span>
+                    }
+                    @case ('missed') {
+                      <span class="badge badge-danger">Not earned</span>
                     }
                     @default {
                       <span class="none">—</span>
