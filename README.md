@@ -89,11 +89,11 @@ There's no account to create and no server: everything you enter is saved in you
 
 | Wallet table | Card catalog |
 | :---: | :---: |
-| <img src="docs/screenshots/wallet-table.png" alt="Wallet in table view with active and churning cards" width="440" /> | <img src="docs/screenshots/cards.png" alt="Card catalog in grid view with filters" width="440" /> |
+| <img src="docs/screenshots/wallet-table.png" alt="Wallet in table view with active and churning cards" width="440" /> | <img src="docs/screenshots/cards.png" alt="Card catalog in grid view, filtered to two issuers" width="440" /> |
 
-| Dark mode |
-| :---: |
-| <img src="docs/screenshots/home-dark.png" alt="The Home page in dark mode" width="900" /> |
+| Card history | Dark mode |
+| :---: | :---: |
+| <img src="docs/screenshots/card-history.png" alt="A card's history timeline across a product change" width="440" /> | <img src="docs/screenshots/home-dark.png" alt="The Home page in dark mode" width="440" /> |
 
 <sub>Screenshots use made-up demo data.</sub>
 
