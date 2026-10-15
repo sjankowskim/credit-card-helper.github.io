@@ -1,0 +1,61 @@
+.field {
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  min-width: 0;
+  padding-right: 2rem;
+}
+
+.chevron {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0.75rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.list {
+  max-height: 15rem;
+  margin-top: 0.25rem;
+  padding: 0.25rem 0;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--background);
+}
+
+.group-label {
+  padding: 0.5rem 0.75rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-tertiary);
+}
+
+.option {
+  padding: 0.4375rem 0.75rem;
+  font-size: 0.9375rem;
+  cursor: pointer;
+
+  &.highlighted {
+    background: var(--surface-hover);
+  }
+
+  &.selected {
+    font-weight: 600;
+    color: var(--primary);
+  }
+}
+
+.empty {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}

@@ -1,0 +1,51 @@
+<div class="searchable-select">
+  <div class="field">
+    <input
+      class="input"
+      type="text"
+      role="combobox"
+      autocomplete="off"
+      aria-autocomplete="list"
+      [attr.aria-label]="label() || null"
+      [attr.aria-expanded]="open()"
+      [attr.aria-controls]="listId"
+      [attr.aria-activedescendant]="open() && flatOptions().length > 0 ? optionId(highlighted()) : null"
+      [placeholder]="selectedLabel() || placeholder()"
+      [value]="inputText()"
+      (focus)="show()"
+      (click)="show()"
+      (blur)="open.set(false)"
+      (input)="onInput($any($event.target).value)"
+      (keydown)="onKeydown($event)"
+    />
+    <span class="chevron" aria-hidden="true">▾</span>
+  </div>
+
+  @if (open()) {
+    <!-- mousedown is cancelled so the input keeps focus (and doesn't close the list) until the click picks -->
+    <div class="list" role="listbox" [id]="listId" (mousedown)="$event.preventDefault()">
+      @for (group of filteredGroups(); track group.label ?? $index) {
+        @if (group.label && groups().length > 1) {
+          <div class="group-label" role="presentation">{{ group.label }}</div>
+        }
+        @for (option of group.options; track option.value) {
+          @let index = indexOf(option);
+          <div
+            class="option"
+            role="option"
+            [id]="optionId(index)"
+            [class.highlighted]="index === highlighted()"
+            [class.selected]="option.value === value()"
+            [attr.aria-selected]="option.value === value()"
+            (mouseenter)="highlighted.set(index)"
+            (click)="pick(option)"
+          >
+            {{ option.label }}
+          </div>
+        }
+      } @empty {
+        <div class="empty">No matches</div>
+      }
+    </div>
+  }
+</div>
