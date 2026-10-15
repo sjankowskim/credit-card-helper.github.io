@@ -52,7 +52,8 @@ There's no account to create and no server: everything you enter is saved in you
 **Cards**
 
 - 🗂️ **Card catalog**: search and filter by issuer, network, network tier, credit needed, annual fee,
-  rewards type, and bonus category. Grid, compact, and table views, with columns you pick.
+  rewards type, and bonus category, picking as many of each as you like (e.g. Chase and Citi cards
+  that earn a bonus on both dining and groceries). Grid, compact, and table views, with columns you pick.
 - 👛 **Wallet**: your cards grouped into Active, Churning, and Closed & product changed. Track open
   dates, credit limits, payment due days, last credit limit increase requests, annual fee overrides,
   and why a card was closed or product changed. Add cards you got by product change, and see each
@@ -159,7 +160,9 @@ The catalog is plain TypeScript, one file per card.
    documents every field.
 2. Set `termsCheckedOn` to the date you checked the terms against the issuer's site.
 3. Optionally add artwork at `public/images/cards/<issuer>/<card-name>.png` (`.webp`, `.avif`, and
-   `.jpg` work too). Extra designs go in `<card-name>-2.png`, `<card-name>-3.png`, and so on.
+   `.jpg` work too). Extra designs go in `<card-name>-2.png`, `<card-name>-3.png`, and so on. Use the
+   issuer's flat (not tilted) card art, cropped to the card's edges with transparent rounded corners
+   and no shadow, about 300–640 px wide.
 4. Run `npm start`. The card index is regenerated automatically and the card shows up in the catalog.
 
 For a card that no longer takes applications, set `discontinued` to `'product-change-only'` if
