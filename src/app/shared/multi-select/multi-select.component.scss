@@ -1,0 +1,90 @@
+:host {
+  position: relative;
+  display: inline-block;
+}
+
+// Looks like the native selects it sits next to
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 9rem;
+  text-align: left;
+  cursor: pointer;
+
+  // A filter in use stands out from the "All ..." ones
+  &.active {
+    border-color: var(--primary);
+  }
+
+  .summary {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .caret {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+  }
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  z-index: 20;
+  min-width: max(100%, 13rem);
+  width: max-content;
+  max-width: min(22rem, calc(100vw - 2rem));
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--background);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+}
+
+.options {
+  max-height: 18rem;
+  padding: 0.375rem 0;
+  overflow-y: auto;
+}
+
+.group-label {
+  padding: 0.5rem 0.875rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-tertiary);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.875rem;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+}
+
+.clear {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.875rem;
+  border: none;
+  border-top: 1px solid var(--border);
+  background: none;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--primary);
+  text-align: left;
+  cursor: pointer;
+}

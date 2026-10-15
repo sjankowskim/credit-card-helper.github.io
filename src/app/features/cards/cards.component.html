@@ -5,29 +5,35 @@
   <app-search-bar (searchChange)="searchQuery.set($event)" />
 
   <div class="filters">
-    <select class="input" aria-label="Issuer" [value]="filters().issuer" (change)="setFilter('issuer', $any($event.target).value)">
-      <option value="">All issuers</option>
-      @for (issuer of issuers; track issuer) {
-        <option [value]="issuer" [selected]="filters().issuer === issuer">{{ issuer }}</option>
-      }
-    </select>
-    <select class="input" aria-label="Network" [value]="filters().network" (change)="setFilter('network', $any($event.target).value)">
-      <option value="">All networks</option>
-      @for (network of networks; track network) {
-        <option [value]="network" [selected]="filters().network === network">{{ network }}</option>
-      }
-    </select>
+    <app-multi-select
+      label="Issuer"
+      allLabel="All issuers"
+      countNoun="issuers"
+      [groups]="issuerOptions"
+      [selected]="filters().issuer"
+      (selectedChange)="setFilter('issuer', $event)"
+    />
+    <app-multi-select
+      label="Network"
+      allLabel="All networks"
+      countNoun="networks"
+      [groups]="networkOptions"
+      [selected]="filters().network"
+      (selectedChange)="setFilter('network', $event)"
+    />
     <select class="input" aria-label="Card type" [value]="filters().type" (change)="setFilter('type', $any($event.target).value)">
       <option value="">Personal & business</option>
       <option value="personal" [selected]="filters().type === 'personal'">Personal</option>
       <option value="business" [selected]="filters().type === 'business'">Business</option>
     </select>
-    <select class="input" aria-label="Your credit" [value]="filters().credit" (change)="setFilter('credit', $any($event.target).value)">
-      <option value="">Any credit needed</option>
-      @for (level of creditLevels; track level[0]) {
-        <option [value]="level[0]" [selected]="filters().credit === level[0]">My credit: {{ level[1] }}</option>
-      }
-    </select>
+    <app-multi-select
+      label="Credit needed"
+      allLabel="Any credit needed"
+      countNoun="credit levels"
+      [groups]="creditOptions"
+      [selected]="filters().credit"
+      (selectedChange)="setFilter('credit', $any($event))"
+    />
     <button
       class="btn btn-small more-toggle"
       type="button"
@@ -64,38 +70,39 @@
           (rangeChange)="setFeeRange($event)"
         />
       </div>
-      <label class="form-field">
+      <div class="form-field">
         <span>Network tier</span>
-        <select class="input" [value]="filters().tier" (change)="setFilter('tier', $any($event.target).value)">
-          <option value="">Any tier</option>
-          @for (group of tierGroups; track group.network) {
-            <optgroup [label]="group.network">
-              @for (tier of group.tiers; track tier.id) {
-                <option [value]="tier.id" [selected]="filters().tier === tier.id">{{ tier.label }}</option>
-              }
-            </optgroup>
-          }
-          <option value="unknown" [selected]="filters().tier === 'unknown'">Unknown (Visa or Mastercard)</option>
-        </select>
-      </label>
-      <label class="form-field">
+        <app-multi-select
+          label="Network tier"
+          allLabel="Any tier"
+          countNoun="tiers"
+          [groups]="tierOptions"
+          [selected]="filters().tier"
+          (selectedChange)="setFilter('tier', $any($event))"
+        />
+      </div>
+      <div class="form-field">
         <span>Rewards type</span>
-        <select class="input" [value]="filters().rewards" (change)="setFilter('rewards', $any($event.target).value)">
-          <option value="">Any rewards</option>
-          @for (kind of rewardsKinds; track kind[0]) {
-            <option [value]="kind[0]" [selected]="filters().rewards === kind[0]">{{ kind[1] }}</option>
-          }
-        </select>
-      </label>
-      <label class="form-field">
-        <span>Earns a bonus on</span>
-        <select class="input" [value]="filters().category" (change)="setFilter('category', $any($event.target).value)">
-          <option value="">Any category</option>
-          @for (category of categories; track category.id) {
-            <option [value]="category.id" [selected]="filters().category === category.id">{{ category.name }}</option>
-          }
-        </select>
-      </label>
+        <app-multi-select
+          label="Rewards type"
+          allLabel="Any rewards"
+          countNoun="types"
+          [groups]="rewardsOptions"
+          [selected]="filters().rewards"
+          (selectedChange)="setFilter('rewards', $any($event))"
+        />
+      </div>
+      <div class="form-field">
+        <span>Earns a bonus on (all picked)</span>
+        <app-multi-select
+          label="Earns a bonus on"
+          allLabel="Any category"
+          countNoun="categories"
+          [groups]="categoryOptions"
+          [selected]="filters().category"
+          (selectedChange)="setFilter('category', $any($event))"
+        />
+      </div>
       @for (kind of kindFilters; track kind.key) {
         <label class="form-field">
           <span>{{ kind.label }}</span>

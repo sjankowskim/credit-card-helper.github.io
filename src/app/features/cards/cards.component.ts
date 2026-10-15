@@ -7,6 +7,11 @@ import { CardTableComponent } from './components/card-table/card-table.component
 import { RangeSliderComponent } from '../../shared/range-slider/range-slider.component';
 import { ChecklistPickerComponent, type ChecklistGroup } from '../../shared/checklist-picker/checklist-picker.component';
 import {
+  MultiSelectComponent,
+  type MultiSelectGroup,
+  type MultiSelectOption
+} from '../../shared/multi-select/multi-select.component';
+import {
   CATALOG_COLUMNS,
   DEFAULT_CATALOG_COLUMNS,
   REQUIRED_CATALOG_COLUMNS,
@@ -19,7 +24,7 @@ import { ALL_CARDS } from '../../core/data/cards';
 import { UserCardsService, type WalletEntry } from '../../core/services/user-cards.service';
 import { ToastService } from '../../core/services/toast.service';
 import type { Card, CreditLevel, NetworkTier } from '../../core/models/card.model';
-import { ALL_CATEGORIES, type CategoryId } from '../../core/data/category.registry';
+import { ALL_CATEGORIES, CATEGORY_GROUP_LABELS, type CategoryId } from '../../core/data/category.registry';
 import { formatCurrency, getBestRate } from '../../core/utils/card-display.utils';
 import {
   CREDIT_LEVEL_LABELS,
@@ -29,25 +34,28 @@ import {
   isSecuredCard,
   isStoreOnly,
   isStudentCard,
-  qualifiesWith,
   type RewardsKind
 } from '../../core/utils/card-filters.utils';
 
 /** Show a kind of card, show only that kind, or hide it */
 export type KindFilter = 'any' | 'only' | 'hide';
 
+/**
+ * Lists are empty for "all". A card matches a list when it has any of the picked values,
+ * except categories, where it has to earn a bonus on every one picked.
+ */
 export interface CardFilters {
-  issuer: string;
-  network: string;
-  /** A tier, or 'unknown' for Visa and Mastercard cards whose tier isn't filled in */
-  tier: '' | NetworkTier | 'unknown';
+  issuer: string[];
+  network: string[];
+  /** Tiers, plus 'unknown' for Visa and Mastercard cards whose tier isn't filled in */
+  tier: (NetworkTier | 'unknown')[];
   type: '' | 'personal' | 'business';
-  /** Your credit; shows cards you typically qualify for */
-  credit: '' | CreditLevel;
+  /** Credit levels the card typically needs */
+  credit: CreditLevel[];
   feeMin: number;
   feeMax: number;
-  rewards: '' | RewardsKind;
-  category: '' | CategoryId;
+  rewards: RewardsKind[];
+  category: CategoryId[];
   student: KindFilter;
   secured: KindFilter;
   storeOnly: KindFilter;
@@ -62,15 +70,15 @@ const FEE_STEP = 25;
 const MAX_FEE = Math.ceil(Math.max(...ALL_CARDS.map(c => c.annualFee)) / FEE_STEP) * FEE_STEP;
 
 const NO_FILTERS: CardFilters = {
-  issuer: '',
-  network: '',
-  tier: '',
+  issuer: [],
+  network: [],
+  tier: [],
   type: '',
-  credit: '',
+  credit: [],
   feeMin: 0,
   feeMax: MAX_FEE,
-  rewards: '',
-  category: '',
+  rewards: [],
+  category: [],
   student: 'any',
   secured: 'any',
   storeOnly: 'any',
@@ -108,13 +116,26 @@ function isTierUnknown(card: Card): boolean {
   return !card.networkTier && (card.network === 'VISA' || card.network === 'MASTERCARD');
 }
 
+function toOptions(values: string[]): MultiSelectOption[] {
+  return values.map(value => ({ value, label: value }));
+}
+
 function matchesKind(filter: KindFilter, isKind: boolean): boolean {
   return filter === 'any' || (filter === 'only') === isKind;
 }
 
 @Component({
   selector: 'app-cards',
-  imports: [SearchBarComponent, CardListComponent, CardTableComponent, CardDetailComponent, AddCardDialogComponent, RangeSliderComponent, ChecklistPickerComponent],
+  imports: [
+    SearchBarComponent,
+    CardListComponent,
+    CardTableComponent,
+    CardDetailComponent,
+    AddCardDialogComponent,
+    RangeSliderComponent,
+    ChecklistPickerComponent,
+    MultiSelectComponent
+  ],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.scss'
 })
@@ -175,13 +196,30 @@ export class CardsComponent {
   readonly selected = signal<Card | null>(null);
   readonly adding = signal<Card | null>(null);
 
-  readonly issuers = [...new Set(ALL_CARDS.map(c => c.issuer))].sort();
-  readonly networks = [...new Set(ALL_CARDS.map(c => c.network))].sort();
+  // Options for the multi-select filters
+  readonly issuerOptions: MultiSelectGroup[] = [{ options: toOptions([...new Set(ALL_CARDS.map(c => c.issuer))].sort()) }];
+  readonly networkOptions: MultiSelectGroup[] = [{ options: toOptions([...new Set(ALL_CARDS.map(c => c.network))].sort()) }];
   /** Tiers in the catalog grouped by network, e.g. Visa → Signature, Infinite; ordered lowest to highest */
-  readonly tierGroups = groupTiers([...new Set(ALL_CARDS.flatMap(c => (c.networkTier ? [c.networkTier] : [])))]);
-  readonly creditLevels = Object.entries(CREDIT_LEVEL_LABELS) as [CreditLevel, string][];
-  readonly rewardsKinds = Object.entries(REWARDS_KIND_LABELS) as [RewardsKind, string][];
-  readonly categories = [...ALL_CATEGORIES].sort((a, b) => a.name.localeCompare(b.name));
+  readonly tierOptions: MultiSelectGroup[] = [
+    ...groupTiers([...new Set(ALL_CARDS.flatMap(c => (c.networkTier ? [c.networkTier] : [])))]).map(group => ({
+      label: group.network,
+      options: group.tiers.map(t => ({ value: t.id, label: t.label }))
+    })),
+    { label: 'Other', options: [{ value: 'unknown', label: 'Unknown (Visa or Mastercard)' }] }
+  ];
+  readonly creditOptions: MultiSelectGroup[] = [
+    { options: Object.entries(CREDIT_LEVEL_LABELS).map(([value, label]) => ({ value, label })) }
+  ];
+  readonly rewardsOptions: MultiSelectGroup[] = [
+    { options: Object.entries(REWARDS_KIND_LABELS).map(([value, label]) => ({ value, label })) }
+  ];
+  /** Categories under their group headings (Food & drink, Travel & transit, ...) */
+  readonly categoryOptions: MultiSelectGroup[] = Object.entries(CATEGORY_GROUP_LABELS).map(([group, label]) => ({
+    label,
+    options: ALL_CATEGORIES.filter(c => c.group === group)
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(c => ({ value: c.id, label: c.name }))
+  }));
   readonly kindFilters: { key: 'student' | 'secured' | 'storeOnly' | 'discontinued'; label: string }[] = [
     { key: 'student', label: 'Student cards' },
     { key: 'secured', label: 'Secured cards' },
@@ -204,7 +242,11 @@ export class CardsComponent {
   private countActive(keys: (keyof CardFilters)[]): number {
     const f = this.filters();
     const feeChanged = f.feeMin !== NO_FILTERS.feeMin || f.feeMax !== NO_FILTERS.feeMax;
-    return keys.filter(k => k !== 'feeMin' && k !== 'feeMax' && f[k] !== NO_FILTERS[k]).length + (feeChanged ? 1 : 0);
+    const changed = (k: keyof CardFilters) => {
+      const value = f[k];
+      return Array.isArray(value) ? value.length > 0 : value !== NO_FILTERS[k];
+    };
+    return keys.filter(k => k !== 'feeMin' && k !== 'feeMax' && changed(k)).length + (feeChanged ? 1 : 0);
   }
 
   readonly hasFilters = computed(() => this.countActive(Object.keys(NO_FILTERS) as (keyof CardFilters)[]) > 0);
@@ -221,14 +263,16 @@ export class CardsComponent {
 
     return ALL_CARDS.filter(card => {
       if (query && ![card.name, card.issuer, card.rewardsCurrency].some(t => t.toLowerCase().includes(query))) return false;
-      if (f.issuer && card.issuer !== f.issuer) return false;
-      if (f.network && card.network !== f.network) return false;
-      if (f.tier && (f.tier === 'unknown' ? !isTierUnknown(card) : card.networkTier !== f.tier)) return false;
+      if (f.issuer.length && !f.issuer.includes(card.issuer)) return false;
+      if (f.network.length && !f.network.includes(card.network)) return false;
+      if (f.tier.length && !f.tier.some(tier => (tier === 'unknown' ? isTierUnknown(card) : card.networkTier === tier))) {
+        return false;
+      }
       if (f.type && card.isBusiness !== (f.type === 'business')) return false;
-      if (f.credit && !qualifiesWith(card, f.credit)) return false;
+      if (f.credit.length && !f.credit.includes(card.creditNeeded)) return false;
       if (card.annualFee < f.feeMin || card.annualFee > f.feeMax) return false;
-      if (f.rewards && getRewardsKind(card) !== f.rewards) return false;
-      if (f.category && !earnsBonusOn(card, f.category)) return false;
+      if (f.rewards.length && !f.rewards.includes(getRewardsKind(card))) return false;
+      if (!f.category.every(category => earnsBonusOn(card, category))) return false;
       if (!matchesKind(f.student, isStudentCard(card))) return false;
       if (!matchesKind(f.secured, isSecuredCard(card))) return false;
       if (!matchesKind(f.storeOnly, isStoreOnly(card))) return false;

@@ -1,0 +1,33 @@
+<button
+  type="button"
+  class="input trigger"
+  [class.active]="checkedCount() > 0"
+  [attr.aria-label]="label() ? label() + ': ' + summary() : null"
+  [attr.aria-expanded]="open()"
+  [attr.aria-controls]="panelId"
+  (click)="open.set(!open())"
+>
+  <span class="summary">{{ summary() }}</span>
+  <span class="caret" aria-hidden="true">▾</span>
+</button>
+
+@if (open()) {
+  <div class="panel" [id]="panelId" role="group" [attr.aria-label]="label() || null">
+    <div class="options">
+      @for (group of groups(); track group.label ?? $index) {
+        @if (group.label) {
+          <div class="group-label">{{ group.label }}</div>
+        }
+        @for (option of group.options; track option.value) {
+          <label class="option">
+            <input type="checkbox" [checked]="isChecked(option.value)" (change)="toggle(option.value, $any($event.target).checked)" />
+            {{ option.label }}
+          </label>
+        }
+      }
+    </div>
+    @if (checkedCount() > 0) {
+      <button type="button" class="clear" (click)="clear()">Clear ({{ checkedCount() }})</button>
+    }
+  </div>
+}

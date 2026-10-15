@@ -19,14 +19,6 @@ export const CREDIT_LEVEL_LABELS: Record<CreditLevel, string> = {
   rebuilding: 'New or rebuilding'
 };
 
-/** Lowest to highest */
-const CREDIT_ORDER: CreditLevel[] = ['rebuilding', 'fair', 'good', 'excellent'];
-
-/** True when someone with `level` credit typically qualifies for the card */
-export function qualifiesWith(card: Card, level: CreditLevel): boolean {
-  return CREDIT_ORDER.indexOf(card.creditNeeded) <= CREDIT_ORDER.indexOf(level);
-}
-
 export function isStudentCard(card: Card): boolean {
   return /\bStudents?\b/.test(card.name);
 }

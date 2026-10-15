@@ -104,3 +104,8 @@
 .filters-note {
   grid-column: 1 / -1;
 }
+
+// Fill the panel's grid column like the selects around them
+.more-filters app-multi-select {
+  display: block;
+}
