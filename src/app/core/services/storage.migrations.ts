@@ -111,10 +111,45 @@ const MIGRATIONS: Record<number, (state: RawState) => RawState> = {
     ...state,
     schemaVersion: 13,
     homeSettings: createDefaultHomeSettings()
+  }),
+
+  // v13 -> v14: cards linked by product change share one open date and authorized user setting (they're one account)
+  13: (state) => ({
+    ...state,
+    schemaVersion: 14,
+    userCards: syncLinkedAccounts(state['userCards'] as RawUserCard[])
   })
 };
 
-type RawUserCard = { cardId: string; userData: Record<string, unknown> };
+type RawUserCard = { id?: string; cardId: string; userData: Record<string, unknown> };
+
+/**
+ * Gives every card in a product change history the account's open date (the original card's,
+ * or the first one set along the history when the original has none), and marks them all as
+ * authorized user cards if any of them was.
+ */
+function syncLinkedAccounts(userCards: RawUserCard[]): RawUserCard[] {
+  const byId = new Map(userCards.map(c => [c.id, c]));
+  const fromOf = (c: RawUserCard) => {
+    const fromId = c.userData['productChangedFromId'];
+    return typeof fromId === 'string' ? byId.get(fromId) : undefined;
+  };
+  const nextOf = (c: RawUserCard) => userCards.find(other => other.id && other.userData['productChangedFromId'] === c.id);
+
+  return userCards.map(userCard => {
+    // Walk back to the original card and forward to the newest; `includes` guards against a loop of links
+    const history = [userCard];
+    for (let from = fromOf(userCard); from && !history.includes(from); from = fromOf(from)) history.unshift(from);
+    for (let next = nextOf(userCard); next && !history.includes(next); next = nextOf(next)) history.push(next);
+    if (history.length === 1) return userCard;
+
+    const userData = { ...userCard.userData };
+    const openDate = history.map(c => c.userData['accountStartDate']).find(date => typeof date === 'string' && date);
+    if (openDate) userData['accountStartDate'] = openDate;
+    if (history.some(c => c.userData['isAuthorizedUser'] === true)) userData['isAuthorizedUser'] = true;
+    return { ...userCard, userData };
+  });
+}
 
 function migrateHitSub(userCard: RawUserCard): RawUserCard {
   const { hitSub, ...userData } = userCard.userData;
