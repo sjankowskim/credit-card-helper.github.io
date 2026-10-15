@@ -15,7 +15,10 @@ export const BILT_MASTERCARD: Card = {
   isBusiness: false,
   creditNeeded: 'good',
   baseRewardRate: 1.0,
+  // Wells Fargo converted these accounts to the Autograph on Feb 7, 2026, keeping the credit line and
+  // account history (a new card number). Choosing a Bilt 2.0 card from Cardless instead opened a new account.
   discontinued: 'retired',
+  transitionedTo: { cardId: 'wells-fargo-autograph', startedOn: '2026-02-07' },
   termsCheckedOn: '2026-10-11',
   rewardTiers: [
     {
